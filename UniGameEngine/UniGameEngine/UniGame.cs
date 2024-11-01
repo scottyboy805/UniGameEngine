@@ -108,7 +108,7 @@ namespace UniGameEngine
 
             // Create object
             ModelRenderer cube = scene.CreateObject<ModelRenderer>();            
-            cube.Model =m = Content.Load<Model>("Cube");
+            cube.Model = Content.Load<Model>("Cube");
 
             scene.Activate();
         }
