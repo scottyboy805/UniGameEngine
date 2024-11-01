@@ -124,7 +124,7 @@ namespace UniGameEngine.Physics
         public void OnUpdate(GameTime gameTime)
         {
             // Update simulation
-            simulation.Timestep(0.01f, threadDispatcher);
+            simulation.Timestep(0.015f, threadDispatcher);
 
             // Sync after update
             SyncDynamicBodies();

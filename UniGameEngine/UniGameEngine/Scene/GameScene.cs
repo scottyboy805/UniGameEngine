@@ -7,6 +7,7 @@ using UniGameEngine.Graphics;
 
 namespace UniGameEngine.Scene
 {
+    [DataContract]
     public sealed class GameScene : GameElement, IGameUpdate, IGameDraw, IContentCallback
     {
         // Internal
@@ -16,6 +17,7 @@ namespace UniGameEngine.Scene
 
         // Private
         private Queue<IGameUpdate> sceneNewObjectsThisFrame = new Queue<IGameUpdate>();
+        private bool activated = false;
 
         [DataMember(Name = "Enabled")]
         private bool enabled = true;
@@ -27,7 +29,7 @@ namespace UniGameEngine.Scene
         // Properties
         public bool Enabled
         {
-            get { return enabled; }
+            get { return enabled && activated; }
         }
 
         public int Priority
@@ -50,7 +52,6 @@ namespace UniGameEngine.Scene
         public GameScene(string name)
             : base(name)
         {
-            enabled = false;
         }
 
         // Methods
@@ -60,7 +61,8 @@ namespace UniGameEngine.Scene
             if (Game.scenes.Contains(this) == true)
                 throw new InvalidOperationException("Scene is already activated");
 
-            enabled = true;
+            // Set activated state
+            activated = true;
 
             // Send initial enabled event
             foreach (GameObject go in gameObjects)
@@ -156,7 +158,7 @@ namespace UniGameEngine.Scene
             return go;
         }
 
-        public GameObject CreateObject(Type[] componentTypes, string name = null)
+        public GameObject CreateObject(string name, params Type[] componentTypes)
         {
             // Check for null
             if (componentTypes == null)
@@ -175,7 +177,7 @@ namespace UniGameEngine.Scene
             return go;
         }
 
-        public Component CreateObject(Type mainComponentType, Type[] additionalComponentTypes = null, string name = null)
+        public Component CreateObject(string name, Type mainComponentType, params Type[] additionalComponentTypes)
         {
             // Check for null
             if (mainComponentType == null)
@@ -202,7 +204,7 @@ namespace UniGameEngine.Scene
             return result;
         }
 
-        public T CreateObject<T>(Type[] additionalComponentTypes = null, string name = null) where T : Component
+        public T CreateObject<T>(string name, params Type[] additionalComponentTypes) where T : Component
         {
             // Create object
             GameObject go = new GameObject(name);

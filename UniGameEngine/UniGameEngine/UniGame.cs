@@ -195,17 +195,17 @@ namespace UniGameEngine
             GameScene scene = new GameScene("MyScene");
 
             // Create camera
-            Camera cam = scene.CreateObject<Camera>();
+            Camera cam = scene.CreateObject<Camera>("Camera");
             //cam.Enabled = false;
             cam.Transform.LocalPosition = new Vector3(0f, 0f, -10f);
 
-            ModelRenderer dynamicCube = scene.CreateObject<ModelRenderer>(new Type[] { typeof(BoxCollider), typeof(RigidBody) }, "Dynamic");
+            ModelRenderer dynamicCube = scene.CreateObject<ModelRenderer>("Dynamic", typeof(BoxCollider), typeof(RigidBody));
             dynamicCube.Model = Content.Load<Model>("Cube");
 
             dynamicCube.Transform.WorldPosition = new Vector3(0f, 5, 0f);
 
             // Create object
-            ModelRenderer cube = scene.CreateObject<ModelRenderer>(name: "Static");
+            ModelRenderer cube = scene.CreateObject<ModelRenderer>("Static");
             cube.gameObject.CreateComponent<BoxCollider>();
             cube.Model = Content.Load<Model>("Cube");
             cube.gameObject.CreateComponent<TestScript>();
