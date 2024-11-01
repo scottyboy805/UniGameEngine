@@ -90,6 +90,50 @@ namespace UniGameEngine
             return string.Format("{0}({1})", GetType().FullName, name);
         }
 
-        protected virtual void OnDestroy() { }
+        protected internal virtual void OnDestroy() { }
+
+        public static void Destroy(GameElement element)
+        {
+            Destroy<GameElement>(element);
+        }
+
+        public static void Destroy<T>(T element) where T : GameElement
+        {
+            // Check for null
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            // Add for destruction
+            if (element.Game.scheduleDestroyElements.Contains(element) == false)
+                element.Game.scheduleDestroyElements.Enqueue(element);
+        }
+
+        public static void DestroyDelayed(GameElement element, float delay)
+        {
+            DestroyDelayed<GameElement>(element, delay);
+        }
+
+        public static void DestroyDelayed<T>(T element, float delay) where T : GameElement
+        {
+            // Check for delay
+            if (delay > 0f)
+            {
+                // Check for null
+                if (element == null)
+                    throw new ArgumentNullException(nameof(element));
+
+                // Add for delayed destruction
+                if(element.Game.scheduledDestroyDelayElements.Contains(element) == false)
+                {
+                    element.scheduledDestroyTime = delay;
+                    element.Game.scheduledDestroyDelayElements.Add(element);
+                }
+            }
+            else
+            {
+                // Destroy now
+                Destroy<T>(element);
+            }
+        }
     }
 }

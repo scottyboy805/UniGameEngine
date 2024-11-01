@@ -55,12 +55,15 @@ namespace UniGameEngine.Scene
         public void Activate()
         {
             // Check for active
-            if (Game.AddGameScene(this) == false)
+            if (Game.scenes.Contains(this) == true)
                 throw new InvalidOperationException("Scene is already activated");
 
             // Send initial enabled event
             foreach (GameObject go in gameObjects)
                 GameObject.DoGameObjectEnabledEvents(go, go.Enabled, true);
+
+            // Add the scene
+            Game.scenes.Add(this);
 
             // Add the module
             Game.AddGameUpdate(this);

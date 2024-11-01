@@ -41,14 +41,21 @@ namespace UniGameEngine
 
         public Transform Transform
         {
-            get { return gameObject.Transform; }
+            get { return GameObject.Transform; }
         }
 
         // Constructor
+        protected Component()
+            : base(null)
+        {
+            Name = GetType().Name;
+        }
+
         protected Component(GameObject parent)
             : base(null)
         {
-            this.gameObject = parent;
+            gameObject = parent;
+            Name = string.Format("{0}({1})", parent.Name, GetType().Name);
         }
 
         // Methods
