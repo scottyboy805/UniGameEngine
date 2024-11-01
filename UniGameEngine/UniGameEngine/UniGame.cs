@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using UniGameEngine.Graphics;
+using UniGameEngine.Physics;
 using UniGameEngine.Scene;
 
 namespace UniGameEngine
@@ -20,15 +22,21 @@ namespace UniGameEngine
         private readonly TypeManager typeManager = new TypeManager();
 
         private GraphicsDeviceManager graphics = null;
-        private SpriteBatch spriteBatch = null;
-        private SpriteFont defaultFont = null;
+        private PhysicsSimulation physics = null;
+        private GameSettings gameSettings = new GameSettings();
         private List<IGameUpdate> scheduledUpdateElements = new List<IGameUpdate>(256);
         private List<IGameDraw> scheduledDrawElements = new List<IGameDraw>(256);
+
+        private SpriteBatch spriteBatch = null;
+        private SpriteFont defaultFont = null;
 
         // Internal
         internal List<GameScene> scenes = new List<GameScene>();        
         internal List<GameElement> scheduledDestroyDelayElements = new List<GameElement>();
         internal Queue<GameElement> scheduleDestroyElements = new Queue<GameElement>();
+
+        // Public
+        public static readonly Version EngineVersion = new Version(1, 0, 0);
 
         // Properties
         internal static UniGame Current
@@ -44,6 +52,16 @@ namespace UniGameEngine
         public TypeManager TypeManager
         {
             get { return typeManager; }
+        }
+
+        public PhysicsSimulation Physics
+        {
+            get { return physics; }
+        }
+
+        public GameSettings GameSettings
+        {
+            get { return gameSettings; }
         }
 
         public bool IsMainThread
@@ -83,33 +101,118 @@ namespace UniGameEngine
         {
             current = this;
 
-            // Initialize type manager
+            // Setup debug
+#if DEBUG
+            Debug.AddLogger(new Debug.ConsoleLogger());
+#endif
 
+            Debug.Log("UniGameEngine, " + EngineVersion);
 
             // Create sprite batch
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
 
+
+            // Load game settings
+            Debug.Log("Load game settings...");
+
+            // Initialize info
+            Debug.Log(gameSettings.CompanyName);
+            Debug.Log(gameSettings.GameName + ", " + gameSettings.GameVersion);
+                        
+            // Initialize display
+            Debug.Log(LogFilter.Graphics, "Preferred screen width: " + gameSettings.PreferredScreenWidth);
+            Debug.Log(LogFilter.Graphics, "Preferred screen height: " + gameSettings.PreferredScreenHeight);
+            Debug.Log(LogFilter.Graphics, "Preferred fullscreen: " + gameSettings.PreferredFullscreen);
+
+            // Apply resolution
+            graphics.PreferredBackBufferWidth = gameSettings.PreferredScreenWidth;
+            graphics.PreferredBackBufferHeight = gameSettings.PreferredScreenHeight;
+            graphics.IsFullScreen = gameSettings.PreferredFullscreen;
+            graphics.ApplyChanges();
+
+            Debug.Log(LogFilter.Graphics, "Allow resizing: " + gameSettings.ResizableWindow);
+            Window.AllowUserResizing = gameSettings.ResizableWindow;
+            Window.Title = gameSettings.GameName;
+
+            // Initialize physics
+            Debug.Log(LogFilter.Physics, "Initialize physics...");
+            physics = new PhysicsSimulation(gameSettings);
+
+            // Add for update
+            AddGameUpdate(physics);
+
+            
             base.Initialize();
         }
 
         protected override void LoadContent()
-        {            
+        {              
             // Load default font
             defaultFont = Content.Load<SpriteFont>("Arial");
 
-            // TODO: use this.Content to load your game content here
 
+            // Load startup scenes
+            if (gameSettings.StartupScenes.Count > 0)
+            {
+                // Store scenes until all loaded
+                List<GameScene> loadedScenes = new List<GameScene>(gameSettings.StartupScenes.Count);
+
+                // Start loading
+                Debug.LogF(LogFilter.Content, "Loading startup scenes ({0})...", gameSettings.StartupScenes.Count);
+                foreach (string scenePath in gameSettings.StartupScenes)
+                {
+                    // Load the scene
+                    GameScene startupScene = null;
+
+                    try
+                    {
+                        // Load the scene
+                        startupScene = Content.Load<GameScene>(scenePath);
+
+                        // Add the scene
+                        loadedScenes.Add(startupScene);
+                    }
+                    catch(ContentLoadException e)
+                    {
+                        Debug.LogError("Error loading startup scene: " + scenePath);
+                        Debug.LogException(e);
+                    }
+                }
+
+                // Activate scenes
+                foreach(GameScene startupScene in loadedScenes)
+                {
+                    // Activate
+                    startupScene.Activate();
+                }
+            }
+            else
+            {
+                Debug.Log(LogFilter.Content, "No startup scenes to load!");
+            }
+
+            
             GameScene scene = new GameScene("MyScene");
 
             // Create camera
             Camera cam = scene.CreateObject<Camera>();
-            //cam.Transform.LocalPosition = new Vector3(0f, 0f, 5f);
+            //cam.Enabled = false;
+            cam.Transform.LocalPosition = new Vector3(0f, 0f, -10f);
+
+            ModelRenderer dynamicCube = scene.CreateObject<ModelRenderer>(new Type[] { typeof(BoxCollider), typeof(RigidBody) }, "Dynamic");
+            dynamicCube.Model = Content.Load<Model>("Cube");
+
+            dynamicCube.Transform.WorldPosition = new Vector3(0f, 5, 0f);
 
             // Create object
-            ModelRenderer cube = scene.CreateObject<ModelRenderer>();            
+            ModelRenderer cube = scene.CreateObject<ModelRenderer>(name: "Static");
+            cube.gameObject.CreateComponent<BoxCollider>();
             cube.Model = Content.Load<Model>("Cube");
+            cube.gameObject.CreateComponent<TestScript>();
 
+            cube.Transform.WorldPosition += new Vector3(0f, -3f, 0f);
+            cube.Transform.LocalScale = new Vector3(3f, 0.1f, 3f);
+            
             scene.Activate();
         }
 
@@ -181,16 +284,6 @@ namespace UniGameEngine
             // Add to collection
             if(scheduledUpdateElements.Contains(update) == false)
             {
-                // Call start
-                try
-                {
-                    update.OnStart();
-                }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                }
-
                 // Add
                 scheduledUpdateElements.Add(update);
 
@@ -239,7 +332,7 @@ namespace UniGameEngine
             {
                 try
                 {
-                    drawReceiver.OnDraw();
+                    drawReceiver.OnDraw(null);
                 }
                 catch (Exception e)
                 {

@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using UniGameEngine.Graphics;
 
 namespace UniGameEngine
 {
@@ -18,6 +19,6 @@ namespace UniGameEngine
         int DrawOrder { get; }
 
         // Methods
-        void OnDraw();
+        void OnDraw(Camera camera);
     }
 }

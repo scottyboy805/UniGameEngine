@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace UniGameEngine
@@ -54,6 +55,16 @@ namespace UniGameEngine
                 { LogFilter.Editor, ConsoleColor.DarkYellow },
             };
 #endif
+
+            // Constructor
+            public ConsoleLogger()
+            {
+                try
+                {
+                    AllocConsole();
+                }
+                catch { }
+            }
 
             // Methods
             public void OnMessage(in LogMessage message)
@@ -124,7 +135,19 @@ namespace UniGameEngine
 #endif
             }
 
-            public void Dispose() { }
+            public void Dispose() 
+            {
+                try
+                {
+                    FreeConsole();
+                }
+                catch { }
+            }
+
+            [DllImport("kernel32.dll")]
+            private static extern bool AllocConsole();
+            [DllImport("kernel32.dll")]
+            private static extern bool FreeConsole();
         }
 
         public sealed class FileLogger : ILogger

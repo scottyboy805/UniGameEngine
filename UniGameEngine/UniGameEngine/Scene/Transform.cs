@@ -253,7 +253,7 @@ namespace UniGameEngine
             Matrix scale = Matrix.CreateScale(localScale);
 
             // Create local to world TRS
-            localToWorldMatrix = translate * rotation * scale;
+            localToWorldMatrix = scale * translate * rotation;// * scale;
 
             // Check for parent
             if (parent != null)

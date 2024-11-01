@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using UniGameEngine.Graphics;
 
 namespace UniGameEngine.Scene
 {
@@ -49,6 +50,7 @@ namespace UniGameEngine.Scene
         public GameScene(string name)
             : base(name)
         {
+            enabled = false;
         }
 
         // Methods
@@ -57,6 +59,8 @@ namespace UniGameEngine.Scene
             // Check for active
             if (Game.scenes.Contains(this) == true)
                 throw new InvalidOperationException("Scene is already activated");
+
+            enabled = true;
 
             // Send initial enabled event
             foreach (GameObject go in gameObjects)
@@ -68,8 +72,10 @@ namespace UniGameEngine.Scene
             // Add the module
             Game.AddGameUpdate(this);
             Game.AddGameDraw(this);
+
+            
         }
-        public void OnDraw() { }
+        public void OnDraw(Camera camera) { }
 
         public void OnStart()
         {

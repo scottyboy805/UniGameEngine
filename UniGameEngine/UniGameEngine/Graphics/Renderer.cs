@@ -24,6 +24,6 @@ namespace UniGameEngine.Graphics
         }
 
         // Methods
-        public abstract void OnDraw();
+        public abstract void OnDraw(Camera camera);
     }
 }

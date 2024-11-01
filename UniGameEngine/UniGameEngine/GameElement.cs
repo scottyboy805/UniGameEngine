@@ -90,6 +90,8 @@ namespace UniGameEngine
             return string.Format("{0}({1})", GetType().FullName, name);
         }
 
+        protected internal virtual void OnLoaded() { }
+
         protected internal virtual void OnDestroy() { }
 
         public static void Destroy(GameElement element)

@@ -100,11 +100,14 @@ namespace UniGameEngine
             // Store current enabled state
             bool currentEnabledState = component.enabled;
 
+            // Check for enabled in hierarchy
+            bool enabledInHierarchy = component.EnabledInHierarchy;
+
             // Change enabled state
             component.enabled = enabled;
 
             // Check for disabled in hierarchy
-            if (component.Scene.Enabled == false || component.EnabledInHierarchy == false || (currentEnabledState == enabled && forceUpdate == false))
+            if (component.Scene.Enabled == false || enabledInHierarchy == false || (currentEnabledState == enabled && forceUpdate == false))
                 return;
 
             // Trigger enabled event for component

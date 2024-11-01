@@ -25,9 +25,9 @@ namespace UniGameEngine.Graphics
         public readonly GameEvent OnWillRender = new GameEvent();
 
         // Private
+        private static readonly CameraSorter cameraSorter = new CameraSorter();
         private static readonly List<Camera> allCameras = new List<Camera>();
         private static readonly List<Camera> allActiveCameras = new List<Camera>();
-        private static readonly CameraSorter cameraSorter = new CameraSorter();
 
         [DataMember(Name = "RenderTexture")]
         private Texture renderTexture = null;
@@ -47,7 +47,7 @@ namespace UniGameEngine.Graphics
         private bool orthographic = false;
 
         // Internal
-        internal Matrix4x4 viewProjectionMatrix = Matrix4x4.Identity;
+        internal Matrix4x4 projectionMatrix = Matrix4x4.Identity;
 
         // Properties
         public static IReadOnlyList<Camera> AllCameras
@@ -65,33 +65,10 @@ namespace UniGameEngine.Graphics
             get { return allActiveCameras.Count > 0 ? allActiveCameras[0] : null; }
         }
 
-        public Matrix4x4 ViewProjectionMatrix
+        public Matrix4x4 ProjectionMatrix
         {
-            get { return viewProjectionMatrix; }
+            get { return projectionMatrix; }
         }
-
-        //public Texture DepthTexture
-        //{
-        //    get { return depthTextureView.Texture; }
-        //}
-
-        //public Texture RenderTexture
-        //{
-        //    get { return renderTexture; }
-        //    set
-        //    {
-        //        renderTexture = value;
-
-        //        // Release depth texture
-        //        if (depthTextureView != null)
-        //        {
-        //            depthTextureView.Texture.Destroy();
-        //            depthTextureView = null;
-        //        }
-
-        //        CreateViewProjectionMatrix();
-        //    }
-        //}
 
         public uint CullingMask
         {
@@ -221,7 +198,7 @@ namespace UniGameEngine.Graphics
             foreach(IGameDraw drawCall in scene.sceneDrawCalls)
             {
                 // Draw
-                drawCall.OnDraw();
+                drawCall.OnDraw(this);
             }
         }
 
@@ -254,13 +231,13 @@ namespace UniGameEngine.Graphics
             if (orthographic == false)
             {
                 // Create perspective
-                viewProjectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(
+                projectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(
                     MathHelper.ToRadians(fieldOfView), AspectRatio, near, far);
             }
             else
             {
                 // Create orthographic
-                viewProjectionMatrix = Matrix4x4.CreateOrthographic(
+                projectionMatrix = Matrix4x4.CreateOrthographic(
                     -1, 1, near, far);
             }
         }
