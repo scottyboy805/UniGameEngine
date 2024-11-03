@@ -11,14 +11,6 @@ namespace UniGameEngine.Content.Serializers
         // Methods
         public override void ReadValue(SerializedReader reader, ref T instance)
         {
-            // Check for null
-            if(reader.PeekType == SerializedType.Null)
-            {
-                reader.ReadNull();
-                instance = default;
-                return;
-            }
-
             // Expect object
             reader.Expect(SerializedType.ObjectStart);
 

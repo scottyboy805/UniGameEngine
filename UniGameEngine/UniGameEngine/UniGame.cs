@@ -117,6 +117,10 @@ namespace UniGameEngine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
+            // Register modules
+            typeManager.RegisterAssembly(typeof(UniGame).Assembly);
+
+
             // Load game settings
             Debug.Log("Load game settings...");
 
@@ -227,7 +231,15 @@ namespace UniGameEngine
             txt.Text = "Hello World";
             txt.Font = Content.Load<SpriteFont>("Arial");
 
+
+            GameObject customLoadContent = Content.Load<GameObject>("Test");
+
             scene.Activate();
+
+
+            GameScene loadScene = Content.Load<GameScene>("Scene/TestScene");
+
+            loadScene.Activate();
         }
 
         protected override void Update(GameTime gameTime)

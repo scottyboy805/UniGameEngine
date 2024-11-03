@@ -145,6 +145,14 @@ namespace UniGameEngine.Content.Serializers
             if (reader == null)
                 throw new ArgumentNullException(nameof(reader));
 
+            // Check for null
+            if(reader.PeekType == SerializedType.Null)
+            {
+                reader.ReadNull();
+                value = default;
+                return;
+            }
+
             // Get serializer
             Serializer<T> serializer = Get<T>();
 
@@ -174,6 +182,14 @@ namespace UniGameEngine.Content.Serializers
 
             if(type == null) 
                 throw new ArgumentNullException(nameof(type));
+
+            // Check for null
+            if (reader.PeekType == SerializedType.Null)
+            {
+                reader.ReadNull();
+                value = default;
+                return;
+            }
 
             // Get serializer
             Serializer serializer = Get(type);
@@ -382,22 +398,13 @@ namespace UniGameEngine.Content.Serializers
                 if ((value is T) == false)
                     throw new ArgumentException(string.Format("Cannot deserialize object of type: {0}, as type: {1}", value, typeof(T)));
 
-                // Check for value type
-                if (typeof(T).IsValueType == true)
-                {
-                    // Deserialize into ref
-                    T impl = (T)value;
-                    ReadValue(reader, ref impl);
+                // Deserialize into ref
+                T impl = (T)value;
+                ReadValue(reader, ref impl);
 
-                    // Update value type
+                // Need to copy back the reference for value type otherwise deserialization fails
+                if (typeof(T).IsValueType == true)
                     value = impl;
-                }
-                else
-                {
-                    // Deserialize into ref
-                    T impl = (T)value;
-                    ReadValue(reader, ref impl);
-                }
             }
         }
     }

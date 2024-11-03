@@ -14,6 +14,7 @@ namespace UniGameEngine
         private string name = "";
         private string type = "";
         private string guid = "";
+        private string contentPath = "";
 
         private bool isReadOnly = false;
         private bool isDestroying = false;
@@ -70,6 +71,12 @@ namespace UniGameEngine
                 return guid;
             }
             internal set { guid = value; }
+        }
+
+        public string ContentPath
+        {
+            get { return contentPath; }
+            internal set { contentPath = value; }
         }
 
         // Constructor

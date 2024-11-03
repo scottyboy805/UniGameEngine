@@ -77,10 +77,15 @@
 /processorParam:DebugMode=Auto
 /build:Effects/Default/SpriteEffect.fx
 
-#begin Test.jprefab
+#begin Scene/TestScene.scene
+/importer:SceneImporter
+/processor:SceneProcessor
+/build:Scene/TestScene.scene
+
+#begin Test.prefab
 /importer:PrefabImporter
 /processor:PrefabProcessor
-/build:Test.jprefab
+/build:Test.prefab
 
 #begin WGPU-Logo.png
 /importer:TextureImporter
