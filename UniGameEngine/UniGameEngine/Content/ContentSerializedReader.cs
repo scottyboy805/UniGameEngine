@@ -103,13 +103,19 @@ namespace UniGameEngine.Content
             return true;
         }
 
-        public override bool ReadObjectStart(out string typeId)
+        public override bool ReadObjectStart(ref TypeReference typeReference)
         {
             RequireSerializedType(ContentSerializedType.ObjectStart);
+            bool hasType = contentReader.ReadBoolean();
 
-            // Read type
-            typeId = contentReader.ReadString();
+            // Read type if required
+            if (typeReference.IsRequired == true)
+            {
+                if (hasType == false)
+                    throw new InvalidDataException("`$type` specifier is required but was not provided in the serialized data: " + typeReference.TypeName);
 
+                typeReference.TypeName = contentReader.ReadString();                
+            }
             ReadSerializedType();
             return true;
         }
@@ -127,7 +133,6 @@ namespace UniGameEngine.Content
 
             // Read length
             length = contentReader.ReadInt32();
-
             ReadSerializedType();
             return true;
         }

@@ -8,15 +8,17 @@ namespace UniGameEngine.Content.Serializers
 {    
     public sealed class ObjectSerializer<T> : Serializer<T>
     {
+        // Private
+        TypeReference typeReference = new TypeReference(TypeManager, typeof(T));
+
         // Methods
         public override void ReadValue(SerializedReader reader, ref T instance)
         {
             // Expect object
             reader.Expect(SerializedType.ObjectStart);
 
-            // Read object start
-            string typeName;
-            reader.ReadObjectStart(out typeName);
+            // Read object start            
+            reader.ReadObjectStart(ref typeReference);
 
             // Get object type
             Type objectType = typeof(T);
@@ -25,13 +27,7 @@ namespace UniGameEngine.Content.Serializers
             if (instance == null)
             {
                 // Create type instance
-                objectType = string.IsNullOrEmpty(typeName) == false
-                    ? TypeManager.ResolveType(typeName)
-                    : typeof(T);
-
-                // Check for null
-                if (objectType == null)
-                    throw new InvalidDataException("Unable to determine type of object to deserialize");
+                objectType = typeReference.Resolve(TypeManager, typeof(T));
 
                 // Create instance
                 instance = (T)TypeManager.CreateTypeInstance(objectType);
@@ -89,11 +85,8 @@ namespace UniGameEngine.Content.Serializers
                 return;
             }
 
-            // Get type name
-            string typeName = TypeManager.GetTypeName(typeof(T));
-
             // Write object start
-            writer.WriteObjectStart(typeName);
+            writer.WriteObjectStart(new TypeReference(TypeManager, typeof(T), SerializeAsType));
 
             // Create contract
             DataContract contract = DataContract.ForType(typeof(T));

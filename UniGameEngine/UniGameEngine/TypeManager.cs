@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -104,6 +105,10 @@ namespace UniGameEngine
             {
                 // Constructor maybe missing or failed - create uninitialized instance
                 object result = FormatterServices.GetUninitializedObject(type);
+
+                // Run initializer to setup game context
+                if (result is GameElement)
+                    GameElement.initializer.Invoke(result, null);
 
                 return result;
             }
@@ -252,8 +257,19 @@ namespace UniGameEngine
             if (cachedAssemblies.Contains(asm) == false)
                 cachedAssemblies.Add(asm);
 
+            Type[] types = null;
+            try
+            {
+                types = asm.GetTypes();
+            }
+            catch(ReflectionTypeLoadException e)
+            {
+                types = e.Types.Where(t => t != null)
+                    .ToArray();
+            }
+
             // Process all types
-            foreach (Type type in asm.GetTypes())
+            foreach (Type type in types)
             {
                 RegisterType(type);
             }

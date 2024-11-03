@@ -13,6 +13,7 @@ using UniGameEngine.Scene;
 using UniGameEngine.UI;
 
 [assembly: InternalsVisibleTo("UniGamePipeline")]
+[assembly: InternalsVisibleTo("UniGamePipelineTests")]
 
 namespace UniGameEngine
 {
@@ -232,7 +233,7 @@ namespace UniGameEngine
             txt.Font = Content.Load<SpriteFont>("Arial");
 
 
-            GameObject customLoadContent = Content.Load<GameObject>("Test");
+            //GameObject customLoadContent = Content.Load<GameObject>("Test");
 
             scene.Activate();
 

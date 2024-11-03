@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace UniGameEngine
@@ -12,7 +13,6 @@ namespace UniGameEngine
         private UniGame game = null;        
 
         private string name = "";
-        private string type = "";
         private string guid = "";
         private string contentPath = "";
 
@@ -21,6 +21,8 @@ namespace UniGameEngine
         private bool isDestroyed = false;
 
         // Internal
+        internal static ConstructorInfo initializer = typeof(GameElement).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, null);
+
         internal Type elementType = null;
         internal float scheduledDestroyTime = 0f;
 
@@ -53,13 +55,6 @@ namespace UniGameEngine
         }
 
         [DataMember]
-        public string Type
-        {
-            get { return type; }
-            internal set { type = value; }
-        }
-
-        [DataMember]
         public string Guid
         {
             get
@@ -80,6 +75,8 @@ namespace UniGameEngine
         }
 
         // Constructor
+        private GameElement() : this(null) { }
+
         protected GameElement(string name)
         {
             this.name = name;

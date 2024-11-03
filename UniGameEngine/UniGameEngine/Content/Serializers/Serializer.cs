@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace UniGameEngine.Content.Serializers
 {
@@ -23,6 +24,63 @@ namespace UniGameEngine.Content.Serializers
         ArrayEnd,
 
         EndStream,
+    }
+
+    public struct TypeReference
+    {
+        // Public
+        public string TypeName;
+        public bool IsRequired;
+
+        // Constructor
+        public TypeReference(TypeManager typeManager, Type type)
+        {
+            // Check required
+            IsRequired = (type.IsClass == true && type.IsSealed == false)
+                || type.IsInterface == true;
+
+            // Get type name
+            TypeName = IsRequired == true
+                ? typeManager.GetTypeName(type)
+                : null;            
+        }
+
+        public TypeReference(TypeManager typeManager, Type type, Type serializeAsType)
+        {
+            // Check required
+            IsRequired = (serializeAsType != null && serializeAsType != type)
+                || (type.IsClass == true && type.IsSealed == false)
+                || type.IsInterface == true;
+
+            // Get type name
+            TypeName = IsRequired == true
+                ? typeManager.GetTypeName(type)
+                : null;
+        }
+
+        // Methods
+        public Type Resolve(TypeManager typeManager, Type fallbackType)
+        {
+            // Check for required
+            if(IsRequired == true)
+            {
+                // Check for no type
+                if (string.IsNullOrEmpty(TypeName) == true)
+                    throw new InvalidDataException("`$type` specifier must be provided for type reference: " + fallbackType);
+
+                // Try to resolve type
+                Type resolvedType = typeManager.ResolveType(TypeName);
+
+                // Check for resolved
+                if(resolvedType == null)
+                {
+                    // Type not found
+                    throw new InvalidDataException("Could not resolve `$type` specifier: " + TypeName);
+                }
+                return resolvedType;
+            }
+            return fallbackType;
+        }
     }
 
     public abstract class Serializer
@@ -69,10 +127,18 @@ namespace UniGameEngine.Content.Serializers
             { typeof(float), singleSerializer },
         };
 
+        // Protected
+        protected Type serializeAsType = null;        
+
         // Properties
         public static TypeManager TypeManager
         {
             get { return typeManager; }
+        }
+
+        public Type SerializeAsType
+        {
+            get { return serializeAsType; }
         }
 
         // Constructor
@@ -82,7 +148,7 @@ namespace UniGameEngine.Content.Serializers
         }
 
         // Methods
-        public abstract void WriteValueObject(SerializedWriter writer, object value);
+        public abstract void WriteValueObject(SerializedWriter writer, Type type, object value);
         public abstract void ReadValueObject(SerializedReader reader, Type type, ref object value);
 
         public static void Serialize<T>(SerializedWriter writer, T value)
@@ -90,6 +156,31 @@ namespace UniGameEngine.Content.Serializers
             // Check for null
             if(writer == null)
                 throw new ArgumentNullException(nameof(writer));
+
+            // Check for null
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            // Check for serialize by reference when passed as a base instance
+            if(value.GetType() != typeof(T))
+            {
+                // Get type
+                Type type = value.GetType();
+
+                // Get serializer
+                Serializer referenceSerializer = Get(type);
+
+                // Check for no serializer
+                if (referenceSerializer == null)
+                    throw new NotSupportedException("No serializer found for type: " + type);
+
+                // Serialize value
+                referenceSerializer.WriteValueObject(writer, typeof(T), value);
+                return;
+            }
 
             // Get serializer
             Serializer<T> serializer = Get<T>();
@@ -99,6 +190,7 @@ namespace UniGameEngine.Content.Serializers
                 throw new NotSupportedException("No serializer found for type: " + typeof(T));
 
             // Serialize value
+            serializer.serializeAsType = typeof(T);
             serializer.WriteValue(writer, value);
         }
 
@@ -126,7 +218,8 @@ namespace UniGameEngine.Content.Serializers
                 throw new NotSupportedException("No serializer found for type: " + type);
 
             // Serialize value
-            serializer.WriteValueObject(writer, value);
+            serializer.serializeAsType = type;
+            serializer.WriteValueObject(writer, type, value);
         }
 
         public static T Deserialize<T>(SerializedReader reader)
@@ -161,6 +254,7 @@ namespace UniGameEngine.Content.Serializers
                 throw new NotSupportedException("No serializer found for type: " + typeof(T));
 
             // Deserialize value
+            serializer.serializeAsType = typeof(T);
             serializer.ReadValue(reader, ref value);
         }
 
@@ -199,6 +293,7 @@ namespace UniGameEngine.Content.Serializers
                 throw new NotSupportedException("No serializer found for type: " + type);
 
             // Deserialize value
+            serializer.serializeAsType = type;
             serializer.ReadValueObject(reader, type, ref value);
         }
 
@@ -273,7 +368,11 @@ namespace UniGameEngine.Content.Serializers
                 if(customSerializers.TryGetValue(lookupType, out serializerType) == true)
                 {
                     // Make generic with provided args
-                    Type finalGenericSerializerType = serializerType.MakeGenericType(type.GenericTypeArguments);
+                    Type finalGenericSerializerType = serializerType;
+                    
+                    // Check for generic
+                    if(isGeneric == true)
+                        finalGenericSerializerType = serializerType.MakeGenericType(type.GenericTypeArguments);
 
                     // Create the instance
                     Serializer serializer = (Serializer)Activator.CreateInstance(finalGenericSerializerType);
@@ -335,35 +434,44 @@ namespace UniGameEngine.Content.Serializers
                 if (shouldCheckAssembly == false)
                     continue;
 
+                Type[] checkTypes = null;
+
                 try
                 {
-                    // Check all types
-                    foreach (Type type in asm.GetTypes())
-                    {
-                        // Check for attribute
-                        if (type.IsDefined(typeof(CustomSerializerAttribute)) == true)
-                        {
-                            // Get the attribute
-                            CustomSerializerAttribute attrib = type.GetCustomAttribute<CustomSerializerAttribute>();
-
-                            // Check generics
-                            if (attrib.ForType.IsGenericType == true)
-                            {
-                                if (attrib.ForType.GenericTypeArguments.Length != type.GenericTypeArguments.Length)
-                                {
-                                    Debug.LogErrorF("Custom serializer could not be registered because the generic type arguments are incompatible. Expected '{0}' generic arguments", attrib.ForType.GenericTypeArguments.Length);
-                                    continue;
-                                }
-                            }
-
-                            // Register serializer
-                            customSerializers[attrib.ForType] = type;
-                        }
-                    }
+                    // Try to load all types
+                    checkTypes = asm.GetTypes();                    
                 }
                 catch (ReflectionTypeLoadException e)
                 {
                     Debug.LogException(e);
+
+                    // Get all types that could be loaded
+                    checkTypes = e.Types.Where(t => t != null)
+                        .ToArray();
+                }
+
+                // Check all types
+                foreach (Type type in checkTypes)
+                {
+                    // Check for attribute
+                    if (type.IsDefined(typeof(CustomSerializerAttribute)) == true)
+                    {
+                        // Get the attribute
+                        CustomSerializerAttribute attrib = type.GetCustomAttribute<CustomSerializerAttribute>();
+
+                        // Check generics
+                        if (attrib.ForType.IsGenericType == true)
+                        {
+                            if (attrib.ForType.GenericTypeArguments.Length != type.GenericTypeArguments.Length)
+                            {
+                                Debug.LogErrorF("Custom serializer could not be registered because the generic type arguments are incompatible. Expected '{0}' generic arguments", attrib.ForType.GenericTypeArguments.Length);
+                                continue;
+                            }
+                        }
+
+                        // Register serializer
+                        customSerializers[attrib.ForType] = type;
+                    }
                 }
             }
         }
@@ -376,13 +484,15 @@ namespace UniGameEngine.Content.Serializers
         public abstract void ReadValue(SerializedReader reader, ref T value);
 
 
-        public override void WriteValueObject(SerializedWriter writer, object value)
+        public override void WriteValueObject(SerializedWriter writer, Type type, object value)
         {
+            serializeAsType = type;
             WriteValue(writer, (T)value);
         }
 
         public override void ReadValueObject(SerializedReader reader, Type type, ref object value)
         {
+            serializeAsType = type;
             if (value == null)
             {
                 // Deserialize into temp

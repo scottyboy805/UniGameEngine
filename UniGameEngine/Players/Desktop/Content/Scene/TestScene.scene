@@ -1,3 +1,20 @@
 {
-	"Name": "My Scene"
+	"Name": "My Scene",
+	"GameObjects":[
+		{
+			"Name": "Camera",
+			"Transform": {
+				"LocalPosition": {
+					"X": 0,
+					"Y": 5,
+					"Z": 0
+				}
+			},
+			"Components": [
+				{
+					"$type": "UniGameEngine.Graphics.Camera"
+				}
+			]
+		}
+	]
 }

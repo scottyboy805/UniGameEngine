@@ -105,7 +105,9 @@ namespace UniGameEngine
         }
 
         // Constructor
-        internal GameObject(string name = null)
+        private GameObject() : this(null) { }
+
+        internal GameObject(string name)
             : base(name)
         {
             this.transform = new Transform(this);

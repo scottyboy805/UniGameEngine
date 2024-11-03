@@ -42,7 +42,7 @@ namespace UniGameEngine.Content.Serializers
                 reader.Expect(SerializedType.ObjectStart);
 
                 // Read start of object
-                reader.ReadObjectStart(out _);
+                reader.ReadObjectStart();
                 {
                     // Read property name key
                     string keyName;
@@ -82,7 +82,7 @@ namespace UniGameEngine.Content.Serializers
                 foreach(KeyValuePair<TKey, TValue> element in value)
                 {
                     // Write start of object
-                    writer.WriteObjectStart(null);
+                    writer.WriteObjectStart();
                     {
                         // Write the key
                         writer.WritePropertyName(keyName);

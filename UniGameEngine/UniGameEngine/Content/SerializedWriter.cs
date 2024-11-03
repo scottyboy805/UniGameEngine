@@ -1,5 +1,6 @@
 ﻿
 using System;
+using UniGameEngine.Content.Serializers;
 
 namespace UniGameEngine.Content
 {
@@ -11,7 +12,8 @@ namespace UniGameEngine.Content
         public abstract void WriteNull();
         public abstract void WritePropertyName(string name);
 
-        public abstract void WriteObjectStart(string typeId);
+        public void WriteObjectStart() => WriteObjectStart(default);
+        public abstract void WriteObjectStart(in TypeReference typeReference);
         public abstract void WriteObjectEnd();
         public abstract void WriteArrayStart(int length);
         public abstract void WriteArrayEnd();

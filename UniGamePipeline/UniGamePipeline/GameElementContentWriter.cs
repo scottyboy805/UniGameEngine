@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
+using System.Runtime.CompilerServices;
 using UniGameEngine;
 using UniGameEngine.Content.Serializers;
+
+[assembly: InternalsVisibleTo("UniGamePipelineTests")]
 
 namespace UniGamePipeline
 {

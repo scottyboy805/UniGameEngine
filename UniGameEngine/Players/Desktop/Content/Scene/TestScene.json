@@ -1,0 +1,78 @@
+{
+  "OnWillDestroy": {
+    "$type": "UniGameEngine.GameEvent",
+    "Listeners": []
+  },
+  "Name": "My Scene",
+  "Guid": "0be9946a-1790-45ba-a592-adfe850150a0",
+  "Enabled": true,
+  "Priority": 0,
+  "GameObjects": [
+    {
+      "OnWillDestroy": {
+        "$type": "UniGameEngine.GameEvent",
+        "Listeners": []
+      },
+      "Name": "Camera",
+      "Guid": "b3368e60-dfc2-4dd8-a501-543b2aa37a96",
+      "Enabled": true,
+      "IsStatic": false,
+      "Layer": 0,
+      "Tag": "",
+      "Transform": {
+        "OnWillDestroy": {
+          "$type": "UniGameEngine.GameEvent",
+          "Listeners": []
+        },
+        "Name": "Transform",
+        "Guid": "bf1bfc64-4383-4d87-97ec-4ae9d1014caa",
+        "Enabled": false,
+        "LocalPosition": {
+          "X": 0.0,
+          "Y": 5.0,
+          "Z": 0.0
+        },
+        "LocalRotation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0,
+          "W": 0.0
+        },
+        "LocalScale": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0
+        }
+      },
+      "Components": [
+        {
+          "$type": "UniGameEngine.Graphics.Camera",
+          "OnWillDestroy": {
+            "$type": "UniGameEngine.GameEvent",
+            "Listeners": []
+          },
+          "Name": "Camera",
+          "Guid": "e19d7dcf-05db-4f23-96bc-5c62a9ca6d0b",
+          "Enabled": true,
+          "OnWillRender": {
+            "$type": "UniGameEngine.GameEvent",
+            "Listeners": []
+          },
+          "RenderTexture": null,
+          "CullingMask": 4294967295,
+          "ClearColor": {
+            "B": 237,
+            "G": 149,
+            "R": 100,
+            "A": 255
+          },
+          "RenderQueue": 0,
+          "Near": 0.01,
+          "Far": 1000.0,
+          "FieldOfView": 60.0,
+          "Orthographic": false
+        }
+      ]
+    }
+  ]
+}

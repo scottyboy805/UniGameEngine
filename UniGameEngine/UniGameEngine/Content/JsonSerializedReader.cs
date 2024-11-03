@@ -1,11 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
-using UniGameEngine.Content;
+using System.IO;
 using UniGameEngine.Content.Serializers;
 
-[assembly: InternalsVisibleTo("UniGamePipelineTests")]
-
-namespace UniGamePipeline
+namespace UniGameEngine.Content
 {
     internal sealed class JsonSerializedReader : SerializedReader
     {
@@ -41,6 +38,11 @@ namespace UniGamePipeline
 
             // Ignore invalid tokens
             SkipInvalid();
+        }
+
+        static JsonSerializedReader()
+        {
+            Serializer.TypeManager.RegisterAssembly(typeof(UniGame).Assembly);
         }
 
         // Methods
@@ -89,10 +91,8 @@ namespace UniGamePipeline
             return false;
         }
 
-        public override bool ReadObjectStart(out string typeId)
+        public override bool ReadObjectStart(ref TypeReference typeReference)
         {
-            typeId = null;
-
             // Check for object start
             if (reader.TokenType == JsonToken.StartObject)
             {
@@ -100,8 +100,35 @@ namespace UniGamePipeline
 
                 // Ignore invalid tokens
                 SkipInvalid();
-                return result;
             }
+
+            // Require type if
+            if (typeReference.IsRequired == true)
+            {
+                if (reader.TokenType == JsonToken.PropertyName)
+                {
+                    // Get the property name
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+
+                    // Check for type
+                    if (propertyName != "$type")
+                        throw new InvalidDataException("`$type` specifier must be provided");
+
+                    // Ignore invalid tokens
+                    SkipInvalid();
+
+                    // Read type id
+                    typeReference.TypeName = (string)reader.Value;
+                    reader.Read();
+
+                    // Ignore invalid tokens
+                    SkipInvalid();
+                    return true;
+                }
+            }
+            else
+                return true;
             return false;
         }
 
@@ -355,6 +382,16 @@ namespace UniGamePipeline
                 SkipInvalid();
                 return true;
             }
+            // Check for non-decimal number
+            else if (reader.TokenType == JsonToken.Integer)
+            {
+                value = (decimal)(long)reader.Value;
+                reader.Read();
+
+                // Ignore invalid tokens
+                SkipInvalid();
+                return true;
+            }
             return false;
         }
 
@@ -372,6 +409,16 @@ namespace UniGamePipeline
                 SkipInvalid();
                 return true;
             }
+            // Check for non-decimal number
+            else if (reader.TokenType == JsonToken.Integer)
+            {
+                value = (double)(long)reader.Value;
+                reader.Read();
+
+                // Ignore invalid tokens
+                SkipInvalid();
+                return true;
+            }
             return false;
         }
 
@@ -383,6 +430,16 @@ namespace UniGamePipeline
             if (reader.TokenType == JsonToken.Float)
             {
                 value = (float)(double)reader.Value;
+                reader.Read();
+
+                // Ignore invalid tokens
+                SkipInvalid();
+                return true;
+            }
+            // Check for non-decimal number
+            else if(reader.TokenType == JsonToken.Integer)
+            {
+                value = (float)(long)reader.Value;
                 reader.Read();
 
                 // Ignore invalid tokens

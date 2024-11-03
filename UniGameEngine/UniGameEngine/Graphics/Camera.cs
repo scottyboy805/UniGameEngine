@@ -162,6 +162,12 @@ namespace UniGameEngine.Graphics
         // Constructor
         public Camera()
         {
+            
+        }
+
+        // Methods
+        protected internal override void OnLoaded()
+        {
             // Add camera
             allCameras.Add(this);
 
@@ -172,7 +178,12 @@ namespace UniGameEngine.Graphics
             CreateViewProjectionMatrix();
         }
 
-        // Methods
+        protected internal override void OnDestroy()
+        {
+            // Remove camera
+            allCameras.Remove(this);
+        }
+
         public void Clear()
         {
             Game.GraphicsDevice.Clear(clearColor);
@@ -202,13 +213,7 @@ namespace UniGameEngine.Graphics
             }
         }
 
-        protected internal override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            // Remove camera
-            allCameras.Remove(this);
-        }
+        
 
         void IGameEnable.OnEnable()
         {

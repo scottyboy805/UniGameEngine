@@ -49,6 +49,8 @@ namespace UniGameEngine.Scene
         }
 
         // Constructor
+        private GameScene() : this(null) { }
+
         public GameScene(string name)
             : base(name)
         {

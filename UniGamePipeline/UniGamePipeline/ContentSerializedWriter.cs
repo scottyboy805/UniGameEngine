@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using UniGameEngine.Content;
+using UniGameEngine.Content.Serializers;
 
 namespace UniGamePipeline
 {
@@ -32,10 +33,14 @@ namespace UniGamePipeline
             contentWriter.Write(name);
         }
 
-        public override void WriteObjectStart(string typeId)
+        public override void WriteObjectStart(in TypeReference typeReference)
         {
             contentWriter.Write((byte)ContentSerializedType.ObjectStart);
-            contentWriter.Write(typeId);
+            contentWriter.Write(typeReference.IsRequired);
+
+            // Check for type if
+            if(typeReference.IsRequired == true)
+                contentWriter.Write(typeReference.TypeName);
         }
 
         public override void WriteObjectEnd()

@@ -24,6 +24,7 @@
   <Content Remove="\**\*\SharpDX.*" />
 </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\UniGameEngine\UniGameEngine\UniGameEngine.csproj" />
     <ProjectReference Include="..\UniGamePipeline\UniGamePipeline.csproj" />
   </ItemGroup>
 

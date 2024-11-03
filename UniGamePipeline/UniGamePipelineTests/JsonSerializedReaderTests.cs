@@ -1,6 +1,7 @@
 ﻿using Assimp;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using UniGameEngine.Content;
 using UniGameEngine.Content.Serializers;
 
 namespace UniGamePipeline.Tests
@@ -9,7 +10,7 @@ namespace UniGamePipeline.Tests
     public class JsonSerializedReaderTests
     {
         [DataContract]
-        class TestObject
+        sealed class TestObject
         {
             public string StringVal;
             public string StringValEmpty;
@@ -61,13 +62,13 @@ namespace UniGamePipeline.Tests
         }
 
         [DataContract]
-        class TestObjectRoot
+        sealed class TestObjectRoot
         {
             [DataContract]
-            public class TestObjectChild1
+            public sealed class TestObjectChild1
             {
                 [DataContract]
-                public class TestObjectChild2
+                public sealed class TestObjectChild2
                 {
                     public string TestValue;
                 }
@@ -77,7 +78,7 @@ namespace UniGamePipeline.Tests
         }
 
         [DataContract]
-        class TestObjectElement
+        sealed class TestObjectElement
         {
             public int Number;
         }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Newtonsoft.Json;
 using System.IO;
 using UniGameEngine;
+using UniGameEngine.Content;
 using UniGameEngine.Content.Reader;
 using UniGameEngine.Content.Serializers;
 

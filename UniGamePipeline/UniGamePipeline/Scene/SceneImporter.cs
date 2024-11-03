@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Newtonsoft.Json;
 using System.IO;
+using UniGameEngine.Content;
 using UniGameEngine.Content.Reader;
 using UniGameEngine.Content.Serializers;
 using UniGameEngine.Scene;
@@ -25,6 +26,10 @@ namespace UniGamePipeline.Scene
             {
                 // Get the game object
                 GameScene importedScene = Serializer.Deserialize<GameScene>(serializedReader);
+
+
+                using(JsonSerializedWriter writer = new JsonSerializedWriter(new JsonTextWriter(File.CreateText(Path.ChangeExtension(filename, ".json")))))
+                    Serializer.Serialize(writer, importedScene);
 
                 // Get imported content
                 return new GameElementContentItem<GameScene>(importedScene);

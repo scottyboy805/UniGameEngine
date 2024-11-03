@@ -12,7 +12,7 @@ namespace UniGameEngine.Content
         public void Expect(SerializedType type)
         {
             if (PeekType != type)
-                throw new FormatException("Expected type: " + type);
+                throw new FormatException("Expected type: " + type + ", but got: " + PeekType);
         }
 
         public abstract void Dispose();
@@ -21,7 +21,12 @@ namespace UniGameEngine.Content
         public abstract bool ReadNull();
         public abstract bool ReadPropertyName(out string name);
 
-        public abstract bool ReadObjectStart(out string typeId);
+        public bool ReadObjectStart()
+        {
+            TypeReference typeReference = default;
+            return ReadObjectStart(ref typeReference);
+        }
+        public abstract bool ReadObjectStart(ref TypeReference typeReference);
         public abstract bool ReadObjectEnd();
         public abstract bool ReadArrayStart(out int length);
         public abstract bool ReadArrayEnd();
