@@ -335,15 +335,6 @@ namespace UniGameEngine
 
         public string GetTypeName(Type type, bool throwOnError = true)
         {
-            if (cachedAssemblies.Contains(type.Assembly) == false)
-            {
-                if (throwOnError == true)
-                    throw new InvalidOperationException("Type is not registered: " + type);
-
-                // No type
-                return null;
-            }
-
             // Use assembly qualified name
             if (typeof(TypeManager).Assembly != type.Assembly)
                 return type.AssemblyQualifiedName;

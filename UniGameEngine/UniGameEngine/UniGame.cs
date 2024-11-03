@@ -4,10 +4,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using UniGameEngine.Content.Serializers;
 using UniGameEngine.Graphics;
 using UniGameEngine.Physics;
 using UniGameEngine.Scene;
+using UniGameEngine.UI;
+
+[assembly: InternalsVisibleTo("UniGamePipeline")]
 
 namespace UniGameEngine
 {
@@ -19,7 +24,7 @@ namespace UniGameEngine
         private static readonly GameDrawComparer drawComparer = new GameDrawComparer();
 
         private readonly Thread mainThread = Thread.CurrentThread;
-        private readonly TypeManager typeManager = new TypeManager();
+        private readonly TypeManager typeManager = Serializer.TypeManager;
 
         private GraphicsDeviceManager graphics = null;
         private PhysicsSimulation physics = null;
@@ -213,6 +218,15 @@ namespace UniGameEngine
             cube.Transform.WorldPosition += new Vector3(0f, -3f, 0f);
             cube.Transform.LocalScale = new Vector3(3f, 0.1f, 3f);
             
+
+
+            // Create UI
+            UICanvas canvas = scene.CreateObject<UICanvas>("Canvas");
+            Image img = canvas.GameObject.CreateObject<Image>("Image");
+            Label txt = canvas.gameObject.CreateObject<Label>("Txt");
+            txt.Text = "Hello World";
+            txt.Font = Content.Load<SpriteFont>("Arial");
+
             scene.Activate();
         }
 

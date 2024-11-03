@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace UniGameEngine.Physics
 {
     [DataContract]
-    public unsafe sealed class RigidBody : Component, IGameEnable
+    public unsafe sealed class RigidBody : Component
     {
         // Private
         private Collider mainCollider = null;
@@ -27,7 +27,7 @@ namespace UniGameEngine.Physics
         }
 
         // Methods
-        void IGameEnable.OnEnable()
+        protected override void RegisterSubSystems()
         {
             // Check for no colliders
             if (mainCollider == null)
@@ -63,7 +63,7 @@ namespace UniGameEngine.Physics
             Physics.dynamicBodies[bodyHandle] = this;
         }
 
-        void IGameEnable.OnDisable()
+        protected override void UnregisterSubSystems()
         {
             // Check for handle
             if (bodyHandle != default)

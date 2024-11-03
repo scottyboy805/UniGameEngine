@@ -66,6 +66,7 @@ namespace UniGameEngine.Physics
             public PoseIntegratorCallbacks(Vector3 gravity)
             {
                 this.gravity = gravity;
+                this.gravityWideDt = default;
             }
 
             // Methods

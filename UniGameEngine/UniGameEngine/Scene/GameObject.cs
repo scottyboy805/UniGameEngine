@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -116,6 +117,112 @@ namespace UniGameEngine
             string nameInfo = (string.IsNullOrEmpty(Name) == false) ? Name : "null";
             return string.Format("{0}({1})", GetType().FullName, nameInfo);
         }
+
+        #region CreateGameObject
+        public GameObject CreateEmptyObject(string name)
+        {
+            GameObject go = new GameObject(name);
+
+            // Initialize the game object
+            CreateObject(go);
+            return go;
+        }
+
+        public GameObject CreatePrimitiveObject(GameObjectPrimitive primitive, string name)
+        {
+            GameObject go = new GameObject(name);
+
+            // Add components
+
+            // Initialize the game object
+            CreateObject(go);
+            return go;
+        }
+
+        public GameObject CreateObject(string name, params Type[] componentTypes)
+        {
+            // Check for null
+            if (componentTypes == null)
+                throw new ArgumentNullException(nameof(componentTypes));
+
+            GameObject go = new GameObject(name);
+
+            // Initialize the game object
+            CreateObject(go);
+
+            // Add components
+            foreach (Type componentType in componentTypes)
+            {
+                go.CreateComponent(componentType);
+            }
+            return go;
+        }
+
+        public Component CreateObject(string name, Type mainComponentType, params Type[] additionalComponentTypes)
+        {
+            // Check for null
+            if (mainComponentType == null)
+                throw new ArgumentNullException(nameof(mainComponentType));
+
+            // Create object
+            GameObject go = new GameObject(name);
+
+            // Initialize the game object
+            CreateObject(go);
+
+            // Add component
+            Component result = go.CreateComponent(mainComponentType);
+
+            // Add additional components
+            if (additionalComponentTypes != null && additionalComponentTypes.Length > 0)
+            {
+                foreach (Type componentType in additionalComponentTypes)
+                {
+                    go.CreateComponent(componentType);
+                }
+            }
+
+            return result;
+        }
+
+        public T CreateObject<T>(string name, params Type[] additionalComponentTypes) where T : Component
+        {
+            // Create object
+            GameObject go = new GameObject(name);
+
+            // Initialize the game object
+            CreateObject(go);
+
+            // Add component
+            T result = go.CreateComponent<T>();
+
+            // Add additional components
+            if (additionalComponentTypes != null && additionalComponentTypes.Length > 0)
+            {
+                foreach (Type componentType in additionalComponentTypes)
+                {
+                    go.CreateComponent(componentType);
+                }
+            }
+
+            return result;
+        }
+
+        private void CreateObject(GameObject go)
+        {
+            // Check for child collection
+            if (transform.children == null)
+                transform.children = new List<Transform>();
+
+            // Register object
+            transform.children.Add(go.transform);
+            go.scene = scene;
+            go.transform.parent = transform;
+
+            // Trigger enable
+            GameObject.DoGameObjectEnabledEvents(go, true, true);
+        }
+        #endregion
 
         #region CreateComponent
         public Component CreateComponent(Type componentType)
@@ -531,11 +638,14 @@ namespace UniGameEngine
             // Store current enabled state
             bool currentEnabledState = gameObject.enabled;
 
+            // Check for enabled in hierarchy
+            bool enabledInHierarchy = gameObject.EnabledInHierarchy;
+
             // Change enabled state
             gameObject.enabled = enabled;
 
             // Check for disabled in hierarchy
-            if (gameObject.scene.Enabled == false || gameObject.EnabledInHierarchy == false || (currentEnabledState == enabled && forceUpdate == false))
+            if (gameObject.scene.Enabled == false || enabledInHierarchy == false || (currentEnabledState == enabled && forceUpdate == false))
                 return;
 
             // Update components
@@ -561,7 +671,7 @@ namespace UniGameEngine
                 foreach (Transform child in transform.children)
                 {
                     // Recursive call
-                    DoGameObjectEnabledEvents(child.GameObject, enabled);
+                    DoGameObjectEnabledEvents(child.GameObject, enabled, forceUpdate);
                 }
             }
         }

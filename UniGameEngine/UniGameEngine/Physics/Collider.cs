@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace UniGameEngine.Physics
 {
-    public abstract class Collider : Component, IGameEnable
+    public abstract class Collider : Component
     {
         // Private
         private bool isTrigger = false;
@@ -51,7 +51,7 @@ namespace UniGameEngine.Physics
         }
 
         // Methods
-        void IGameEnable.OnEnable()
+        protected override void RegisterSubSystems()
         {
             // Add type index
             physicsTypeIndex = CreatePhysicsShape();
@@ -72,10 +72,10 @@ namespace UniGameEngine.Physics
             }
         }
 
-        void IGameEnable.OnDisable()
+        protected override void UnregisterSubSystems()
         {
             // Remove dynamic
-            if(Body != null)
+            if (Body != null)
             {
                 Body.DetachCollider(this);
             }

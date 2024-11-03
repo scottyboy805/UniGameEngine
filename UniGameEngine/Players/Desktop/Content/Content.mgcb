@@ -10,6 +10,8 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\..\..\UniGamePipeline\UniGamePipeline\bin\Debug\net6.0\UniGamePipeline.dll
+/reference:..\..\..\..\UniGamePipeline\UniGamePipelineTests\bin\Debug\net6.0\Newtonsoft.Json.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -74,6 +76,11 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/Default/SpriteEffect.fx
+
+#begin Test.jprefab
+/importer:PrefabImporter
+/processor:PrefabProcessor
+/build:Test.jprefab
 
 #begin WGPU-Logo.png
 /importer:TextureImporter

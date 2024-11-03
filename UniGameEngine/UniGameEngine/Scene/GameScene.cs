@@ -138,7 +138,7 @@ namespace UniGameEngine.Scene
         }
 
         #region CreateGameObject
-        public GameObject CreateEmptyObject(string name = null)
+        public GameObject CreateEmptyObject(string name)
         {
             GameObject go = new GameObject(name);
 
@@ -147,7 +147,7 @@ namespace UniGameEngine.Scene
             return go;
         }
 
-        public GameObject CreatePrimitiveObject(GameObjectPrimitive primitive, string name = null)
+        public GameObject CreatePrimitiveObject(GameObjectPrimitive primitive, string name)
         {
             GameObject go = new GameObject(name);
 
