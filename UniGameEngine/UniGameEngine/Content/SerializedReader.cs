@@ -30,6 +30,7 @@ namespace UniGameEngine.Content
         public abstract bool ReadObjectEnd();
         public abstract bool ReadArrayStart(out int length);
         public abstract bool ReadArrayEnd();
+        public abstract bool ReadSerializedReference(ref SerializedReference serializedReference);
 
         public abstract bool ReadBoolean(out bool value);
         public abstract bool ReadChar(out char value);

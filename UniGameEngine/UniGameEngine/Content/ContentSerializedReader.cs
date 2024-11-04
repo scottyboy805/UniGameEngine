@@ -13,6 +13,7 @@ namespace UniGameEngine.Content
         ObjectEnd,
         ArrayStart,
         ArrayEnd,
+        Reference,
         Bool,
         Char,
         String,
@@ -50,6 +51,7 @@ namespace UniGameEngine.Content
                     ContentSerializedType.ObjectEnd => SerializedType.ObjectEnd,
                     ContentSerializedType.ArrayStart => SerializedType.ArrayStart,
                     ContentSerializedType.ArrayEnd => SerializedType.ArrayEnd,
+                    ContentSerializedType.Reference => SerializedType.Reference,
                     ContentSerializedType.Bool => SerializedType.Boolean,
                     ContentSerializedType.Char => SerializedType.String,
                     ContentSerializedType.String => SerializedType.String,
@@ -112,7 +114,7 @@ namespace UniGameEngine.Content
             if (typeReference.IsRequired == true)
             {
                 if (hasType == false)
-                    throw new InvalidDataException("`$type` specifier is required but was not provided in the serialized data: " + typeReference.TypeName);
+                    throw new InvalidDataException("`" + TypeReference.TypeSpecifier + "` specifier is required but was not provided in the serialized data: " + typeReference.TypeName);
 
                 typeReference.TypeName = contentReader.ReadString();                
             }
@@ -140,6 +142,19 @@ namespace UniGameEngine.Content
         public override bool ReadArrayEnd()
         {
             RequireSerializedType(ContentSerializedType.ArrayEnd);
+            ReadSerializedType();
+            return true;
+        }
+
+        public override bool ReadSerializedReference(ref SerializedReference serializedReference)
+        {
+            RequireSerializedType(ContentSerializedType.Reference);
+
+            // Read Reference
+            serializedReference.GuidOrContentPath = contentReader.ReadString();
+            serializedReference.IsExternal = contentReader.ReadBoolean();
+            serializedReference.IsGuid = contentReader.ReadBoolean();
+
             ReadSerializedType();
             return true;
         }

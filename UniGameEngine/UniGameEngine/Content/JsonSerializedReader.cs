@@ -112,8 +112,8 @@ namespace UniGameEngine.Content
                     reader.Read();
 
                     // Check for type
-                    if (propertyName != "$type")
-                        throw new InvalidDataException("`$type` specifier must be provided");
+                    if (propertyName != TypeReference.TypeSpecifier)
+                        throw new InvalidDataException("`" + TypeReference.TypeSpecifier + "` specifier must be provided");
 
                     // Ignore invalid tokens
                     SkipInvalid();
@@ -168,6 +168,25 @@ namespace UniGameEngine.Content
             if (reader.TokenType == JsonToken.EndArray)
             {
                 bool result = reader.Read();
+
+                // Ignore invalid tokens
+                SkipInvalid();
+                return result;
+            }
+            return false;
+        }
+
+        public override bool ReadSerializedReference(ref SerializedReference serializedReference)
+        {
+            // Check for string
+            if(reader.TokenType == JsonToken.String)
+            {
+                // Get value
+                string value = (string)reader.Value;
+                bool result = reader.Read();
+
+                // Parse reference
+                serializedReference = SerializedReference.Parse(value);
 
                 // Ignore invalid tokens
                 SkipInvalid();

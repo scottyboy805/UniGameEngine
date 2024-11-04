@@ -270,6 +270,9 @@ namespace UniGameEngine
             components.Add(existingComponent);
             existingComponent.gameObject = this;
 
+            // Trigger loaded
+            GameElement.DoGameElementLoadedEvents(existingComponent);
+
             // Trigger enable
             Component.DoComponentEnabledEvents(existingComponent, true, true);
         }

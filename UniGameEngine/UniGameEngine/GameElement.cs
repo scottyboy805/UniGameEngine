@@ -6,9 +6,6 @@ namespace UniGameEngine
 {
     public abstract class GameElement
     {
-        // Events
-        public readonly GameEvent OnWillDestroy = new GameEvent();
-
         // Private
         private UniGame game = null;        
 
@@ -139,6 +136,23 @@ namespace UniGameEngine
             {
                 // Destroy now
                 Destroy<T>(element);
+            }
+        }
+
+        internal static void DoGameElementLoadedEvents(GameElement element)
+        {
+            // Check for null
+            if (element == null)
+                return;
+
+            // Trigger event
+            try
+            {
+                element.OnLoaded();
+            }
+            catch(Exception e)
+            {
+                Debug.LogException(e);
             }
         }
     }

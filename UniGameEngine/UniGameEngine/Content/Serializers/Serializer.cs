@@ -29,6 +29,8 @@ namespace UniGameEngine.Content.Serializers
     public struct TypeReference
     {
         // Public
+        public const string TypeSpecifier = "$type";
+
         public string TypeName;
         public bool IsRequired;
 
@@ -66,7 +68,7 @@ namespace UniGameEngine.Content.Serializers
             {
                 // Check for no type
                 if (string.IsNullOrEmpty(TypeName) == true)
-                    throw new InvalidDataException("`$type` specifier must be provided for type reference: " + fallbackType);
+                    throw new InvalidDataException("`" + TypeSpecifier + "` specifier must be provided for type reference: " + fallbackType);
 
                 // Try to resolve type
                 Type resolvedType = typeManager.ResolveType(TypeName);
@@ -75,11 +77,73 @@ namespace UniGameEngine.Content.Serializers
                 if(resolvedType == null)
                 {
                     // Type not found
-                    throw new InvalidDataException("Could not resolve `$type` specifier: " + TypeName);
+                    throw new InvalidDataException("Could not resolve `" + TypeSpecifier + "` specifier: " + TypeName);
                 }
                 return resolvedType;
             }
             return fallbackType;
+        }
+    }
+
+    public struct SerializedReference
+    {
+        // Public
+        public const string ExternSpecifier = "$externref";
+        public const string LocalSpecifier = "$localref";
+
+        public string GuidOrContentPath;
+        public bool IsExternal;
+        public bool IsGuid;
+
+        // Methods
+        public override string ToString()
+        {
+            // Check for external
+            return IsExternal == true
+                ? string.Format("{0}:{1}", ExternSpecifier, GuidOrContentPath)
+                : string.Format("{0}:{1}", LocalSpecifier, GuidOrContentPath);
+        }
+
+        public static SerializedReference Parse(string referenceString)
+        {
+            // Check for empty
+            if (string.IsNullOrEmpty(referenceString) == true)
+                return default;
+
+            // Create result
+            SerializedReference reference = default;
+
+            // Split
+            string[] segments = referenceString.Split(':');
+
+            // Check for local
+            if (segments[0] == ExternSpecifier)
+            {
+                reference.IsExternal = true;
+            }
+            else if (segments[0] == LocalSpecifier)
+            {
+                reference.IsExternal = false;
+            }
+            else
+            {
+                throw new InvalidDataException("Invalid reference string. Expected: `" + ExternSpecifier + "` or `" + LocalSpecifier + "'");
+            }
+
+            // Check for guid
+            System.Guid guid;
+            if(System.Guid.TryParse(segments[1], out guid) == true)
+            {
+                // Set guid reference
+                reference.IsGuid = true;
+                reference.GuidOrContentPath = guid.ToString();
+            }
+            else
+            {
+                reference.IsGuid = false;
+                reference.GuidOrContentPath = segments[1];
+            }
+            return reference;
         }
     }
 

@@ -162,7 +162,6 @@ namespace UniGameEngine.Graphics
         // Constructor
         public Camera()
         {
-            
         }
 
         // Methods

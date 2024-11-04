@@ -23,7 +23,7 @@ namespace UniGameEngine.Graphics
     public class ModelRenderer : Renderer
     {
         // Protected
-        [DataMember(Name = "model")]
+        [DataMember(Name = "Model")]
         protected Model model = null;
         [DataMember(Name = "ShadowMode")]
         protected ShadowMode shadowMode = ShadowMode.On;

@@ -41,7 +41,7 @@ namespace UniGameEngine.Content
             // Check for type
             if(typeReference.IsRequired == true)
             {
-                writer.WritePropertyName("$type");
+                writer.WritePropertyName(TypeReference.TypeSpecifier);
                 writer.WriteValue(typeReference.TypeName);
             }
         }

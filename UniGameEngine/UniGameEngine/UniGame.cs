@@ -240,7 +240,7 @@ namespace UniGameEngine
 
             GameScene loadScene = Content.Load<GameScene>("Scene/TestScene");
 
-            loadScene.Activate();
+            //loadScene.Activate();
         }
 
         protected override void Update(GameTime gameTime)
