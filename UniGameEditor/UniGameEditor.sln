@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsEditor", "WindowsEditor\WindowsEditor.csproj", "{C12164FF-0A60-4CA6-86E4-D98D42B86217}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniGameEditor", "UniGameEditor\UniGameEditor.csproj", "{EE4E2046-B743-4E77-ABA9-E51233D37F33}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniGameEngine", "..\UniGameEngine\UniGameEngine\UniGameEngine.csproj", "{A58DD92C-B73D-498D-806F-1FD352D5C1FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{ACDCFABB-ED66-4386-8681-90BC107AE7BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C12164FF-0A60-4CA6-86E4-D98D42B86217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C12164FF-0A60-4CA6-86E4-D98D42B86217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C12164FF-0A60-4CA6-86E4-D98D42B86217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C12164FF-0A60-4CA6-86E4-D98D42B86217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE4E2046-B743-4E77-ABA9-E51233D37F33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE4E2046-B743-4E77-ABA9-E51233D37F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE4E2046-B743-4E77-ABA9-E51233D37F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE4E2046-B743-4E77-ABA9-E51233D37F33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A58DD92C-B73D-498D-806F-1FD352D5C1FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A58DD92C-B73D-498D-806F-1FD352D5C1FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A58DD92C-B73D-498D-806F-1FD352D5C1FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A58DD92C-B73D-498D-806F-1FD352D5C1FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A58DD92C-B73D-498D-806F-1FD352D5C1FE} = {ACDCFABB-ED66-4386-8681-90BC107AE7BF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {62F4D86D-6E4F-4163-AF4C-60602C8048A7}
+	EndGlobalSection
+EndGlobal

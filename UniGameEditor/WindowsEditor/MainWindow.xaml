@@ -1,0 +1,104 @@
+﻿<Window x:Class="WindowsEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        Title="MainWindow" Height="720" Width="1280"
+        ui:WindowHelper.UseModernWindowStyle="True">
+    
+
+    <!--Main window grid-->
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--Menu Bar-->
+        <Menu x:Name="Menu" Grid.Row="0">
+            <MenuItem Header="File"></MenuItem>
+            <MenuItem Header="Edit"></MenuItem>
+            <MenuItem Header="Content"></MenuItem>
+            <MenuItem Header="GameObject"></MenuItem>
+            <MenuItem Header="Component"></MenuItem>
+            <MenuItem Header="Window">
+                <MenuItem Header="Reset Layout" Click="Window_ResetClicked"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Hierarchy" IsCheckable="True" Click="Window_Hierarchy" IsVisibleChanged="Window_Hierarchy_MenuShowing"></MenuItem>
+                <MenuItem Header="Properties" IsCheckable="True" Click="Window_Properties" IsVisibleChanged="Window_Properties_MenuShowing"></MenuItem>
+                <MenuItem Header="Content" IsCheckable="True" Click="Window_Content" IsVisibleChanged="Window_Content_MenuShowing"></MenuItem>
+                <MenuItem Header="Console" IsCheckable="True" Click="Window_Console" IsVisibleChanged="Window_Console_MenuShowing"></MenuItem>
+                <MenuItem Header="Scene" IsCheckable="True" Click="Window_Scene" IsVisibleChanged="Window_Scene_MenuShowing"></MenuItem>
+                <MenuItem Header="Game" IsCheckable="True" Click="Window_Game" IsVisibleChanged="Window_Game_MenuShowing"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Theme">
+                    <MenuItem Header="Light" IsCheckable="True" Click="Window_ThemeLight" IsVisibleChanged="Window_ThemeLight_MenuShowing" />
+                    <MenuItem Header="Dark" IsCheckable="True" Click="Window_ThemeDark" IsVisibleChanged="Window_ThemeDark_MenuShowing" />
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--Main Grid-->
+            <Grid Grid.Column="0" MinWidth="250">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--Hierarchy Grid-->
+                            <Grid x:Name="LeftGrid" Grid.Column="0" MinWidth="250">
+                                <TabControl x:Name="LeftTab" Width="Auto" Height="Auto" />
+                            </Grid>
+
+                            <GridSplitter x:Name="LeftSplitter" Grid.Column="1" HorizontalAlignment="Stretch" />
+
+                            <!--Scene Grid-->
+                            <Grid x:Name="CenterGrid" Grid.Column="2">
+                                <TabControl x:Name="CenterTab" Width="Auto" Height="Auto" />
+                            </Grid>
+                        </Grid>
+                        
+                    </Grid>
+
+                    <GridSplitter x:Name="BottomSplitter" Grid.Row="1" HorizontalAlignment="Stretch" />
+
+                    <!--Content Grid-->
+                    <Grid x:Name="BottomGrid" Grid.Row="2" MinHeight="150">
+                        <TabControl x:Name="BottomTab" Width="Auto" Height="Auto" />
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <GridSplitter x:Name="RightSplitter" Grid.Column="1" HorizontalAlignment="Stretch" />
+
+            <!--Properties Grid-->
+            <Grid x:Name="RightGrid" Grid.Column="2" MinWidth="250">
+                <TabControl x:Name="RightTab" Width="Auto" Height="Auto" />
+            </Grid>
+        </Grid>
+        
+    </Grid>
+
+    <!--<ui:SimpleStackPanel Margin="12" Spacing="24">
+        <TextBlock Text="My first ModernWPF app" Style="{StaticResource HeaderTextBlockStyle}" />
+        <Button Content="I am a button" />
+        <Button Content="I am an accent button" Style="{StaticResource AccentButtonStyle}" />
+    </ui:SimpleStackPanel>-->
+</Window>
