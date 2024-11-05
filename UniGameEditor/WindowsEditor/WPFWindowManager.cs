@@ -1,19 +1,19 @@
-﻿using UniGameEditor.Windows;
+﻿using UniGameEditor;
+using UniGameEditor.Windows;
 
 namespace WindowsEditor
 {
     internal sealed class WPFWindowManager
     {
         // Private
-        //private WPFWindowControl centerWindow = null;
-        //private WPFWindowControl rightWindow = null;
-        //private WPFWindowControl leftWindow = null;
-        //private WPFWindowControl bottomWindow = null;
+        private UniEditor editor = null;
         private List<WPFWindowControl> windowDocks = new List<WPFWindowControl>();
 
         // Constructor
-        public WPFWindowManager()
+        public WPFWindowManager(UniEditor editor)
         {
+            this.editor = editor;
+
             // Add listener
             EditorWindow.OnRequestOpenWindow += OnRequestOpenWindow;
         }
@@ -113,6 +113,7 @@ namespace WindowsEditor
             {
                 if(windowDock.Location == location)
                 {
+                    window.editor = editor;
                     windowDock.OpenWindow(window);
                     break;
                 }
@@ -143,14 +144,8 @@ namespace WindowsEditor
             if (window.isOpen == true)
                 CloseWindow(window);
 
-            foreach (WPFWindowControl windowDock in windowDocks)
-            {
-                if(windowDock.Location == location)
-                {
-                    windowDock.OpenWindow(window);
-                    break;
-                }
-            }
+            // Open the window
+            OpenWindow(window, location);
         }
     }
 }

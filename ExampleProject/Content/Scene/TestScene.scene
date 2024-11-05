@@ -1,0 +1,36 @@
+{
+	"Name": "My Scene",
+	"GameObjects":[
+		{
+			"Name": "Camera",
+			"Transform": {
+				"LocalPosition": {
+					"X": 0,
+					"Y": 0,
+					"Z": -10
+				}
+			},
+			"Components": [
+				{
+					"$type": "UniGameEngine.Graphics.Camera"
+				}
+			]
+		},
+		{
+			"Name": "DynamicCube",
+			"Transform": {
+				"LocalPosition": {
+					"X": 0,
+					"Y": 5,
+					"Z": 0
+				}
+			},
+			"Components": [
+				{
+					"$type": "UniGameEngine.Graphics.ModelRenderer",
+					//"Model": "$externref:Content/Cube.fbx"
+				}
+			]
+		}
+	]
+}

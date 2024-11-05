@@ -1,10 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using UniGameEditor;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
 {
-    internal class WPFEditorLabel : EditorLabel
+    internal sealed class WPFEditorPropertyLabel : EditorPropertyLabel
     {
         // Internal
         internal Label label = null;
@@ -20,6 +21,7 @@ namespace WindowsEditor.UI
             get => (int)label.Height;
             set => label.Height = value;
         }
+
         public override string Text
         {
             get => (string)label.Content;
@@ -27,7 +29,8 @@ namespace WindowsEditor.UI
         }
 
         // Constructor
-        public WPFEditorLabel(Panel parent, string text)
+        public WPFEditorPropertyLabel(Panel parent, SerializedProperty property, string text)
+            : base(property)
         {
             label = new Label();
             label.Content = text;
@@ -39,7 +42,8 @@ namespace WindowsEditor.UI
             parent.Children.Add(label);
         }
 
-        public WPFEditorLabel(ItemsControl parent, string text)
+        public WPFEditorPropertyLabel(ItemsControl parent, SerializedProperty property, string text)
+            : base(property)
         {
             label = new Label();
             label.Content = text;

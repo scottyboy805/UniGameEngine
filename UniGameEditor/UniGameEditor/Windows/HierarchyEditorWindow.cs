@@ -12,7 +12,7 @@ namespace UniGameEditor.Windows
         }
 
         // Methods
-        protected internal override void OnOpenWindow()
+        protected internal override void OnShow()
         {
             // Create scene
             EditorLayoutControl hLayout = RootControl.AddHorizontalLayout();
@@ -20,6 +20,11 @@ namespace UniGameEditor.Windows
             hLayout.AddLabel("My Scene Name");
 
             RootControl.AddLabel("Hello World");
+
+            // Add tree view
+            EditorTreeView tree = RootControl.AddTreeView();
+            tree.AddNode("Test1").AddNode("Child1");
+            tree.AddNode("Test2").AddNode("Child2");
         }
     }
 }

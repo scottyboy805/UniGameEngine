@@ -19,11 +19,17 @@ namespace UniGameEditor.Windows
         internal static event Action<EditorWindow, EditorWindowLocation> OnRequestOpenWindow;
 
         // Internal
+        internal UniEditor editor = null;
         internal EditorLayoutControl rootControl = null;
         internal string title = null;
         internal bool isOpen = false;
 
         // Properties
+        public UniEditor Editor
+        {
+            get { return editor; }
+        }
+
         public EditorLayoutControl RootControl
         {
             get { return rootControl; }
@@ -46,9 +52,9 @@ namespace UniGameEditor.Windows
         }
 
         // Methods
-        protected internal virtual void OnOpenWindow() { }
+        protected internal virtual void OnShow() { }
 
-        protected internal virtual void OnCloseWindow() { }
+        protected internal virtual void OnHide() { }
 
         // Methods
         public static T OpenEditorWindow<T>(EditorWindowLocation location = EditorWindowLocation.Center) where T : EditorWindow, new()

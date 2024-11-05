@@ -36,6 +36,10 @@ namespace WindowsEditor
             this.tabControl = tab;
             this.location = location;
 
+            // Set grid margin
+            tab.Padding = new Thickness(0, 12, 0, 12);
+            grid.Margin = new Thickness(8, 0, 8, 0);
+
             initialColumnWidths = grid.ColumnDefinitions.Select(d => d.Width).ToArray();
             initialRowHeights = grid.RowDefinitions.Select(d => d.Height).ToArray();
             
@@ -83,12 +87,16 @@ namespace WindowsEditor
             window.rootControl = new WPFEditorStackLayout(rootGrid, Orientation.Vertical);
             window.isOpen = true;
 
+            // Create tab label
+            Label headerLabel = new Label();
+            headerLabel.Content = window.title;
+            headerLabel.ContextMenu = CreateWindowContextMenu(window);
+
             // Create tab item
             TabItem newTab = new TabItem
             {
-                Header = window.Title,
+                Header = headerLabel,
                 Content = rootGrid,
-                ContextMenu = CreateWindowContextMenu(window),
             };
 
             // Create a new tab
@@ -103,7 +111,7 @@ namespace WindowsEditor
             // Show the window
             try
             {
-                window.OnOpenWindow();
+                window.OnShow();
             }
             catch(Exception e)
             {
@@ -136,7 +144,7 @@ namespace WindowsEditor
             // Close the window
             try
             {
-                window.OnCloseWindow();
+                window.OnHide();
             }
             catch (Exception e)
             {

@@ -1,8 +1,10 @@
-﻿
-
-using ModernWpf;
+﻿using ModernWpf;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using UniGameEditor;
+using UniGameEditor.Content;
+using UniGameEditor.Property;
 using UniGameEditor.Windows;
 using UniGameEngine;
 
@@ -14,7 +16,8 @@ namespace WindowsEditor
     public partial class MainWindow : Window
     {
         // Private
-        private WPFWindowManager windowManager = new WPFWindowManager();
+        private UniEditor editor = new UniEditor();
+        private WPFWindowManager windowManager = null;
 
         public MainWindow()
         {
@@ -25,6 +28,11 @@ namespace WindowsEditor
 
             // Set theme
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
+            ThemeManager.Current.AccentColor = Colors.LightBlue;
+
+
+            // Initialize window manager
+            windowManager = new WPFWindowManager(editor);
 
             // Initialize windows
             windowManager.AddWindowDock(new WPFWindowControl(CenterGrid, null, CenterTab, EditorWindowLocation.Center));
@@ -32,8 +40,18 @@ namespace WindowsEditor
             windowManager.AddWindowDock(new WPFWindowControl(LeftGrid, LeftSplitter, LeftTab, EditorWindowLocation.Left));
             windowManager.AddWindowDock(new WPFWindowControl(BottomGrid, BottomSplitter, BottomTab, EditorWindowLocation.Bottom));
 
+            
+
+
+            // Initialize editors
+            PropertyEditor.InitializePropertyEditors(editor);
+            ContentEditor.InitializePropertyEditors(editor);
+
+
             // Show windows
             windowManager.ShowDefaultWindows();
+
+            editor.OpenProject("../../../../../ExampleProject/ExampleProject.unigame");
         }
 
         #region WindowEvents
@@ -105,6 +123,7 @@ namespace WindowsEditor
         private void Window_ThemeLight(object sender, RoutedEventArgs e)
         {
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
+            ThemeManager.Current.AccentColor = Colors.LightBlue;
         }
         private void Window_ThemeLight_MenuShowing(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -113,6 +132,7 @@ namespace WindowsEditor
         private void Window_ThemeDark(object sender, RoutedEventArgs e)
         {
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
+            ThemeManager.Current.AccentColor = Colors.Orange;
         }
         private void Window_ThemeDark_MenuShowing(object sender, DependencyPropertyChangedEventArgs e)
         {

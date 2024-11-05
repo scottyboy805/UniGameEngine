@@ -83,6 +83,12 @@ namespace WindowsEditor.UI
             parent.Children.Add(renderView);
         }
 
+        public WPFEditorRenderView(ItemsControl parent, Action onRender)
+        {
+            renderView = new WPFInteropHostView(onRender);
+            parent.Items.Add(renderView);
+        }
+
         public override void Render()
         {
             //renderView.TargetElapsedTime

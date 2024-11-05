@@ -11,7 +11,7 @@ namespace UniGameEditor.Windows
         }
 
         // Methods
-        protected internal override void OnOpenWindow()
+        protected internal override void OnShow()
         {
             RootControl.AddRenderView(null);
         }

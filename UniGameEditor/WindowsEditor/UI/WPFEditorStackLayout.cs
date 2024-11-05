@@ -1,54 +1,47 @@
-﻿
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
 {
-    internal sealed class WPFEditorStackLayout : EditorLayoutControl
+    internal sealed class WPFEditorStackLayout : WPFEditorLayoutControl
     {
         // Internal
         private StackPanel stackPanel = null;
 
         // Properties
-        public override float Width
-        {
-            get => (float)stackPanel.Width;
-            set => stackPanel.Width = value;
-        }
-        public override float Height
-        {
-            get => (int)stackPanel.Height;
-            set => stackPanel.Height = value;
-        }
+        public override Panel Panel => stackPanel;
 
         // Constructor
         public WPFEditorStackLayout(Panel parent, Orientation orientation)
         {
             stackPanel = new StackPanel();
-            stackPanel.Orientation = orientation;
+            UpdateOrientation(orientation);
+
             parent.Children.Add(stackPanel);
         }
 
+        public WPFEditorStackLayout(ItemsControl parent, Orientation orientation)
+        {
+            stackPanel = new StackPanel();
+            UpdateOrientation(orientation);
+
+            parent.Items.Add(stackPanel);
+        }
+
         // Methods
-        public override EditorLabel AddLabel(string text)
+        private void UpdateOrientation(Orientation orientation)
         {
-            return new WPFEditorLabel(stackPanel, text);
-        }
+            stackPanel.Orientation = orientation;
 
-        public override EditorRenderView AddRenderView(Action OnRender)
-        {
-            return new WPFEditorRenderView(stackPanel, OnRender);
-        }
-
-        public override EditorLayoutControl AddHorizontalLayout()
-        {
-            return new WPFEditorStackLayout(stackPanel, Orientation.Horizontal);
-        }
-
-        public override EditorLayoutControl AddVerticalLayout()
-        {
-            return new WPFEditorStackLayout(stackPanel, Orientation.Vertical);
+            // Check direction
+            if (orientation == Orientation.Horizontal)
+            {
+                stackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+            }
+            else
+            {
+                stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
+            }
         }
     }
 }
