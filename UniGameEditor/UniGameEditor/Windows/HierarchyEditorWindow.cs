@@ -1,4 +1,5 @@
 ﻿
+using System.ComponentModel.Design;
 using UniGameEditor.UI;
 
 namespace UniGameEditor.Windows
@@ -8,6 +9,7 @@ namespace UniGameEditor.Windows
         // Constructor
         public HierarchyEditorWindow()
         {
+            icon = EditorIcon.FindIcon("Hierarchy");
             title = "Hierarchy";
         }
 
@@ -23,8 +25,8 @@ namespace UniGameEditor.Windows
 
             // Add tree view
             EditorTreeView tree = RootControl.AddTreeView();
-            tree.AddNode("Test1").AddNode("Child1");
-            tree.AddNode("Test2").AddNode("Child2");
+            tree.AddNode("Test1").AddNode("Child1").Icon = EditorIcon.FindIcon("FolderNormal");
+            tree.AddNode("Test2").AddNode("Child2").Icon = EditorIcon.FindIcon("FolderOpen");
         }
     }
 }

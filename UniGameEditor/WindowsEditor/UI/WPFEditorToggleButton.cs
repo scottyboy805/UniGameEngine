@@ -8,6 +8,7 @@ namespace WindowsEditor.UI
     {
         // Internal
         internal ToggleButton toggleButton = null;
+        internal IconTextContent content = null;
 
         // Properties
         public override float Width
@@ -23,9 +24,22 @@ namespace WindowsEditor.UI
 
         public override string Text
         {
-            get => (string)toggleButton.Content;
-            set => toggleButton.Content = value;
+            get => content.Text;
+            set => content.Text = value;
         }
+
+        public override string Tooltip
+        {
+            get => content.Tooltip;
+            set => content.Tooltip = value;
+        }
+
+        public override EditorIcon Icon
+        {
+            get => content.Icon;
+            set => content.Icon = value;
+        }
+
         public override bool IsChecked
         {
             get => (bool)toggleButton.IsChecked;
@@ -36,25 +50,15 @@ namespace WindowsEditor.UI
         public WPFEditorToggleButton(Panel parent, string text, bool on)
         {
             toggleButton = new ToggleButton();
-            toggleButton.Content = text;
             toggleButton.IsChecked = on;
-
-            toggleButton.FontSize = DefaultFontSize;
-            toggleButton.MinHeight = DefaultLineHeight;
-
-            parent.Children.Add(toggleButton);
+            content = new IconTextContent(parent, toggleButton, text);
         }
 
         public WPFEditorToggleButton(ItemsControl parent, string text, bool on)
         {
             toggleButton = new ToggleButton();
-            toggleButton.Content = text;
             toggleButton.IsChecked = on;
-
-            toggleButton.FontSize = DefaultFontSize;
-            toggleButton.MinHeight = DefaultLineHeight;
-
-            parent.Items.Add(toggleButton);
+            content = new IconTextContent(parent, toggleButton, text);
         }
     }
 }

@@ -11,12 +11,27 @@ namespace WindowsEditor.UI
         {
             // Internal
             internal ComboBoxItem item = null;
+            internal IconTextContent content = null;
 
+            // Properties
             public override string Text
             {
-                get => (string)item.Content;
-                set => item.Content = value;
+                get => content.Text;
+                set => content.Text = value;
             }
+
+            public override string Tooltip
+            {
+                get => content.Tooltip;
+                set => content.Tooltip = value;
+            }
+
+            public override EditorIcon Icon
+            {
+                get => content.Icon;
+                set => content.Icon = value;
+            }
+
             public override bool IsSelected
             {
                 get => item.IsSelected;
@@ -24,10 +39,10 @@ namespace WindowsEditor.UI
             }
 
             // Constructor
-            public DropdownEditorOption(string text)
+            public DropdownEditorOption(ItemCollection parent, string text)
             {
                 item = new ComboBoxItem();
-                item.Content = text;
+                content = new IconTextContent(parent, item, text);
             }
         }
 
@@ -61,6 +76,7 @@ namespace WindowsEditor.UI
         public WPFEditorDropdown(Panel parent)
         {
             combo = new ComboBox();
+            combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
 
             combo.FontSize = DefaultFontSize;
             combo.MinHeight = DefaultLineHeight;
@@ -71,6 +87,7 @@ namespace WindowsEditor.UI
         public WPFEditorDropdown(ItemsControl parent)
         {
             combo = new ComboBox();
+            combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
 
             combo.FontSize = DefaultFontSize;
             combo.MinHeight = DefaultLineHeight;
@@ -81,17 +98,15 @@ namespace WindowsEditor.UI
         // Methods
         public override EditorOption AddOption(string text)
         {
-            // Create option
-            DropdownEditorOption option = new DropdownEditorOption(text);
-
             // Add to options
             if (options == null)
                 options = new List<EditorOption>();
 
-            options.Add(option);
+            // Create option
+            DropdownEditorOption option = new DropdownEditorOption(combo.Items, text);
 
-            // Add to combo
-            combo.Items.Add(option.item);
+            // Add to options
+            options.Add(option);
 
             // Update selection
             if(combo.SelectedIndex < 0)

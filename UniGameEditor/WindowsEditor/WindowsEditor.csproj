@@ -9,6 +9,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="_Icon\Console.png" />
+    <None Remove="_Icon\Content.png" />
+    <None Remove="_Icon\Error.png" />
+    <None Remove="_Icon\FolderNormal.png" />
+    <None Remove="_Icon\FolderOpen.png" />
+    <None Remove="_Icon\Game.png" />
+    <None Remove="_Icon\Hierarchy.png" />
+    <None Remove="_Icon\Info.png" />
+    <None Remove="_Icon\Properties.png" />
+    <None Remove="_Icon\Scene.png" />
+    <None Remove="_Icon\Warning.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ModernWpfUI" Version="0.9.7-preview.2" />
     <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
   </ItemGroup>
@@ -16,6 +30,22 @@
   <ItemGroup>
     <ProjectReference Include="..\..\UniGameEngine\UniGameEngine\UniGameEngine.csproj" />
     <ProjectReference Include="..\UniGameEditor\UniGameEditor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="_Icon\Console.png" />
+    <Resource Include="_Icon\Content.png" />
+    <Resource Include="_Icon\Error.png" />
+    <Resource Include="_Icon\FolderNormal.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="_Icon\FolderOpen.png" />
+    <Resource Include="_Icon\Game.png" />
+    <Resource Include="_Icon\Hierarchy.png" />
+    <Resource Include="_Icon\Info.png" />
+    <Resource Include="_Icon\Properties.png" />
+    <Resource Include="_Icon\Scene.png" />
+    <Resource Include="_Icon\Warning.png" />
   </ItemGroup>
 
 </Project>

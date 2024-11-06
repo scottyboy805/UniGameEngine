@@ -7,6 +7,7 @@ using UniGameEditor.Content;
 using UniGameEditor.Property;
 using UniGameEditor.Windows;
 using UniGameEngine;
+using WindowsEditor.UI;
 
 namespace WindowsEditor
 {
@@ -40,18 +41,25 @@ namespace WindowsEditor
             windowManager.AddWindowDock(new WPFWindowControl(LeftGrid, LeftSplitter, LeftTab, EditorWindowLocation.Left));
             windowManager.AddWindowDock(new WPFWindowControl(BottomGrid, BottomSplitter, BottomTab, EditorWindowLocation.Bottom));
 
-            
-
+            // Initialize icons
+            WPFEditorIcon.InitializeIconProvider();
 
             // Initialize editors
             PropertyEditor.InitializePropertyEditors(editor);
             ContentEditor.InitializePropertyEditors(editor);
 
+            
+
+            // Listen for window loaded
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            editor.OpenProject("../../../../../ExampleProject/ExampleProject.unigame");
 
             // Show windows
             windowManager.ShowDefaultWindows();
-
-            editor.OpenProject("../../../../../ExampleProject/ExampleProject.unigame");
         }
 
         #region WindowEvents
@@ -132,7 +140,7 @@ namespace WindowsEditor
         private void Window_ThemeDark(object sender, RoutedEventArgs e)
         {
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
-            ThemeManager.Current.AccentColor = Colors.Orange;
+            ThemeManager.Current.AccentColor = Colors.DarkSlateBlue;
         }
         private void Window_ThemeDark_MenuShowing(object sender, DependencyPropertyChangedEventArgs e)
         {

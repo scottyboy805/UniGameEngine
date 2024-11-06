@@ -7,12 +7,19 @@ namespace UniGameEditor.Windows
         // Constructor
         public ConsoleEditorWindow()
         {
+            icon = EditorIcon.FindIcon("Console");
             title = "Console";
         }
 
         // Methods
         protected internal override void OnShow()
         {
+            // Get icons
+            EditorIcon infoIcon = EditorIcon.FindIcon("Info");
+            EditorIcon warningIcon = EditorIcon.FindIcon("Warning");
+            EditorIcon errorIcon = EditorIcon.FindIcon("Error");
+            
+
             // Add toolbar
             EditorLayoutControl topBar = RootControl.AddHorizontalLayout();
 
@@ -30,9 +37,9 @@ namespace UniGameEditor.Windows
             topBar.AddInput("").Width = 250;
 
             // Add toggle
-            topBar.AddToggleButton("Message");
-            topBar.AddToggleButton("Warning");
-            topBar.AddToggleButton("Error");
+            topBar.AddToggleButton("Message").Icon = infoIcon;
+            topBar.AddToggleButton("Warning").Icon = warningIcon;
+            topBar.AddToggleButton("Error").Icon = errorIcon;
         }
     }
 }

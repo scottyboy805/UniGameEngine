@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using UniGameEditor.Content;
 using UniGameEditor.Property;
+using UniGameEditor.UI;
 using UniGameEngine;
 using UniGameEngine.Content.Contract;
 
@@ -20,6 +21,7 @@ namespace UniGameEditor.Windows
         // Constructor
         public PropertiesEditorWindow()
         {
+            icon = EditorIcon.FindIcon("Properties");
             title = "Properties";
         }
 

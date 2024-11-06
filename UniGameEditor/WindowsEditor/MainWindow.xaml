@@ -71,7 +71,7 @@
 
                             <!--Scene Grid-->
                             <Grid x:Name="CenterGrid" Grid.Column="2">
-                                <TabControl x:Name="CenterTab" Width="Auto" Height="Auto" />
+                                <TabControl x:Name="CenterTab" Width="Auto" Height="Auto" VerticalContentAlignment="Stretch" />
                             </Grid>
                         </Grid>
                         
@@ -81,7 +81,7 @@
 
                     <!--Content Grid-->
                     <Grid x:Name="BottomGrid" Grid.Row="2" MinHeight="150">
-                        <TabControl x:Name="BottomTab" Width="Auto" Height="Auto" />
+                        <TabControl x:Name="BottomTab" Width="Auto" MaxHeight="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid }}}" />
                     </Grid>
                 </Grid>
             </Grid>
@@ -90,7 +90,7 @@
 
             <!--Properties Grid-->
             <Grid x:Name="RightGrid" Grid.Column="2" MinWidth="250">
-                <TabControl x:Name="RightTab" Width="Auto" Height="Auto" />
+                <TabControl x:Name="RightTab" Height="Auto" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid}}}" />
             </Grid>
         </Grid>
         

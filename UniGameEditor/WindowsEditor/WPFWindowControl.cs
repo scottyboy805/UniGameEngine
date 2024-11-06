@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel.Design;
+using System.Windows;
 using System.Windows.Controls;
 using UniGameEditor.Windows;
 using UniGameEngine;
@@ -37,7 +38,7 @@ namespace WindowsEditor
             this.location = location;
 
             // Set grid margin
-            tab.Padding = new Thickness(0, 12, 0, 12);
+            tab.Padding = new Thickness(0, 8, 0, 4);
             grid.Margin = new Thickness(8, 0, 8, 0);
 
             initialColumnWidths = grid.ColumnDefinitions.Select(d => d.Width).ToArray();
@@ -84,18 +85,33 @@ namespace WindowsEditor
 
             // Create root item
             Grid rootGrid = new Grid();
-            window.rootControl = new WPFEditorStackLayout(rootGrid, Orientation.Vertical);
-            window.isOpen = true;
+            window.rootControl = new WPFEditorScrollView(rootGrid, true, true); //new WPFEditorStackLayout(rootGrid, Orientation.Vertical);
 
-            // Create tab label
-            Label headerLabel = new Label();
-            headerLabel.Content = window.title;
-            headerLabel.ContextMenu = CreateWindowContextMenu(window);
+
+            StackPanel tabPanel = new StackPanel();
+            tabPanel.Orientation = Orientation.Horizontal;
+            {
+                // Create tab icon
+                Image icon = new Image();
+                icon.Source = window.Icon != null ? ((WPFEditorIcon)window.Icon).image : null;
+                icon.MaxHeight = 16;
+                icon.Margin = new Thickness(0, 3, 6, 0);
+                tabPanel.Children.Add(icon);
+
+                // Create tab label
+                Label headerLabel = new Label();
+                headerLabel.Content = window.title;
+                headerLabel.FontSize = 13;
+                headerLabel.FontWeight = FontWeights.DemiBold;
+                headerLabel.MaxHeight = 16;
+                headerLabel.ContextMenu = CreateWindowContextMenu(window);
+                tabPanel.Children.Add(headerLabel);
+            }
 
             // Create tab item
             TabItem newTab = new TabItem
             {
-                Header = headerLabel,
+                Header = tabPanel,
                 Content = rootGrid,
             };
 
@@ -108,18 +124,34 @@ namespace WindowsEditor
             // Add display window
             displayedWindows.Add(window, newTab);
 
-            // Show the window
-            try
+            rootGrid.Loaded += (object sender, RoutedEventArgs evt) =>
             {
-                window.OnShow();
-            }
-            catch(Exception e)
-            {
-                Debug.LogException(e);
-            }
+                // Trigger resize and add listener
+                window.Resize((float)rootGrid.ActualWidth, (float)rootGrid.ActualHeight);
+
+                // Skip the event if the window has been opened before or is hidden (Not active tab)
+                if (window.isOpen == true || rootGrid.IsVisible == false)
+                    return;
+
+                // Show the window
+                try
+                {
+                    window.isOpen = true;
+                    window.OnShow();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                }
+            };
 
             // Update visibility
             RefreshGridControl();
+        }
+
+        private void RootGrid_Initialized(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public void CloseWindow(EditorWindow window)

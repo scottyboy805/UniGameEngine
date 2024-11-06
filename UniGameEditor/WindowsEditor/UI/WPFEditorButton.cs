@@ -9,6 +9,7 @@ namespace WindowsEditor.UI
     {
         // Internal
         internal Button button = null;
+        internal IconTextContent content = null;
 
         // Properties
         public override float Width
@@ -16,6 +17,7 @@ namespace WindowsEditor.UI
             get => (float)button.Width;
             set => button.Width = value;
         }
+
         public override float Height
         {
             get => (int)button.Height;
@@ -24,31 +26,33 @@ namespace WindowsEditor.UI
 
         public override string Text
         {
-            get => (string)button.Content;
-            set => button.Content = value;
+            get => content.Text;
+            set => content.Text = value;
+        }
+
+        public override string Tooltip
+        {
+            get => content.Tooltip;
+            set => content.Tooltip = value;
+        }
+
+        public override EditorIcon Icon
+        {
+            get => content.Icon;
+            set => content.Icon = value;
         }
 
         // Constructor
         public WPFEditorButton(Panel parent, string text)
         {
             button = new Button();
-            button.Content = text;
-
-            button.FontSize = DefaultFontSize;
-            button.MinHeight = DefaultLineHeight;
-
-            parent.Children.Add(button);
+            content = new IconTextContent(parent, button, text);
         }
 
         public WPFEditorButton(ItemsControl parent, string text)
         {
             button = new Button();
-            button.Content = text;
-
-            button.FontSize = DefaultFontSize;
-            button.MinHeight = DefaultLineHeight;
-
-            parent.Items.Add(button);
+            content = new IconTextContent(parent, button, text);
         }
 
         // Methods

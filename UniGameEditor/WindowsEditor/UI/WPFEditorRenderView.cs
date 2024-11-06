@@ -80,6 +80,8 @@ namespace WindowsEditor.UI
         public WPFEditorRenderView(Panel parent, Action onRender)
         {
             renderView = new WPFInteropHostView(onRender);
+            //renderView.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
+            //renderView.MinHeight = 150;
             parent.Children.Add(renderView);
         }
 

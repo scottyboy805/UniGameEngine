@@ -90,5 +90,10 @@ namespace WindowsEditor.UI
         {
             return new WPFEditorStackLayout(Panel, Orientation.Vertical);
         }
+
+        public override EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true)
+        {
+            return new WPFEditorScrollView(Panel, horizontal, vertical);
+        }
     }
 }

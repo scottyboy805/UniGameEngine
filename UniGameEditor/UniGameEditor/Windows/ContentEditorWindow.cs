@@ -6,18 +6,29 @@ namespace UniGameEditor.Windows
     {
         // Private
         private EditorTreeView contentTreeView = null;
+        private EditorIcon folderNormalIcon = null;
+        private EditorIcon folderOpenIcon = null;
 
         // Constructor
         public ContentEditorWindow()
         {
+            icon = EditorIcon.FindIcon("Content");
             title = "Content";
         }
 
         // Methods
         protected internal override void OnShow()
         {
+            // Load icons
+            folderNormalIcon = EditorIcon.FindIcon("FolderNormal");
+            folderOpenIcon = EditorIcon.FindIcon("FolderOpen");
+
+
+            // Add scroll 
+            EditorLayoutControl scrollLayout = RootControl.AddScrollLayout();
+
             // Add tree view
-            contentTreeView = rootControl.AddTreeView();
+            contentTreeView = scrollLayout.AddTreeView();
 
             // Refresh content
             RefreshContentTree(Editor.ContentDirectory);
@@ -25,19 +36,25 @@ namespace UniGameEditor.Windows
 
         private void RefreshContentTree(string directory, EditorTreeNode parent = null)
         {
+            // Get folder name
+            string rootName = Path.GetFileName(directory);
+
+            // Create directory
+            EditorTreeNode rootNode = parent != null
+                ? parent.AddNode(rootName)
+                : contentTreeView.AddNode(rootName);
+
+            // Make folder
+            rootNode.Icon = folderNormalIcon;
+
+            // Add listeners
+            rootNode.OnExpanded += OnTreeNodeExpanded;
+
             // Get all directories
             foreach (string subDir in Directory.EnumerateDirectories(directory))
             {
-                // Get folder name
-                string folderName = Path.GetFileName(subDir);
-
-                // Add folder node
-                EditorTreeNode folderNode = parent != null
-                    ? parent.AddNode(folderName)
-                    : contentTreeView.AddNode(folderName);
-
                 // Add children
-                RefreshContentTree(subDir, folderNode);
+                RefreshContentTree(subDir, rootNode);
             }
 
             // Get all files
@@ -47,10 +64,15 @@ namespace UniGameEditor.Windows
                 string fileName = Path.GetFileName(subFile);
 
                 // Add file node
-                EditorTreeNode fileNode = parent != null
-                    ? parent.AddNode(fileName)
-                    : contentTreeView.AddNode(fileName);
+                EditorTreeNode fileNode = rootNode.AddNode(fileName);
             }
+        }
+
+        private void OnTreeNodeExpanded(EditorTreeNode node, bool expanded)
+        {
+            node.Icon = expanded == false
+                ? folderNormalIcon 
+                : folderOpenIcon;
         }
     }
 }

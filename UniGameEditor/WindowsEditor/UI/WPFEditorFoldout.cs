@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using ModernWpf;
+using System.Windows.Controls;
 using System.Windows.Media;
 using UniGameEditor;
 using UniGameEditor.UI;
@@ -123,6 +124,11 @@ namespace WindowsEditor.UI
         public override EditorLayoutControl AddVerticalLayout()
         {
             return new WPFEditorStackLayout(stackPanel, Orientation.Vertical);
+        }
+
+        public override EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true)
+        {
+            return new WPFEditorScrollView(stackPanel, horizontal, vertical);
         }
     }
 }

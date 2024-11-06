@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
@@ -8,6 +10,8 @@ namespace WindowsEditor.UI
         // Internal
         internal WPFEditorTreeView treeView = null;
         internal TreeViewItem treeItem = null;
+        internal IconTextContent content = null;
+
         internal ItemCollection treeItems = null;
         internal List<EditorTreeNode> nodes = null;
 
@@ -26,8 +30,20 @@ namespace WindowsEditor.UI
 
         public override string Text
         {
-            get => (string)treeItem.Header;
-            set => treeItem.Header = value;
+            get => content.Text;
+            set => content.Text = value;
+        }
+
+        public override string Tooltip
+        {
+            get => content.Tooltip;
+            set => content.Tooltip = value;
+        }
+
+        public override EditorIcon Icon
+        {
+            get => content.Icon;
+            set => content.Icon = value;
         }
 
         public override bool IsExpanded
@@ -57,25 +73,32 @@ namespace WindowsEditor.UI
         {
             this.treeView = treeView;
             this.treeItems = treeView.treeView.Items;
-            this.treeItem = new TreeViewItem();
-            this.treeItem.Header = text;
 
-            treeItem.FontSize = DefaultFontSize;
-            treeItem.MinHeight = DefaultLineHeight;
-            
-            treeItems.Add(treeItem);
+            InitializeTreeItem(text);
+
         }        
 
         public WPFEditorTreeNode(WPFEditorTreeNode treeNode, string text)
         {
             this.treeView = treeNode.treeView;
             this.treeItems = treeNode.treeItem.Items;
+
+            InitializeTreeItem(text);
+        }
+
+        // Methods
+        private void InitializeTreeItem(string text)
+        {
             this.treeItem = new TreeViewItem();
-            this.treeItem.Header = text;
 
-            treeItem.FontSize = DefaultFontSize;
-            treeItem.MinHeight = DefaultLineHeight;
+            // Create content
+            this.content = new IconTextContent(treeItem, text);
 
+            // Add listeners
+            treeItem.Selected += (object sender, RoutedEventArgs e) => OnSelectedEvent();
+            treeItem.Expanded += (object sender, RoutedEventArgs e) => OnExpandedEvent(treeItem.IsExpanded);
+            treeItem.Collapsed += (object sender, RoutedEventArgs e) => OnExpandedEvent(treeItem.IsExpanded);
+ 
             treeItems.Add(treeItem);
         }
 
