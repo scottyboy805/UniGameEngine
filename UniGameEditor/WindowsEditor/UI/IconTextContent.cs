@@ -23,7 +23,7 @@ namespace WindowsEditor.UI
 
         public float Height
         {
-            get => (int)mainControl.Height;
+            get => (float)mainControl.Height;
             set => mainControl.Height = value;
         }
 

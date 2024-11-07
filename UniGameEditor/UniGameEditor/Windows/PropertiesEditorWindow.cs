@@ -45,6 +45,7 @@ namespace UniGameEditor.Windows
 
             //// Create the property
             //editor.CreateProperty(RootControl, new SerializedProperty(contract.SerializeProperties[0], new[] { new TestObject() }));
+
         }
     }
 }

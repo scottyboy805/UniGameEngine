@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ModernWpf.Controls.Primitives;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace WindowsEditor.UI

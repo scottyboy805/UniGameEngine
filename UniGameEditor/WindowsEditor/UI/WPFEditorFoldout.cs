@@ -20,7 +20,7 @@ namespace WindowsEditor.UI
         }
         public override float Height
         {
-            get => (int)expander.Height;
+            get => (float)expander.Height;
             set => expander.Height = value;
         }
         public override string Text
@@ -94,6 +94,11 @@ namespace WindowsEditor.UI
         public override EditorDropdown AddDropdown()
         {
             return new WPFEditorDropdown(stackPanel);
+        }
+
+        public override EditorCombinationDropdown AddCombinationDropdown()
+        {
+            return new WPFEditorCombinationDropdown(stackPanel);
         }
 
         public override EditorRenderView AddRenderView(Action OnRender)

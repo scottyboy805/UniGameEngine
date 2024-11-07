@@ -20,7 +20,7 @@ namespace WindowsEditor.UI
 
         public override float Height
         {
-            get => (int)button.Height;
+            get => (float)button.Height;
             set => button.Height = value;
         }
 

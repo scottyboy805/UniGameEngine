@@ -17,7 +17,7 @@ namespace WindowsEditor.UI
         }
         public override float Height
         {
-            get => (int)treeView.Height;
+            get => (float)treeView.Height;
             set => treeView.Height = value;
         }
 

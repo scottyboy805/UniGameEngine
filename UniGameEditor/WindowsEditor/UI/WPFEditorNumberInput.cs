@@ -18,7 +18,7 @@ namespace WindowsEditor.UI
         }
         public override float Height
         {
-            get => (int)numberBox.Height;
+            get => (float)numberBox.Height;
             set => numberBox.Height = value;
         }
         public override long ValueInteger

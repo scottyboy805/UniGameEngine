@@ -18,7 +18,8 @@ namespace UniGameEditor.UI
         public abstract EditorButton AddButton(string text);
         public abstract EditorToggleButton AddToggleButton(string text, bool on = false);
         public abstract EditorToggle AddToggle(string text, bool on = false);
-        public abstract EditorDropdown AddDropdown();        
+        public abstract EditorDropdown AddDropdown();
+        public abstract EditorCombinationDropdown AddCombinationDropdown();
         public abstract EditorRenderView AddRenderView(Action OnRender);
         public abstract EditorTreeView AddTreeView();
     }

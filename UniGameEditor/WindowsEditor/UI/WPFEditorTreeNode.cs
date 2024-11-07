@@ -24,7 +24,7 @@ namespace WindowsEditor.UI
 
         public override float Height
         {
-            get => (int)treeItem.Height;
+            get => (float)treeItem.Height;
             set => treeItem.Height = value;
         }
 

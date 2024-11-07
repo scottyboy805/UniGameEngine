@@ -72,7 +72,7 @@ namespace WindowsEditor.UI
         }
         public override float Height
         {
-            get => (int)renderView.Height;
+            get => (float)renderView.Height;
             set => renderView.Height = value;
         }
 

@@ -17,7 +17,7 @@ namespace WindowsEditor.UI
 
         public override float Height
         {
-            get => (int)content.Height;
+            get => (float)content.Height;
             set => content.Height = value;
         }
 

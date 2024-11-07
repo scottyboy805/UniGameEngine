@@ -16,7 +16,7 @@ namespace WindowsEditor.UI
         }
         public override float Height
         {
-            get => (int)Panel.Height;
+            get => (float)Panel.Height;
             set => Panel.Height = value;
         }
 
@@ -59,6 +59,11 @@ namespace WindowsEditor.UI
         public override EditorDropdown AddDropdown()
         {
             return new WPFEditorDropdown(Panel);
+        }
+
+        public override EditorCombinationDropdown AddCombinationDropdown()
+        {
+            return new WPFEditorCombinationDropdown(Panel);
         }
 
         public override EditorRenderView AddRenderView(Action OnRender)

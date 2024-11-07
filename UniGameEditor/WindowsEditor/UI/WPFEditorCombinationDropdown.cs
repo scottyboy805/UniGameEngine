@@ -1,13 +1,12 @@
-﻿using ModernWpf.Controls;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
 {
-    internal sealed class WPFEditorDropdown : EditorDropdown
+    internal sealed class WPFEditorCombinationDropdown : EditorCombinationDropdown
     {
         // Type
-        internal sealed class DropdownEditorOption : EditorOption
+        internal sealed class DropdownCombinationEditorOption : EditorOption
         {
             // Internal
             internal ComboBoxItem item = null;
@@ -38,7 +37,7 @@ namespace WindowsEditor.UI
             }
 
             // Constructor
-            public DropdownEditorOption(ItemCollection parent, string text)
+            public DropdownCombinationEditorOption(ItemCollection parent, string text)
             {
                 item = new ComboBoxItem();
                 content = new IconTextContent(parent, item, text);
@@ -50,16 +49,29 @@ namespace WindowsEditor.UI
         internal List<EditorOption> options = null;
 
         // Properties
-        public override int SelectedIndex
+        public override int SelectedCount
         {
-            get => combo.SelectedIndex;
-            set => combo.SelectedIndex = value;
+            get => options.Count(o => o.IsSelected == true);
         }
 
-        public override EditorOption SelectedOption
+        public override int[] SelectedIndexes
         {
-            get => options[combo.SelectedIndex];
-            set => combo.SelectedIndex = options.IndexOf(value);
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+
+        public override EditorOption[] SelectedOptions
+        {
+            get => options.Where(o => o.IsSelected == true).ToArray();
+            set
+            {
+                foreach(EditorOption option in options)
+                {
+                    ((DropdownCombinationEditorOption)option).item.IsSelected = value.Contains(option) == true
+                        ? true
+                        : false;
+                }
+            }
         }
 
         public override float Width
@@ -75,7 +87,7 @@ namespace WindowsEditor.UI
         }
 
         // Constructor
-        public WPFEditorDropdown(Panel parent)
+        public WPFEditorCombinationDropdown(Panel parent)
         {
             combo = new ComboBox();
             combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
@@ -86,7 +98,7 @@ namespace WindowsEditor.UI
             parent.Children.Add(combo);
         }
 
-        public WPFEditorDropdown(ItemsControl parent)
+        public WPFEditorCombinationDropdown(ItemsControl parent)
         {
             combo = new ComboBox();
             combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
@@ -105,14 +117,10 @@ namespace WindowsEditor.UI
                 options = new List<EditorOption>();
 
             // Create option
-            DropdownEditorOption option = new DropdownEditorOption(combo.Items, text);
+            DropdownCombinationEditorOption option = new DropdownCombinationEditorOption(combo.Items, text);
 
             // Add to options
             options.Add(option);
-
-            // Update selection
-            if(combo.SelectedIndex < 0)
-                combo.SelectedIndex = 0;
 
             return option;
         }
@@ -120,13 +128,13 @@ namespace WindowsEditor.UI
         public override void RemoveOption(EditorOption option)
         {
             // Check for added
-            if(options.Contains(option) == true)
+            if (options.Contains(option) == true)
             {
                 // Remove option
                 options.Remove(option);
 
                 // Remove from combo
-                combo.Items.Remove(((DropdownEditorOption)option).item);
+                combo.Items.Remove(((DropdownCombinationEditorOption)option).item);
             }
         }
     }

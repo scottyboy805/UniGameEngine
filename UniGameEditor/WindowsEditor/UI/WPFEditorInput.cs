@@ -16,7 +16,7 @@ namespace WindowsEditor.UI
         }
         public override float Height
         {
-            get => (int)textBox.Height;
+            get => (float)textBox.Height;
             set => textBox.Height = value;
         }
 

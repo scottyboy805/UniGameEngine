@@ -18,7 +18,7 @@ namespace WindowsEditor.UI
         }
         public override float Height
         {
-            get => (int)toggleButton.Height;
+            get => (float)toggleButton.Height;
             set => toggleButton.Height = value;
         }
 

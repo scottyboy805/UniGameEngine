@@ -16,7 +16,7 @@ namespace WindowsEditor.UI
         }
         public override float Height
         {
-            get => (int)checkBox.Height;
+            get => (float)checkBox.Height;
             set => checkBox.Height = value;
         }
 

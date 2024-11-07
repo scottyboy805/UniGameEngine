@@ -40,6 +40,13 @@ namespace UniGameEditor.Windows
             topBar.AddToggleButton("Message").Icon = infoIcon;
             topBar.AddToggleButton("Warning").Icon = warningIcon;
             topBar.AddToggleButton("Error").Icon = errorIcon;
+
+
+            EditorCombinationDropdown drop = RootControl.AddCombinationDropdown();
+
+            drop.AddOption("Option1");
+            //drop.AddOption("Option2");
+            //drop.AddOption("Option3");
         }
     }
 }
