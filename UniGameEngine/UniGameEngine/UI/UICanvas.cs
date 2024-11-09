@@ -7,7 +7,7 @@ using UniGameEngine.Graphics;
 namespace UniGameEngine.UI
 {
     [DataContract]
-    public sealed class UICanvas : Component, IGameDraw, IGameEnable
+    public sealed class UICanvas : Component, IGameDraw
     {
         // Internal
         internal HashSet<IGameDraw> uiDrawCalls = new HashSet<IGameDraw>();
@@ -54,13 +54,13 @@ namespace UniGameEngine.UI
             spriteBatch.End();
         }
 
-        void IGameEnable.OnEnable()
+        protected override void OnEnable()
         {
             // Create batch
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
         }
 
-        void IGameEnable.OnDisable()
+        protected override void OnDisable()
         {
             // Release batch
             spriteBatch.Dispose();

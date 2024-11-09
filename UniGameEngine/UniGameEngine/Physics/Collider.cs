@@ -1,7 +1,9 @@
-﻿using BepuPhysics;
-using BepuPhysics.Collidables;
+﻿using Jitter2.Collision.Shapes;
+using Jitter2.LinearMath;
 using Microsoft.Xna.Framework;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using JitterBody = Jitter2.Dynamics.RigidBody;
 
 namespace UniGameEngine.Physics
 {
@@ -12,11 +14,20 @@ namespace UniGameEngine.Physics
         private PhysicsMaterial material = null;
 
         // Internal
-        internal TypedIndex physicsTypeIndex = default;
-        internal StaticHandle staticHandle = default;
+        internal RigidBodyShape physicsShape = null;
+        internal JitterBody staticBody = null;
+        internal RigidBody attachedBody = null;
 
         // Properties
-        public abstract BoundingBox Bounds { get; }
+        public virtual BoundingBox Bounds
+        {
+            get
+            {
+                // Get the box
+                JBBox box = physicsShape.WorldBoundingBox;
+                return Unsafe.As<JBBox, BoundingBox>(ref box);
+            }
+        }
 
         [DataMember]
         public bool IsTrigger
@@ -47,23 +58,35 @@ namespace UniGameEngine.Physics
 
         public RigidBody Body
         {
-            get { return GameObject.GetComponentInParent<RigidBody>(); }
+            get 
+            {
+                if (attachedBody != null)
+                    return attachedBody;
+
+                return GameObject.GetComponentInParent<RigidBody>(); 
+            }
         }
 
         // Methods
         protected override void RegisterSubSystems()
         {
-            // Add type index
-            physicsTypeIndex = CreatePhysicsShape();
+            // Register collider
+            Physics.activeColliders[physicsShape] = this;
 
             // Add static
             if (Body == null)
             {
-                // Create static shape
-                staticHandle = Physics.simulation.Statics.Add(
-                    new StaticDescription(
-                        PhysicsSimulation.GetPose(Transform),
-                        physicsTypeIndex));
+                // Create static body
+                staticBody = Physics.physicsWorld.CreateRigidBody();
+                staticBody.AddShape(physicsShape);
+                staticBody.Tag = this;
+                staticBody.IsStatic = true;
+
+                // Rebuild
+                RebuildCollider();
+
+                // Update attached body
+                attachedBody = Body;
             }
             // Add dynamic
             else
@@ -75,30 +98,25 @@ namespace UniGameEngine.Physics
         protected override void UnregisterSubSystems()
         {
             // Remove dynamic
-            if (Body != null)
+            if (attachedBody != null)
             {
-                Body.DetachCollider(this);
+                attachedBody.DetachCollider(this);
+                attachedBody = null;
+            }
+            else
+            {
+                // Remove shape from body
+                staticBody.RemoveShape(physicsShape);
             }
 
-            // Remove static
-            if (staticHandle != default)
-            {
-                // Remove statics
-                Physics.simulation.Statics.Remove(staticHandle);
-                staticHandle = default;
-            }
-
-            Physics.simulation.Shapes.Remove(physicsTypeIndex);
-            physicsTypeIndex = default;
+            // Remove collider
+            Physics.activeColliders.Remove(physicsShape);
         }
 
-        internal abstract TypedIndex CreatePhysicsShape();
-
-        internal abstract BodyInertia GetBodyInertia(float mass);
-
-        internal void RebuildCollider()
+        internal virtual void RebuildCollider() 
         {
-
+            // Update transform
+            PhysicsSimulation.ApplyTransform(staticBody, Transform);
         }
     }
 }

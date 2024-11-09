@@ -22,4 +22,10 @@ namespace UniGameEngine
 
         void OnUpdate(GameTime gameTime);
     }
+
+    public interface IGameFixedUpdate
+    {
+        // Methods
+        void OnFixedUpdate(GameTime gameTime, float fixedStep);
+    }
 }

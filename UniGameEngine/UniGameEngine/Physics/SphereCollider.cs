@@ -1,18 +1,18 @@
-﻿using BepuPhysics;
-using BepuPhysics.Collidables;
+﻿using Jitter2.Collision.Shapes;
 using Microsoft.Xna.Framework;
+using System;
 using System.Runtime.Serialization;
 
 namespace UniGameEngine.Physics
 {
     [DataContract]
-    public unsafe sealed class SphereCollider : Collider
+    public sealed class SphereCollider : Collider
     {
         // Private
         private float radius = 0.5f;
 
         // Internal
-        internal Sphere physicsSphere = default;
+        internal SphereShape physicsSphere = null;
 
         // Properties
         [DataMember]
@@ -26,31 +26,27 @@ namespace UniGameEngine.Physics
             }
         }
 
-        public override BoundingBox Bounds
-        {
-            get 
-            {
-                return new BoundingBox(
-                    Transform.WorldPosition - new Vector3(radius), 
-                    Transform.WorldPosition + new Vector3(radius)); 
-            }
-        }
-
         // Constructor
         public SphereCollider()
         {
-            this.physicsSphere = new Sphere(radius);
+            this.physicsSphere = new SphereShape(radius);
+            this.physicsShape = physicsSphere;
         }
 
         // Methods
-        internal override TypedIndex CreatePhysicsShape()
+        internal override void RebuildCollider()
         {
-            return Physics.simulation.Shapes.Add(physicsSphere);
-        }
+            // Call base
+            base.RebuildCollider();
 
-        internal override BodyInertia GetBodyInertia(float mass)
-        {
-            return physicsSphere.ComputeInertia(mass);
-        }    
+            // Get scale
+            Vector3 scale = Transform.LocalScale;
+
+            // Create final size
+            float scaledRadius = MathF.Max(MathF.Max(scale.X, scale.Y), scale.Z) * radius;
+
+            // Update radius
+            physicsSphere.Radius = scaledRadius;
+        }
     }
 }

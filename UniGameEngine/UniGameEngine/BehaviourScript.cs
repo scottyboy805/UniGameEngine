@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace UniGameEngine
 {
-    public abstract class BehaviourScript : Component, IGameEnable, IGameUpdate
+    public abstract class BehaviourScript : Component, IGameUpdate, IGameFixedUpdate
     {
         // Private
         [DataMember(Name = "Priority")]
@@ -47,13 +47,28 @@ namespace UniGameEngine
         }
 
         // Methods
-        public virtual void OnEnable() { }
-        public virtual void OnDisable() { }
-
-        public virtual void OnAwake() { }
         public virtual void OnStart() { }
-
         public virtual void OnUpdate(GameTime gameTime) { }
+
+        public virtual void OnFixedUpdate(GameTime gameTime, float fixedStep) { }
+
+        protected override void RegisterSubSystems()
+        {
+            base.RegisterSubSystems();
+
+            // Register for fixed update
+            if(this is IGameFixedUpdate)
+                Scene.sceneFixedUpdateCalls.Add((IGameFixedUpdate)this);
+        }
+
+        protected override void UnregisterSubSystems()
+        {
+            base.UnregisterSubSystems();
+
+            // Unregister fixed update
+            if(this is IGameFixedUpdate)
+                Scene.sceneFixedUpdateCalls.Remove((IGameFixedUpdate)this);
+        }
 
         #region CreateComponent
         public Component CreateComponent(Type componentType)

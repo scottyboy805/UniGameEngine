@@ -59,6 +59,10 @@ namespace UniGameEngine
         }
 
         // Methods
+        protected virtual void OnEnable() { }
+
+        protected virtual void OnDisable() { }
+
         public bool CompareTag(string tag)
         {
             return string.Compare(gameObject.Tag, tag, StringComparison.OrdinalIgnoreCase) == 0;
@@ -116,25 +120,21 @@ namespace UniGameEngine
 
         internal static void OnComponentEnabledEvent(Component component, bool enabled)
         {
-            // Handle event
-            if (component is IGameEnable)
+            // Trigger event
+            try
             {
-                // Trigger event
-                try
+                if (enabled == true)
                 {
-                    if (enabled == true)
-                    {
-                        // Call enable
-                        ((IGameEnable)component).OnEnable();
-                    }
-                    else
-                    {
-                        // Call disable
-                        ((IGameEnable)component).OnDisable();
-                    }
+                    // Call enable
+                    component.OnEnable();
                 }
-                catch (Exception e) { Debug.LogException(e); }
+                else
+                {
+                    // Call disable
+                    component.OnDisable();
+                }
             }
+            catch (Exception e) { Debug.LogException(e); }
 
             // Register component
             if (enabled == true)

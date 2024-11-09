@@ -149,10 +149,7 @@ namespace UniGameEngine
 
             // Initialize physics
             Debug.Log(LogFilter.Physics, "Initialize physics...");
-            physics = new PhysicsSimulation(gameSettings);
-
-            // Add for update
-            AddGameUpdate(physics);
+            physics = new PhysicsSimulation(this);
 
             
             base.Initialize();
@@ -250,6 +247,9 @@ namespace UniGameEngine
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            // Run physics
+            physics.Step(gameTime);
 
             // Do scheduled updates
             DoScheduledUpdateEvents(gameTime);

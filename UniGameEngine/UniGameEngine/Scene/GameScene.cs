@@ -13,6 +13,7 @@ namespace UniGameEngine.Scene
         // Internal
         internal HashSet<IGameDraw> sceneDrawCalls = new HashSet<IGameDraw>();
         internal HashSet<IGameUpdate> sceneUpdateCalls = new HashSet<IGameUpdate>();
+        internal HashSet<IGameFixedUpdate> sceneFixedUpdateCalls = new HashSet<IGameFixedUpdate>();
         internal bool startCalled = false;
 
         // Private

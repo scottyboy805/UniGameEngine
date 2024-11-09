@@ -8,7 +8,7 @@ using UniGameEngine.Scene;
 namespace UniGameEngine.Graphics
 {
     [DataContract]
-    public sealed class Camera : Component, IGameEnable
+    public sealed class Camera : Component
     {
         // Type
         private sealed class CameraSorter : IComparer<Camera>
@@ -212,9 +212,7 @@ namespace UniGameEngine.Graphics
             }
         }
 
-        
-
-        void IGameEnable.OnEnable()
+        protected override void OnEnable()
         {
             // Add camera
             allActiveCameras.Add(this);
@@ -223,7 +221,7 @@ namespace UniGameEngine.Graphics
             allActiveCameras.Sort(cameraSorter);
         }
 
-        void IGameEnable.OnDisable()
+        protected override void OnDisable()
         {
             // Remove camera
             allActiveCameras.Remove(this);

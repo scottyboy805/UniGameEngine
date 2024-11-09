@@ -1,20 +1,22 @@
-﻿using BepuPhysics;
-using BepuPhysics.Collidables;
+﻿using Jitter2.Collision.Shapes;
+using Jitter2.LinearMath;
 using Microsoft.Xna.Framework;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace UniGameEngine.Physics
 {
     [DataContract]
-    public unsafe sealed class BoxCollider : Collider
+    public sealed class BoxCollider : Collider
     {
         // Private
         private Vector3 extents = new Vector3(1f);
 
         // Internal
-        internal Box physicsBox = default;
+        internal BoxShape physicsBox = null;
 
         // Properties
+        [DataMember]
         public Vector3 Extents
         {
             get { return extents; }
@@ -25,31 +27,23 @@ namespace UniGameEngine.Physics
             }
         }
 
-        public override BoundingBox Bounds
-        {
-            get
-            {
-                return new BoundingBox(
-                    Transform.WorldPosition - (extents / 2),
-                    Transform.WorldPosition + (extents / 2));
-            }
-        }
-
         // Constructor
         public BoxCollider()
         {
-            this.physicsBox = new Box(extents.X, extents.Y, extents.Z);
+            this.physicsBox = new BoxShape(Unsafe.As<Vector3, JVector>(ref extents));
+            this.physicsShape = physicsBox;
         }
 
         // Methods
-        internal override TypedIndex CreatePhysicsShape()
+        internal override void RebuildCollider()
         {
-            return Physics.simulation.Shapes.Add(physicsBox);
-        }
+            base.RebuildCollider();
 
-        internal override BodyInertia GetBodyInertia(float mass)
-        {
-            return physicsBox.ComputeInertia(mass);
+            // Create final size
+            Vector3 size = extents * Transform.LocalScale;
+
+            // Update size
+            physicsBox.Size = Unsafe.As<Vector3, JVector>(ref size);
         }
     }
 }
