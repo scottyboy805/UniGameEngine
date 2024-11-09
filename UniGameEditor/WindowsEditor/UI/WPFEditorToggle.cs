@@ -11,12 +11,12 @@ namespace WindowsEditor.UI
         // Properties
         public override float Width
         {
-            get => (float)checkBox.Width;
+            get => (float)checkBox.ActualWidth;
             set => checkBox.Width = value;
         }
         public override float Height
         {
-            get => (float)checkBox.Height;
+            get => (float)checkBox.ActualHeight;
             set => checkBox.Height = value;
         }
 

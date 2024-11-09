@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Security.Policy;
+﻿using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using UniGameEditor.UI;

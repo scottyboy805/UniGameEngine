@@ -95,9 +95,12 @@ namespace UniGameEngine
         }
 
         // Constructor
-        public UniGame()
+        public UniGame(GraphicsDeviceManager graphics = null)
         {
-            graphics = new GraphicsDeviceManager(this);
+            if (graphics == null)
+                graphics = new GraphicsDeviceManager(this);
+
+            this.graphics = graphics;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }

@@ -12,12 +12,12 @@ namespace WindowsEditor.UI
         // Properties
         public override float Width
         {
-            get => (float)treeView.Width;
+            get => (float)treeView.ActualWidth;
             set => treeView.Width = value;
         }
         public override float Height
         {
-            get => (float)treeView.Height;
+            get => (float)treeView.ActualHeight;
             set => treeView.Height = value;
         }
 

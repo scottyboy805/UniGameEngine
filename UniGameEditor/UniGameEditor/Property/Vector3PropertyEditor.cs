@@ -34,7 +34,7 @@ namespace UniGameEditor.Property
             {
                 // Draw X element
                 EditorLayoutControl xLayout = layout.AddHorizontalLayout();
-                xLayout.Width = elementWidth;
+                //xLayout.Width = elementWidth;
 
                 // X property
                 EditorPropertyLabel xPropertyLabel = xLayout.AddPropertyLabel(xProperty);
@@ -52,7 +52,7 @@ namespace UniGameEditor.Property
             {
                 // Draw y element
                 EditorLayoutControl yLayout = layout.AddHorizontalLayout();
-                yLayout.Width = elementWidth;
+                //yLayout.Width = elementWidth;
 
                 // Y property
                 EditorPropertyLabel yPropertyLabel = yLayout.AddPropertyLabel(yProperty);
@@ -70,7 +70,7 @@ namespace UniGameEditor.Property
             {
                 // Draw z element
                 EditorLayoutControl zLayout = layout.AddHorizontalLayout();
-                zLayout.Width = elementWidth;
+                //zLayout.Width = elementWidth;
 
                 // Z property
                 EditorPropertyLabel zPropertyLabel = zLayout.AddPropertyLabel(zProperty);

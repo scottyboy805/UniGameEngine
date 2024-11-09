@@ -11,12 +11,12 @@ namespace WindowsEditor.UI
         // Properties
         public override float Width
         {
-            get => (float)textBox.Width;
+            get => (float)textBox.ActualWidth;
             set => textBox.Width = value;
         }
         public override float Height
         {
-            get => (float)textBox.Height;
+            get => (float)textBox.ActualHeight;
             set => textBox.Height = value;
         }
 

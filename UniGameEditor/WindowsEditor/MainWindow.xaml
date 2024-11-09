@@ -16,12 +16,12 @@
 
         <!--Menu Bar-->
         <Menu x:Name="Menu" Grid.Row="0">
-            <MenuItem Header="File"></MenuItem>
-            <MenuItem Header="Edit"></MenuItem>
-            <MenuItem Header="Content"></MenuItem>
-            <MenuItem Header="GameObject"></MenuItem>
-            <MenuItem Header="Component"></MenuItem>
-            <MenuItem Header="Window">
+            <MenuItem Name="FileMenu" Header="File"></MenuItem>
+            <MenuItem Name="EditMenu" Header="Edit"></MenuItem>
+            <MenuItem Name="ContentMenu" Header="Content"></MenuItem>
+            <MenuItem Name="GameObjectMenu" Header="GameObject"></MenuItem>
+            <MenuItem Name="ComponentMenu" Header="Component"></MenuItem>
+            <MenuItem Name="WindowMenu" Header="Window">
                 <MenuItem Header="Reset Layout" Click="Window_ResetClicked"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Hierarchy" IsCheckable="True" Click="Window_Hierarchy" IsVisibleChanged="Window_Hierarchy_MenuShowing"></MenuItem>

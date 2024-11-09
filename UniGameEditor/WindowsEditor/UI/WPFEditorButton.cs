@@ -14,13 +14,13 @@ namespace WindowsEditor.UI
         // Properties
         public override float Width
         {
-            get => (float)button.Width;
+            get => (float)button.ActualWidth;
             set => button.Width = value;
         }
 
         public override float Height
         {
-            get => (float)button.Height;
+            get => (float)button.ActualHeight;
             set => button.Height = value;
         }
 

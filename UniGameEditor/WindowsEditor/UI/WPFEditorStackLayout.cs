@@ -38,10 +38,12 @@ namespace WindowsEditor.UI
             if (orientation == Orientation.Horizontal)
             {
                 stackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                stackPanel.VerticalAlignment = VerticalAlignment.Center;
             }
             else
             {
                 stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
+                stackPanel.HorizontalAlignment = HorizontalAlignment.Center;
             }
         }
     }

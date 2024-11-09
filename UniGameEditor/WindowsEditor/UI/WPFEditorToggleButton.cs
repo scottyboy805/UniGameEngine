@@ -13,12 +13,12 @@ namespace WindowsEditor.UI
         // Properties
         public override float Width
         {
-            get => (float)toggleButton.Width;
+            get => (float)toggleButton.ActualWidth;
             set => toggleButton.Width = value;
         }
         public override float Height
         {
-            get => (float)toggleButton.Height;
+            get => (float)toggleButton.ActualHeight;
             set => toggleButton.Height = value;
         }
 

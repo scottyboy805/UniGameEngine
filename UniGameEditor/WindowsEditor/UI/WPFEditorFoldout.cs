@@ -15,12 +15,12 @@ namespace WindowsEditor.UI
         // Properties
         public override float Width
         {
-            get => (float)expander.Width;
+            get => (float)expander.ActualWidth;
             set => expander.Width = value;
         }
         public override float Height
         {
-            get => (float)expander.Height;
+            get => (float)expander.ActualHeight;
             set => expander.Height = value;
         }
         public override string Text

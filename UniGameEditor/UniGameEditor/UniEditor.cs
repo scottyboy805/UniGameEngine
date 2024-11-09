@@ -10,7 +10,9 @@ namespace UniGameEditor
 
         private bool isProjectOpen = false;
         private string projectPath = null;
+        private string projectDirectory = null;
         private string contentDirectory = null;
+        private string libraryDirectory = null;
 
         private bool isPlaying = false;
 
@@ -30,6 +32,11 @@ namespace UniGameEditor
             get { return projectPath; }
         }
 
+        public string ProjectDirectory
+        {
+            get { return projectDirectory; }
+        }
+
         public string ContentDirectory
         {
             get { return contentDirectory; }
@@ -39,12 +46,38 @@ namespace UniGameEditor
 
         public override bool IsPlaying => isPlaying;
 
+        // Constructor
+        public UniEditor()
+        {
+
+        }
+
         // Methods
         public void OpenProject(string projectPath)
         {
             this.isProjectOpen = true;
             this.projectPath = projectPath;
-            this.contentDirectory = Path.Combine(Directory.GetParent(projectPath).FullName, "Content");
+            this.projectDirectory = Directory.GetParent(projectPath).FullName;
+            this.contentDirectory = Path.Combine(projectDirectory, "Content");
+            this.libraryDirectory = Path.Combine(projectDirectory, "Library");
+
+            // Update content directory
+            Content.RootDirectory = libraryDirectory;
         }
+
+        //internal void InitializeEditor()
+        //{
+        //    base.Initialize();
+        //}
+
+        //internal void UpdateFrame()
+        //{
+        //    base.
+        //}
+
+        //internal void RenderFrame()
+        //{
+
+        //}
     }
 }

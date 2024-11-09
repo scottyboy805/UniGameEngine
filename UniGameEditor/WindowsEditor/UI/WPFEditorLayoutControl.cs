@@ -11,12 +11,12 @@ namespace WindowsEditor.UI
 
         public override float Width
         {
-            get => (float)Panel.Width;
+            get => (float)Panel.ActualWidth;
             set => Panel.Width = value;
         }
         public override float Height
         {
-            get => (float)Panel.Height;
+            get => (float)Panel.ActualHeight;
             set => Panel.Height = value;
         }
 

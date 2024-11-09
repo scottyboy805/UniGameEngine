@@ -76,13 +76,13 @@ namespace WindowsEditor.UI
 
         public override float Width
         {
-            get => (float)combo.Width;
+            get => (float)combo.ActualWidth;
             set => combo.Width = value;
         }
 
         public override float Height
         {
-            get => (float)combo.Height;
+            get => (float)combo.ActualHeight;
             set => combo.Height = value;
         }
 

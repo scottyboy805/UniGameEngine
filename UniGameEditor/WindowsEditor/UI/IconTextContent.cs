@@ -17,13 +17,13 @@ namespace WindowsEditor.UI
         // Properties
         public float Width
         {
-            get => (float)mainControl.Width;
+            get => (float)mainControl.ActualWidth;
             set => mainControl.Width = value;
         }
 
         public float Height
         {
-            get => (float)mainControl.Height;
+            get => (float)mainControl.ActualHeight;
             set => mainControl.Height = value;
         }
 
@@ -101,6 +101,7 @@ namespace WindowsEditor.UI
             // Create stack panel
             StackPanel stackPanel = new StackPanel();
             stackPanel.Orientation = Orientation.Horizontal;
+            stackPanel.VerticalAlignment = VerticalAlignment.Center;
 
             // Create icon
             itemIcon = new Image();
@@ -114,9 +115,11 @@ namespace WindowsEditor.UI
             itemLabel = new Label();
             itemLabel.IsEnabled = string.IsNullOrEmpty(text) == false;
             itemLabel.VerticalContentAlignment = VerticalAlignment.Center;
+            itemLabel.VerticalAlignment = VerticalAlignment.Center;
             itemLabel.Content = text;
             itemLabel.FontSize = EditorControl.DefaultFontSize;
             itemLabel.MinHeight = EditorControl.DefaultLineHeight;
+            itemLabel.Margin = new Thickness(0, 6, 6, 0);
             stackPanel.Children.Add(itemLabel);
 
             return stackPanel;

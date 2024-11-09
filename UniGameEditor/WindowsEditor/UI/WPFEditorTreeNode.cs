@@ -18,13 +18,13 @@ namespace WindowsEditor.UI
         // Properties
         public override float Width
         {
-            get => (float)treeItem.Width;
+            get => (float)treeItem.ActualWidth;
             set => treeItem.Width = value;
         }
 
         public override float Height
         {
-            get => (float)treeItem.Height;
+            get => (float)treeItem.ActualHeight;
             set => treeItem.Height = value;
         }
 

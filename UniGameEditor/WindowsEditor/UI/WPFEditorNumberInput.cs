@@ -1,6 +1,5 @@
 ﻿using ModernWpf.Controls;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
@@ -13,12 +12,12 @@ namespace WindowsEditor.UI
         // Properties
         public override float Width
         {
-            get => (float)numberBox.Width;
+            get => (float)numberBox.ActualWidth;
             set => numberBox.Width = value;
         }
         public override float Height
         {
-            get => (float)numberBox.Height;
+            get => (float)numberBox.ActualHeight;
             set => numberBox.Height = value;
         }
         public override long ValueInteger
