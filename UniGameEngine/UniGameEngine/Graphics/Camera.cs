@@ -48,6 +48,7 @@ namespace UniGameEngine.Graphics
 
         // Internal
         internal Matrix4x4 projectionMatrix = Matrix4x4.Identity;
+        internal SpriteBatch spriteBatch = null;
 
         // Properties
         public static IReadOnlyList<Camera> AllCameras
@@ -173,12 +174,18 @@ namespace UniGameEngine.Graphics
             // Sort by render queue
             allCameras.Sort(cameraSorter);
 
+            // Create batch
+            spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            
             // Create matrix
             CreateViewProjectionMatrix();
         }
 
         protected internal override void OnDestroy()
         {
+            // Release batch
+            spriteBatch.Dispose();
+
             // Remove camera
             allCameras.Remove(this);
         }
@@ -204,12 +211,18 @@ namespace UniGameEngine.Graphics
             if (scene.sceneDrawCalls == null || scene.sceneDrawCalls.Count == 0)
                 return;
 
+            // Begin batch
+            spriteBatch.Begin();
+
             // Draw all
             foreach(IGameDraw drawCall in scene.sceneDrawCalls)
             {
                 // Draw
                 drawCall.OnDraw(this);
             }
+
+            // End batch
+            spriteBatch.End();
         }
 
         protected override void OnEnable()

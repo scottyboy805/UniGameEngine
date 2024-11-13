@@ -85,9 +85,9 @@ namespace UniGameEngine
             }
         }
 
-        public Vector3 LocalEulerAngle
+        public Vector3 LocalEulerAngles
         {
-            get { return ToEuler(localRotation); }
+            get { return localRotation.ToEuler(); }
             set
             {
                 localRotation = Quaternion.CreateFromYawPitchRoll(value.Y, value.X, value.Z);
@@ -145,6 +145,16 @@ namespace UniGameEngine
                     : value;
 
                 // Update matrices
+                RebuildTransform();
+            }
+        }
+
+        public Vector3 WorldEulerAngles
+        {
+            get { return WorldRotation.ToEuler(); }
+            set
+            {
+                WorldRotation = Quaternion.CreateFromYawPitchRoll(value.Y, value.X, value.Z);
                 RebuildTransform();
             }
         }
@@ -244,7 +254,7 @@ namespace UniGameEngine
             Matrix translate = Matrix.CreateTranslation(localPosition);
 
             // Get euler
-            Vector3 localEulerAngles = LocalEulerAngle;
+            Vector3 localEulerAngles = LocalEulerAngles;
 
             // Rotation
             Matrix rotation = Matrix.CreateFromYawPitchRoll(localEulerAngles.Y, localEulerAngles.X, localEulerAngles.Z);
@@ -253,7 +263,7 @@ namespace UniGameEngine
             Matrix scale = Matrix.CreateScale(localScale);
 
             // Create local to world TRS
-            localToWorldMatrix = scale * translate * rotation;// * scale;
+            localToWorldMatrix = scale * rotation * translate;// * scale;
 
             // Check for parent
             if (parent != null)
@@ -268,48 +278,6 @@ namespace UniGameEngine
 
             // Create inverse world to local
             worldToLocalMatrix = Matrix.Invert(localToWorldMatrix);
-        }
-
-        internal static Vector3 ToEuler(in Quaternion q)
-        {
-            Vector3 euler = default;
-
-            // if the input quaternion is normalized, this is exactly one. Otherwise, this acts as a correction factor for the quaternion's not-normalizedness
-            float unit = (q.X * q.X) + (q.Y * q.Y) + (q.Z * q.Z) + (q.W * q.W);
-
-            // this will have a magnitude of 0.5 or greater if and only if this is a singularity case
-            float test = q.X * q.W - q.Y * q.Z;
-
-            if (test > 0.4995f * unit) // singularity at north pole
-            {
-                euler.X = MathHelper.Pi / 2;
-                euler.Y = 2f * MathF.Atan2(q.Y, q.X);
-                euler.Z = 0;
-            }
-            else if (test < -0.4995f * unit) // singularity at south pole
-            {
-                euler.X = -MathHelper.Pi / 2;
-                euler.Y = -2f * MathF.Atan2(q.Y, q.X);
-                euler.Z = 0;
-            }
-            else // no singularity - this is the majority of cases
-            {
-                euler.X = MathF.Asin(2f * (q.W * q.X - q.Y * q.Z));
-                euler.Y = MathF.Atan2(2f * q.W * q.Y + 2f * q.Z * q.X, 1 - 2f * (q.X * q.X + q.Y * q.Y));
-                euler.Z = MathF.Atan2(2f * q.W * q.Z + 2f * q.X * q.Y, 1 - 2f * (q.Z * q.Z + q.X * q.X));
-            }
-
-            // all the math so far has been done in radians. Before returning, we convert to degrees...
-            euler.X = MathHelper.ToDegrees(euler.X);
-            euler.Y = MathHelper.ToDegrees(euler.Y);
-            euler.Z = MathHelper.ToDegrees(euler.Z);
-
-            //...and then ensure the degree values are between 0 and 360
-            euler.X %= 360;
-            euler.Y %= 360;
-            euler.Z %= 360;
-
-            return euler;
         }
     }
 }

@@ -72,7 +72,10 @@ namespace UniGameEngine
         }
 
         // Constructor
-        private GameElement() : this(null) { }
+        protected GameElement()
+            : this(null)
+        {
+        }
 
         protected GameElement(string name)
         {

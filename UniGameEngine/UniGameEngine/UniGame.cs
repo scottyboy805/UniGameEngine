@@ -218,7 +218,7 @@ namespace UniGameEngine
             ModelRenderer cube = scene.CreateObject<ModelRenderer>("Static");
             cube.gameObject.CreateComponent<BoxCollider>();
             cube.Model = Content.Load<Model>("Cube");
-            cube.gameObject.CreateComponent<TestScript>();
+            //cube.gameObject.CreateComponent<TestScript>();
 
             cube.Transform.WorldPosition += new Vector3(0f, -3f, 0f);
             cube.Transform.LocalScale = new Vector3(3f, 0.1f, 3f);
@@ -231,6 +231,15 @@ namespace UniGameEngine
             Label txt = canvas.gameObject.CreateObject<Label>("Txt");
             txt.Text = "Hello World";
             txt.Font = Content.Load<SpriteFont>("Arial");
+
+
+
+            Sprite sprite = new Sprite(Content.Load<Texture2D>("blue_button12"));
+            SpriteRenderer spriteRenderer = scene.CreateObject<SpriteRenderer>("Sprite");
+            spriteRenderer.GameObject.CreateComponent<TestScript>();
+            spriteRenderer.Sprite = sprite;
+
+            spriteRenderer.Transform.WorldPosition = new Vector3(640, 360, 0);
 
 
             //GameObject customLoadContent = Content.Load<GameObject>("Test");
