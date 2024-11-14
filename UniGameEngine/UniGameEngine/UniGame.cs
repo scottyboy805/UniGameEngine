@@ -11,6 +11,7 @@ using UniGameEngine.Graphics;
 using UniGameEngine.Physics;
 using UniGameEngine.Scene;
 using UniGameEngine.UI;
+using UniGameEngine.UI.Events;
 
 [assembly: InternalsVisibleTo("UniGamePipeline")]
 [assembly: InternalsVisibleTo("UniGamePipelineTests")]
@@ -222,16 +223,22 @@ namespace UniGameEngine
 
             cube.Transform.WorldPosition += new Vector3(0f, -3f, 0f);
             cube.Transform.LocalScale = new Vector3(3f, 0.1f, 3f);
-            
 
 
             // Create UI
-            UICanvas canvas = scene.CreateObject<UICanvas>("Canvas");
-            Image img = canvas.GameObject.CreateObject<Image>("Image");
+            UICanvas canvas = scene.CreateObject<UICanvas>("Canvas", typeof(UIEventDispatcher));
+            Image img = Image.Create(canvas.gameObject);
+            img.Size = new Vector2(200, 100);
             Label txt = canvas.gameObject.CreateObject<Label>("Txt");
             txt.Text = "Hello World";
             txt.Font = Content.Load<SpriteFont>("Arial");
 
+
+            Button btn = Button.Create(canvas.GameObject);
+            btn.Transform.LocalPosition = new Vector3(300, 300, 0);
+
+            Toggle toggle = Toggle.Create(canvas.gameObject);
+            toggle.Transform.LocalPosition = new Vector3(150, 150, 0);
 
 
             Sprite sprite = new Sprite(Content.Load<Texture2D>("blue_button12"));
@@ -239,7 +246,7 @@ namespace UniGameEngine
             spriteRenderer.GameObject.CreateComponent<TestScript>();
             spriteRenderer.Sprite = sprite;
 
-            spriteRenderer.Transform.WorldPosition = new Vector3(640, 360, 0);
+            spriteRenderer.Transform.WorldPosition = new Vector3(1, 0, 0);
 
 
             //GameObject customLoadContent = Content.Load<GameObject>("Test");

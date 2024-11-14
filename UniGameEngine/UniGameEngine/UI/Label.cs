@@ -43,14 +43,14 @@ namespace UniGameEngine.UI
         }
 
         // Methods
-        protected override void DrawGraphic(SpriteBatch spriteBatch, Rectangle rect)
+        protected override void DrawGraphic(SpriteBatch spriteBatch, Vector2 position, float rotation, Vector2 scale, Vector2 pivot)
         {
             // Check for font
             if (font == null || text.Length == 0)
                 return;
 
             // Draw text
-            spriteBatch.DrawString(font, text, rect.Location.ToVector2(), color);
+            spriteBatch.DrawString(font, text, position, color, rotation, pivot, scale, SpriteEffects.None, 0f);
         }
     }
 }

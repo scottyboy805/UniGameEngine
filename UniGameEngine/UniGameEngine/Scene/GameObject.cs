@@ -643,7 +643,9 @@ namespace UniGameEngine
             bool currentEnabledState = gameObject.enabled;
 
             // Check for enabled in hierarchy
-            bool enabledInHierarchy = gameObject.EnabledInHierarchy;
+            bool enabledInHierarchy = gameObject.Transform.Parent != null
+                ? gameObject.Transform.Parent.GameObject.EnabledInHierarchy
+                : gameObject.Scene.Enabled;
 
             // Change enabled state
             gameObject.enabled = enabled;

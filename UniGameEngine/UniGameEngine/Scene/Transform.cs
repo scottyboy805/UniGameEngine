@@ -159,6 +159,16 @@ namespace UniGameEngine
             }
         }
 
+        public Vector3 WorldScale
+        {
+            get
+            {
+                Vector3 scale;
+                localToWorldMatrix.DecomposeScale(out scale);
+                return scale;
+            }
+        }
+
         public Vector3 Forward
         {
             get { return localToWorldMatrix.Forward; }

@@ -1,22 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
-using System.Threading;
 using UniGameEngine.Graphics;
 using UniGameEngine.Scene;
 using static System.Formats.Asn1.AsnWriter;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UniGameEngine.UI
 {
-    [DataContract]
-    public class Button : Image
+    public class Toggle : Image
     {
         // Events
-        [DataMember]
-        public GameEvent OnClicked = new GameEvent();
+        public GameEvent<bool> OnToggled = new GameEvent<bool>();
 
         // Private
+        [DataMember(Name = "ToggleGraphic")]
+        private UIGraphic toggleGraphic;
         [DataMember(Name = "HighlightColor")]
         private Color highlightColor = new Color(0.95f, 0.95f, 0.95f, 1f);
         [DataMember(Name = "PressedColor")]
@@ -25,8 +23,16 @@ namespace UniGameEngine.UI
         private Color inactiveColor = new Color(0.8f, 0.8f, 0.8f, 1f);
         [DataMember(Name = "Interactable")]
         private bool interactable = true;
+        [DataMember(Name = "On")]
+        private bool on = true;
 
         // Properties
+        public UIGraphic ToggleGraphic
+        {
+            get { return toggleGraphic; }
+            set { toggleGraphic = value; }
+        }
+
         public Color HighlightColor
         {
             get { return highlightColor; }
@@ -51,16 +57,33 @@ namespace UniGameEngine.UI
             set { interactable = value; }
         }
 
+        public bool On
+        {
+            get { return on; }
+        }
+
         // Constructor
-        public Button()
+        public Toggle()
         {
         }
 
         // Methods
-        public virtual void Perform()
+        public virtual void PerformToggle(bool sendEvent = true)
         {
-            // Trigger event
-            OnClicked.Raise();
+            PerformToggle(!On, sendEvent);
+        }
+
+        public virtual void PerformToggle(bool on, bool sendEvent = true)
+        {
+            this.on = on;
+
+            // Update graphic
+            if (toggleGraphic != null)
+                toggleGraphic.GameObject.Enabled = on;
+
+            // Send event
+            if (sendEvent == true)
+                OnToggled.Raise(on);
         }
 
         protected override void DrawGraphic(SpriteBatch spriteBatch, Vector2 position, float rotation, Vector2 scale, Vector2 pivot)
@@ -91,40 +114,46 @@ namespace UniGameEngine.UI
         public override void OnPressEnd()
         {
             base.OnPressEnd();
-            Perform();
+            PerformToggle();
         }
 
-        public static Button Create(GameObject parent, string text = null)
+        public static Toggle Create(GameObject parent)
         {
-            // Create button object
-            Button button = parent.CreateObject<Button>("Button");
-            CreateDefaultButton(button, text);
+            // Create toggle object
+            Toggle toggle = parent.CreateObject<Toggle>("Toggle");
+            CreateDefaultToggle(toggle);
 
-            return button;
+            return toggle;
         }
 
-        public static Button Create(GameScene scene, string text = null)
+        public static Toggle Create(GameScene scene)
         {
-            // Create button object
-            Button button = scene.CreateObject<Button>("Button");
-            CreateDefaultButton(button, text);            
+            // Create toggle object
+            Toggle toggle = scene.CreateObject<Toggle>("Toggle");
+            CreateDefaultToggle(toggle);            
 
-            return button;
+            return toggle;
         }
 
-        internal static void CreateDefaultButton(Button button, string text)
+        internal static void CreateDefaultToggle(Toggle toggle)
         {
             // Get sprite
-            button.Size = new Vector2(160, 40);
-            button.Sprite = new Sprite(button.Game.Content.Load<Texture2D>("UI/Default"),
-                new Rectangle(2, 2, 190, 49));
+            toggle.Size = new Vector2(40, 40);
+            toggle.Sprite = new Sprite(toggle.Game.Content.Load<Texture2D>("UI/Default"),
+                new Rectangle(2, 104, 36, 36));
 
-            // Create label
-            Label label = button.GameObject.CreateObject<Label>("Label");
-            label.Text = text;
-            label.Transform.LocalPosition = new Vector3(5, 3, 0);
-            label.Size = new Vector2(150, 34);
-            label.Raycast = false;
+            // Create toggle mark
+            Image image = toggle.GameObject.CreateObject<Image>("On");            
+            toggle.toggleGraphic = image;
+
+            // Get checkmark sprite
+            image.Transform.LocalPosition = new Vector3(6, 6, 0);
+            image.Size = new Vector2(30, 30);
+            image.Sprite = new Sprite(toggle.Game.Content.Load<Texture2D>("UI/Default"),
+                new Rectangle(220, 103, 23, 23));
+
+            // Disable raycast
+            image.Raycast = false;
         }
     }
 }

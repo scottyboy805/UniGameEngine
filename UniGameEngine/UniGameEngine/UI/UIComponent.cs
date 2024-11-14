@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Runtime.Serialization;
+using UniGameEngine.UI.Events;
 
 namespace UniGameEngine.UI
 {
@@ -22,6 +23,7 @@ namespace UniGameEngine.UI
     {
         // Private
         private UICanvas canvas = null;
+        private UIEventDispatcher dispatcher = null;
 
         [DataMember(Name = "Size")]
         private Vector2 size = new Vector2(100f, 100f);
@@ -39,6 +41,17 @@ namespace UniGameEngine.UI
                     canvas = GameObject.GetComponentInParent<UICanvas>(true);
 
                 return canvas;
+            }
+        }
+
+        public UIEventDispatcher Dispatcher
+        {
+            get
+            {
+                if (dispatcher == null)
+                    dispatcher = GameObject.GetComponentInParent<UIEventDispatcher>(true);
+
+                return dispatcher;
             }
         }
 
@@ -77,6 +90,24 @@ namespace UniGameEngine.UI
         }
         
         // Methods
+        public bool GetTransform(out Vector2 position, out float rotation, out Vector2 scale)
+        {
+            // Get matrix
+            Matrix worldMatrix = Transform.LocalToWorldMatrix;
+
+            // Decompose
+            return worldMatrix.Decompose(out scale, out rotation, out position);
+        }
+
+        public Vector2 GetAdjustedScale(Vector2 contentSize)
+        {
+            return new Vector2
+            {
+                X = (1f / contentSize.X) * size.X,
+                Y = (1f / contentSize.Y) * size.Y
+            };
+        }
+
         protected override void RegisterSubSystems()
         {
             // Register for draw
@@ -86,6 +117,10 @@ namespace UniGameEngine.UI
             // Register for update
             if (this is IGameUpdate)
                 Scene.sceneUpdateCalls.Add((IGameUpdate)this);
+
+            // Register for UI events
+            if (this is UIGraphic)
+                Dispatcher.AddRaycastTarget((UIGraphic)this);
         }
         protected override void UnregisterSubSystems()
         {
@@ -96,6 +131,10 @@ namespace UniGameEngine.UI
             // Unregister update
             if (this is IGameUpdate)
                 Scene.sceneUpdateCalls.Remove((IGameUpdate)this);
+
+            // Unregister UI event
+            if (this is UIGraphic)
+                Dispatcher.AddRaycastTarget((UIGraphic)this);
         }
     }
 }

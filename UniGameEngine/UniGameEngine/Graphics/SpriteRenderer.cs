@@ -53,22 +53,17 @@ namespace UniGameEngine.Graphics
             if (camera.spriteBatch == null)
                 return;
 
-            // Get matrix
-            Matrix worldMatrix = Transform.LocalToWorldMatrix;
+            // Create sprite matrix - convert from sprite coords to screen
+            Matrix spriteMatrix = Matrix.CreateScale(sprite.Units)
+                * Matrix.CreateTranslation(Game.RenderWidth / 2, Game.RenderHeight / 2, 0f);
 
+            // Get matrix
+            Matrix worldMatrix = Transform.LocalToWorldMatrix * spriteMatrix;
+
+            // Extract draw matrix
             Vector2 drawPosition, drawScale;
             float drawRotation;
             worldMatrix.Decompose(out drawScale, out drawRotation, out drawPosition);
-
-            //// Get actual position values
-            //Vector2 drawPosition = Transform.WorldPosition.ToVector2();
-
-            //// Get actual rotation - Z axis euler only
-            //float drawRotation = Transform.WorldEulerAngles.Z;
-
-            //// Get actual scale values
-            //Vector2 drawScale;
-            //Transform.localToWorldMatrix.DecomposeScale(out drawScale);
 
             // Draw call
             camera.spriteBatch.Draw(sprite.Texture,
@@ -77,7 +72,7 @@ namespace UniGameEngine.Graphics
                 color,
                 drawRotation,
                 sprite.SourcePivot,
-                drawScale,
+                drawScale * Sprite.InverseUnits,
                 spriteEffects,
                 drawOrder);
         }

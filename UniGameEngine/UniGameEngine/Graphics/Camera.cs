@@ -47,7 +47,7 @@ namespace UniGameEngine.Graphics
         private bool orthographic = false;
 
         // Internal
-        internal Matrix4x4 projectionMatrix = Matrix4x4.Identity;
+        internal Matrix projectionMatrix = Matrix.Identity;
         internal SpriteBatch spriteBatch = null;
 
         // Properties
@@ -66,7 +66,7 @@ namespace UniGameEngine.Graphics
             get { return allActiveCameras.Count > 0 ? allActiveCameras[0] : null; }
         }
 
-        public Matrix4x4 ProjectionMatrix
+        public Matrix ProjectionMatrix
         {
             get { return projectionMatrix; }
         }
@@ -138,7 +138,7 @@ namespace UniGameEngine.Graphics
                 //    return renderTexture.Width;
 
                 // Get device width
-                return Game.GraphicsDevice.DisplayMode.Width;
+                return Game.RenderWidth;
             }
         }
 
@@ -151,7 +151,7 @@ namespace UniGameEngine.Graphics
                 //    return renderTexture.Height;
 
                 // Get device width
-                return Game.GraphicsDevice.DisplayMode.Height;
+                return Game.RenderHeight;
             }
         }
 
@@ -245,14 +245,13 @@ namespace UniGameEngine.Graphics
             // Check for orthographic
             if (orthographic == false)
             {
-                // Create perspective
-                projectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(
+                projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                     MathHelper.ToRadians(fieldOfView), AspectRatio, near, far);
             }
             else
             {
                 // Create orthographic
-                projectionMatrix = Matrix4x4.CreateOrthographic(
+                projectionMatrix = Matrix.CreateOrthographic(
                     -1, 1, near, far);
             }
         }

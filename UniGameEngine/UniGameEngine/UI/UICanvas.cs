@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Runtime.Serialization;
 using UniGameEngine.Graphics;
 
@@ -13,6 +13,7 @@ namespace UniGameEngine.UI
         internal HashSet<IGameDraw> uiDrawCalls = new HashSet<IGameDraw>();
 
         private SpriteBatch spriteBatch = null;
+        private SamplerState spriteSampler = null;
 
         [DataMember(Name = "Camera")]
         private Camera camera = null;
@@ -33,6 +34,18 @@ namespace UniGameEngine.UI
             get { return spriteBatch; }
         }
 
+        // Constructor
+        public UICanvas()
+        {
+            spriteSampler = new SamplerState
+            { 
+                AddressU = TextureAddressMode.Clamp,
+                AddressV = TextureAddressMode.Clamp,
+                AddressW = TextureAddressMode.Clamp,
+                //Filter = TextureFilter.PointMipLinear,
+            };
+        }
+
         // Methods
         public void OnDraw(Camera camera)
         {
@@ -40,8 +53,14 @@ namespace UniGameEngine.UI
             if (this.camera != null && camera != this.camera)
                 return;
 
+            // Create scale size
+            Matrix referenceMatrix = Matrix.CreateScale(
+                (1f / referenceSize.X) * camera.RenderWidth,
+                (1f / referenceSize.Y) * camera.RenderHeight,
+                1f);
+
             // Begin batch
-            spriteBatch.Begin();
+            spriteBatch.Begin(samplerState: spriteSampler, transformMatrix: referenceMatrix);
             {
                 // Draw all elements
                 foreach(IGameDraw drawCall in uiDrawCalls)

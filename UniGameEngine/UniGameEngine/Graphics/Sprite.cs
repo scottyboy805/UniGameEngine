@@ -8,6 +8,8 @@ namespace UniGameEngine.Graphics
     public sealed class Sprite
     {
         // Private
+        private const float defaultUnits = 100f;
+
         [DataMember(Name = "Texture")]
         private Texture2D texture = null;
         [DataMember(Name = "SourcePositionNormalized")]
@@ -16,11 +18,14 @@ namespace UniGameEngine.Graphics
         private Vector2 sourceSizeNormalized = new Vector2(1f, 1f);
         [DataMember(Name = "PivotNormalized")]
         private Vector2 pivotNormalized = new Vector2(0.5f, 0.5f);
+        [DataMember(Name = "Units")]
+        private float units = defaultUnits;
 
         private Rectangle sourceRect = default;
         private Vector2 sourcePivot = default;
+        private float inverseUnits = 1f / defaultUnits;
 
-        // Properties
+        // Properties        
         public Texture2D Texture
         {
             get { return texture; }
@@ -62,6 +67,21 @@ namespace UniGameEngine.Graphics
             get { return sourceRect.Height; }
         }
 
+        public float Units
+        {
+            get { return units; }
+            set
+            {
+                units = value;
+                inverseUnits = 1f / units;
+            }
+        }
+
+        internal float InverseUnits
+        {
+            get { return inverseUnits; }
+        }
+
         // Constructor
         public Sprite(Texture2D texture)
         {
@@ -78,7 +98,13 @@ namespace UniGameEngine.Graphics
             {
                 this.sourcePositionNormalized = new Vector2
                 {
-                    X = texture.Width / sourceRect.X,
+                    X = (1f / texture.Width) * sourceRect.X,
+                    Y = (1f / texture.Height) * sourceRect.Y,
+                };
+                this.sourceSizeNormalized = new Vector2
+                {
+                    X = (1f / texture.Width) * sourceRect.Width,
+                    Y = (1f / texture.Height) * sourceRect.Height,
                 };
             }
             
