@@ -12,6 +12,7 @@
 
 /reference:..\..\..\..\UniGamePipeline\UniGamePipeline\bin\Debug\net6.0\UniGamePipeline.dll
 /reference:..\..\..\..\UniGamePipeline\UniGamePipelineTests\bin\Debug\net6.0\Newtonsoft.Json.dll
+/reference:..\..\..\..\UniGamePipeline\UniGamePipelineTests\bin\Debug\net6.0\FontStashSharp.MonoGame.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -88,6 +89,11 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/Default/SpriteEffect.fx
+
+#begin OpenSans-Regular.ttf
+/importer:FontImporter
+/processor:FontProcessor
+/build:OpenSans-Regular.ttf
 
 #begin Scene/TestScene.scene
 /importer:SceneImporter

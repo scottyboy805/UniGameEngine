@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FontStashSharp;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -231,7 +232,7 @@ namespace UniGameEngine
             img.Size = new Vector2(200, 100);
             Label txt = canvas.gameObject.CreateObject<Label>("Txt");
             txt.Text = "Hello World";
-            txt.Font = Content.Load<SpriteFont>("Arial");
+            txt.Font = Content.Load<FontSystem>("OpenSans-Regular");
 
 
             Button btn = Button.Create(canvas.GameObject);
