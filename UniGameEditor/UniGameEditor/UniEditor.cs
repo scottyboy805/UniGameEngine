@@ -3,7 +3,7 @@ using UniGameEngine.Scene;
 
 namespace UniGameEditor
 {
-    public sealed class UniEditor : UniGame
+    public sealed class UniEditor
     {
         // Private
         private Selection selection = new Selection();
@@ -14,7 +14,7 @@ namespace UniGameEditor
         private string contentDirectory = null;
         private string libraryDirectory = null;
 
-        private bool isPlaying = false;
+        private UniEditorGameInstance gameInstance = null;
 
         // Properties
         public Selection Selection
@@ -42,14 +42,15 @@ namespace UniGameEditor
             get { return contentDirectory; }
         }
 
-        public override bool IsEditor => true;
-
-        public override bool IsPlaying => isPlaying;
+        internal UniEditorGameInstance GameInstance
+        {
+            get { return gameInstance; }
+        }
 
         // Constructor
         public UniEditor()
         {
-
+            gameInstance = new UniEditorGameInstance();
         }
 
         // Methods
@@ -62,7 +63,7 @@ namespace UniGameEditor
             this.libraryDirectory = Path.Combine(projectDirectory, "Library");
 
             // Update content directory
-            Content.RootDirectory = libraryDirectory;
+            gameInstance.Content.RootDirectory = libraryDirectory;
         }
 
         //internal void InitializeEditor()

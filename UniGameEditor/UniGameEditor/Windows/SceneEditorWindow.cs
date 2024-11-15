@@ -15,12 +15,12 @@ namespace UniGameEditor.Windows
         // Methods
         protected internal override void OnShow()
         {
-            RootControl.AddRenderView(RenderScene).Height = Height;
+            RootControl.AddRenderView(editor.GameInstance).Height = Height;
         }
 
         private void RenderScene()
         {
-            editor.RunOneFrame();
+            //editor.GameInstance.RunOneFrame();
         }
     }
 }

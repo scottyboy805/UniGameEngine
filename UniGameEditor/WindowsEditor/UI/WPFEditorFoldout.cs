@@ -1,4 +1,5 @@
-﻿using ModernWpf;
+﻿using Microsoft.Xna.Framework;
+using ModernWpf;
 using System.Windows.Controls;
 using System.Windows.Media;
 using UniGameEditor;
@@ -101,9 +102,9 @@ namespace WindowsEditor.UI
             return new WPFEditorCombinationDropdown(stackPanel);
         }
 
-        public override EditorRenderView AddRenderView(Action OnRender)
+        public override EditorRenderView AddRenderView(Game gameHost)
         {
-            return new WPFEditorRenderView(stackPanel, OnRender);
+            return new WPFEditorRenderView(stackPanel, gameHost);
         }
 
         public override EditorTreeView AddTreeView()

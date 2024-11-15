@@ -2,23 +2,23 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.WpfInterop;
 using MonoGame.Framework.WpfInterop.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows.Controls;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
 {
-    internal sealed  class WPFEditorRenderView : EditorRenderView
+    internal sealed class WPFEditorRenderView : EditorRenderView
     {
         // Type
         private sealed class WPFInteropHostView : WpfGame
         {
             // Private
-            private Action onRender = null;
+            private Game gameHost = null;
+            private Action initializeCall;
+            private Action loadCall;
+            private Action<GameTime> updateCall;
+            private Action<GameTime> drawCall;
 
             // Internal
             internal IGraphicsDeviceService graphicsDeviceManager;
@@ -26,22 +26,42 @@ namespace WindowsEditor.UI
             internal WpfMouse mouse = null;
 
             // Constructor
-            public WPFInteropHostView(Action onRender)
+            public WPFInteropHostView(Game gameHost)
             {
-                this.onRender = onRender;
+                this.gameHost = gameHost;
+
+                Type gameHostType = gameHost.GetType();
+                BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
+                // Get delegates
+                initializeCall = gameHostType.GetMethod(nameof(Initialize), flags).CreateDelegate<Action>(gameHost);
+                loadCall = gameHostType.GetMethod(nameof(LoadContent), flags).CreateDelegate<Action>(gameHost);
+                updateCall = gameHostType.GetMethod(nameof(Update), flags).CreateDelegate<Action<GameTime>>(gameHost);
+                drawCall = gameHostType.GetMethod(nameof(Draw), flags).CreateDelegate<Action<GameTime>>(gameHost);
             }
 
             // Methods
             protected override void Initialize()
             {
-                
-
                 // Initialize device manager
-                graphicsDeviceManager = new WpfGraphicsDeviceService(this);
+                graphicsDeviceManager = new WpfGraphicsDeviceService(this);                
                 keyboard = new WpfKeyboard(this);
                 mouse = new WpfMouse(this);
 
+                // Add graphics
+                gameHost.Services.RemoveService(typeof(IGraphicsDeviceService));
+                gameHost.Services.AddService(graphicsDeviceManager);
+                
                 base.Initialize();
+
+                // Call initialize
+                initializeCall();
+            }
+
+            protected override void LoadContent()
+            {
+                // Call load
+                loadCall();
             }
 
             protected override void Update(GameTime gameTime)
@@ -50,15 +70,17 @@ namespace WindowsEditor.UI
 
                 keyboard.GetState();
                 mouse.GetState();
+
+                // Call update
+                updateCall(gameTime);
             }
 
             protected override void Draw(GameTime gameTime)
             {
                 GraphicsDevice.Clear(new Color(0.1f, 0.1f, 0.1f, 1f));
 
-                // Call render
-                if (onRender != null)
-                    onRender();
+                // Call draw
+                drawCall(gameTime);
             }
         }
 
@@ -77,17 +99,17 @@ namespace WindowsEditor.UI
         }
 
         // Constructor
-        public WPFEditorRenderView(Panel parent, Action onRender)
+        public WPFEditorRenderView(Panel parent, Game gameHost)
         {
-            renderView = new WPFInteropHostView(onRender);
+            renderView = new WPFInteropHostView(gameHost);
             //renderView.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
             //renderView.MinHeight = 150;
             parent.Children.Add(renderView);
         }
 
-        public WPFEditorRenderView(ItemsControl parent, Action onRender)
+        public WPFEditorRenderView(ItemsControl parent, Game gameHost)
         {
-            renderView = new WPFInteropHostView(onRender);
+            renderView = new WPFInteropHostView(gameHost);
             parent.Items.Add(renderView);
         }
 

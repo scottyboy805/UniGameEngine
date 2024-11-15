@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.Xna.Framework;
+
 namespace UniGameEditor.UI
 {
     public abstract class EditorLayoutControl : EditorControl
@@ -20,7 +22,7 @@ namespace UniGameEditor.UI
         public abstract EditorToggle AddToggle(string text, bool on = false);
         public abstract EditorDropdown AddDropdown();
         public abstract EditorCombinationDropdown AddCombinationDropdown();
-        public abstract EditorRenderView AddRenderView(Action OnRender);
+        public abstract EditorRenderView AddRenderView(Game hostGame);
         public abstract EditorTreeView AddTreeView();
     }
 }

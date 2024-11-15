@@ -1,5 +1,4 @@
-﻿using FontStashSharp;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,8 +10,6 @@ using UniGameEngine.Content.Serializers;
 using UniGameEngine.Graphics;
 using UniGameEngine.Physics;
 using UniGameEngine.Scene;
-using UniGameEngine.UI;
-using UniGameEngine.UI.Events;
 
 [assembly: InternalsVisibleTo("UniGamePipeline")]
 [assembly: InternalsVisibleTo("UniGamePipelineTests")]
@@ -101,7 +98,7 @@ namespace UniGameEngine
         {
             if (graphics == null)
                 graphics = new GraphicsDeviceManager(this);
-
+            
             this.graphics = graphics;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -112,47 +109,48 @@ namespace UniGameEngine
         {
             current = this;
 
-            // Setup debug
-#if DEBUG
-            Debug.AddLogger(new Debug.ConsoleLogger());
-#endif
-
-            Debug.Log("UniGameEngine, " + EngineVersion);
-
             // Create sprite batch
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
 
             // Register modules
             typeManager.RegisterAssembly(typeof(UniGame).Assembly);
 
+            // Check for player
+            if (IsEditor == false)
+            {
+                // Setup debug - for player only
+#if DEBUG
+                Debug.AddLogger(new Debug.ConsoleLogger());
+#endif
 
-            // Load game settings
-            Debug.Log("Load game settings...");
+                Debug.Log("UniGameEngine, " + EngineVersion);
 
-            // Initialize info
-            Debug.Log(gameSettings.CompanyName);
-            Debug.Log(gameSettings.GameName + ", " + gameSettings.GameVersion);
-                        
-            // Initialize display
-            Debug.Log(LogFilter.Graphics, "Preferred screen width: " + gameSettings.PreferredScreenWidth);
-            Debug.Log(LogFilter.Graphics, "Preferred screen height: " + gameSettings.PreferredScreenHeight);
-            Debug.Log(LogFilter.Graphics, "Preferred fullscreen: " + gameSettings.PreferredFullscreen);
+                // Load game settings
+                Debug.Log("Load game settings...");
 
-            // Apply resolution
-            graphics.PreferredBackBufferWidth = gameSettings.PreferredScreenWidth;
-            graphics.PreferredBackBufferHeight = gameSettings.PreferredScreenHeight;
-            graphics.IsFullScreen = gameSettings.PreferredFullscreen;
-            graphics.ApplyChanges();
+                // Initialize info
+                Debug.Log(gameSettings.CompanyName);
+                Debug.Log(gameSettings.GameName + ", " + gameSettings.GameVersion);
 
-            Debug.Log(LogFilter.Graphics, "Allow resizing: " + gameSettings.ResizableWindow);
-            Window.AllowUserResizing = gameSettings.ResizableWindow;
-            Window.Title = gameSettings.GameName;
+                // Initialize display
+                Debug.Log(LogFilter.Graphics, "Preferred screen width: " + gameSettings.PreferredScreenWidth);
+                Debug.Log(LogFilter.Graphics, "Preferred screen height: " + gameSettings.PreferredScreenHeight);
+                Debug.Log(LogFilter.Graphics, "Preferred fullscreen: " + gameSettings.PreferredFullscreen);
+                
+                // Apply resolution
+                graphics.PreferredBackBufferWidth = gameSettings.PreferredScreenWidth;
+                graphics.PreferredBackBufferHeight = gameSettings.PreferredScreenHeight;
+                graphics.IsFullScreen = gameSettings.PreferredFullscreen;
+                graphics.ApplyChanges();
 
-            // Initialize physics
-            Debug.Log(LogFilter.Physics, "Initialize physics...");
-            physics = new PhysicsSimulation(this);
+                Debug.Log(LogFilter.Graphics, "Allow resizing: " + gameSettings.ResizableWindow);
+                Window.AllowUserResizing = gameSettings.ResizableWindow;
+                Window.Title = gameSettings.GameName;
 
+                // Initialize physics
+                Debug.Log(LogFilter.Physics, "Initialize physics...");
+                physics = new PhysicsSimulation(this);
+            }
             
             base.Initialize();
         }
@@ -204,58 +202,58 @@ namespace UniGameEngine
             }
 
             
-            GameScene scene = new GameScene("MyScene");
+            //GameScene scene = new GameScene("MyScene");
 
-            // Create camera
-            Camera cam = scene.CreateObject<Camera>("Camera");
-            //cam.Enabled = false;
-            cam.Transform.LocalPosition = new Vector3(0f, 0f, -10f);
+            //// Create camera
+            //Camera cam = scene.CreateObject<Camera>("Camera");
+            ////cam.Enabled = false;
+            //cam.Transform.LocalPosition = new Vector3(0f, 0f, -10f);
 
-            ModelRenderer dynamicCube = scene.CreateObject<ModelRenderer>("Dynamic", typeof(BoxCollider), typeof(RigidBody));
-            dynamicCube.Model = Content.Load<Model>("Cube");
+            //ModelRenderer dynamicCube = scene.CreateObject<ModelRenderer>("Dynamic", typeof(BoxCollider), typeof(RigidBody));
+            //dynamicCube.Model = Content.Load<Model>("Cube");
 
-            dynamicCube.Transform.WorldPosition = new Vector3(0f, 5, 0f);
+            //dynamicCube.Transform.WorldPosition = new Vector3(0f, 5, 0f);
 
-            // Create object
-            ModelRenderer cube = scene.CreateObject<ModelRenderer>("Static");
-            cube.gameObject.CreateComponent<BoxCollider>();
-            cube.Model = Content.Load<Model>("Cube");
-            //cube.gameObject.CreateComponent<TestScript>();
+            //// Create object
+            //ModelRenderer cube = scene.CreateObject<ModelRenderer>("Static");
+            //cube.gameObject.CreateComponent<BoxCollider>();
+            //cube.Model = Content.Load<Model>("Cube");
+            ////cube.gameObject.CreateComponent<TestScript>();
 
-            cube.Transform.WorldPosition += new Vector3(0f, -3f, 0f);
-            cube.Transform.LocalScale = new Vector3(3f, 0.1f, 3f);
-
-
-            // Create UI
-            UICanvas canvas = scene.CreateObject<UICanvas>("Canvas", typeof(UIEventDispatcher));
-            Image img = Image.Create(canvas.gameObject);
-            img.Size = new Vector2(200, 100);
-            Label txt = canvas.gameObject.CreateObject<Label>("Txt");
-            txt.Text = "Hello World";
-            txt.Font = Content.Load<FontSystem>("OpenSans-Regular");
+            //cube.Transform.WorldPosition += new Vector3(0f, -3f, 0f);
+            //cube.Transform.LocalScale = new Vector3(3f, 0.1f, 3f);
 
 
-            Button btn = Button.Create(canvas.GameObject);
-            btn.Transform.LocalPosition = new Vector3(300, 300, 0);
-
-            Toggle toggle = Toggle.Create(canvas.gameObject);
-            toggle.Transform.LocalPosition = new Vector3(150, 150, 0);
-
-
-            Sprite sprite = new Sprite(Content.Load<Texture2D>("blue_button12"));
-            SpriteRenderer spriteRenderer = scene.CreateObject<SpriteRenderer>("Sprite");
-            spriteRenderer.GameObject.CreateComponent<TestScript>();
-            spriteRenderer.Sprite = sprite;
-
-            spriteRenderer.Transform.WorldPosition = new Vector3(1, 0, 0);
+            //// Create UI
+            //UICanvas canvas = scene.CreateObject<UICanvas>("Canvas", typeof(UIEventDispatcher));
+            //Image img = Image.Create(canvas.gameObject);
+            //img.Size = new Vector2(200, 100);
+            //Label txt = canvas.gameObject.CreateObject<Label>("Txt");
+            //txt.Text = "Hello World";
+            //txt.Font = Content.Load<FontSystem>("OpenSans-Regular");
 
 
-            //GameObject customLoadContent = Content.Load<GameObject>("Test");
+            //Button btn = Button.Create(canvas.GameObject);
+            //btn.Transform.LocalPosition = new Vector3(300, 300, 0);
 
-            scene.Activate();
+            //Toggle toggle = Toggle.Create(canvas.gameObject);
+            //toggle.Transform.LocalPosition = new Vector3(150, 150, 0);
 
 
-            GameScene loadScene = Content.Load<GameScene>("Scene/TestScene");
+            //Sprite sprite = new Sprite(Content.Load<Texture2D>("blue_button12"));
+            //SpriteRenderer spriteRenderer = scene.CreateObject<SpriteRenderer>("Sprite");
+            //spriteRenderer.GameObject.CreateComponent<TestScript>();
+            //spriteRenderer.Sprite = sprite;
+
+            //spriteRenderer.Transform.WorldPosition = new Vector3(1, 0, 0);
+
+
+            ////GameObject customLoadContent = Content.Load<GameObject>("Test");
+
+            //scene.Activate();
+
+
+            //GameScene loadScene = Content.Load<GameScene>("Scene/TestScene");
 
             //loadScene.Activate();
         }
@@ -266,7 +264,8 @@ namespace UniGameEngine
                 Exit();
 
             // Run physics
-            physics.Step(gameTime);
+            if(physics != null)
+                physics.Step(gameTime);
 
             // Do scheduled updates
             DoScheduledUpdateEvents(gameTime);
