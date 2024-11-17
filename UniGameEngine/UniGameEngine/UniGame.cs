@@ -420,14 +420,14 @@ namespace UniGameEngine
                 if (scheduledDestroyDelayElements.Contains(destroyed) == true)
                     scheduledDestroyDelayElements.Remove(destroyed);
 
-                // Trigger destroy event
-                try
+                // Check for game object
+                if (destroyed is GameObject go)
                 {
-                    destroyed.OnDestroy();
+                    GameObject.DoGameObjectDestroyEvents(go);
                 }
-                catch(Exception e)
+                else
                 {
-                    Debug.LogException(e);
+                    GameElement.DoGameElementDestroyEvents(destroyed);
                 }
 
                 // Destroy element

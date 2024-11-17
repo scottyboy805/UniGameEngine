@@ -32,6 +32,10 @@ namespace UniGameEngine
                 if (parent == value)
                     return;
 
+                // Check for self
+                if (value == this)
+                    throw new InvalidOperationException("Cannot set parent as self");
+
                 // Remove parent
                 if (parent != null)
                 {
@@ -44,6 +48,7 @@ namespace UniGameEngine
 
                 // Update parent
                 this.parent = value;
+                this.GameObject.scene = value != null ? value.GameObject.scene : null;
 
                 // Check for not null
                 if (value != null)

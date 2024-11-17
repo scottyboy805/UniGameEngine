@@ -250,10 +250,21 @@ namespace UniGameEditor
             editMenu.AddItem("Copy");
             editMenu.AddItem("Paste");
             editMenu.AddSeparator();
-            editMenu.AddItem("Select All");
             editMenu.AddItem("Duplicate");
             editMenu.AddItem("Rename");
-            editMenu.AddItem("Delete");
+            EditorMenuItem deleteItem = editMenu.AddItem("Delete");
+            {
+                deleteItem.OnShown += () => deleteItem.IsEnabled = selection.HasAnySelection;
+                deleteItem.OnClicked += () =>
+                {
+                    // Delete selection
+                    foreach (GameElement selectedElement in selection.GetSelected<GameElement>())
+                        GameElement.Destroy(selectedElement);
+
+                    // Clear selection
+                    selection.Clear();
+                };
+            }
         }
         #endregion
         #region ContentMenu
@@ -268,6 +279,9 @@ namespace UniGameEditor
 
             };
             contentMenu.AddSeparator();
+            contentMenu.AddItem("Build");
+            contentMenu.AddItem("Rebuild");
+            contentMenu.AddItem("Clean");
         }
         #endregion
         #region GameObjectMenu

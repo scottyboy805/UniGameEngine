@@ -82,10 +82,20 @@ namespace UniGameEditor.Windows
         {
             if(scenes.ContainsKey(scene) == false)
             {
+                // Create the control
+                EditorFoldout foldout = RootControl.AddFoldoutLayout(scene.Name);
+
+                // Set expanded
+                foldout.IsExpanded = scene.expanded;
+
+                // Listen for expanded changed
+                foldout.OnExpanded += (EditorFoldout foldout, bool expanded) => scene.expanded = expanded;
+
                 // Create the scene tree view
                 scenes.Add(scene, new HierarchyScene
                 {
-                    Tree = RootControl.AddTreeView(),
+                    Foldout = foldout,
+                    Tree = foldout.AddTreeView(),
                 });
 
                 // Rebuild the scene
@@ -152,7 +162,13 @@ namespace UniGameEditor.Windows
         private void RebuildHierarchyObjectChildren(GameObject current, EditorTreeNode currentNode)
         {
             // Set expanded state
-            //currentNode.IsExpanded = 
+            currentNode.IsExpanded = current.expanded;
+
+            // Listen for selected
+            currentNode.OnSelected += (EditorTreeNode treeNode) => Editor.Selection.Select(current);
+
+            // Listen for expanded changed
+            currentNode.OnExpanded += (EditorTreeNode treeNode, bool expanded) => current.expanded = expanded;
 
             // Create drag handler
             HierarchyDragDrop dragDrop = new HierarchyDragDrop(current);

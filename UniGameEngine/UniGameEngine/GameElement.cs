@@ -109,6 +109,10 @@ namespace UniGameEngine
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
+            // Check for already destroyed
+            if (element.isDestroyed == true || element.isDestroying == true)
+                return;
+
             // Add for destruction
             if (element.Game.scheduleDestroyElements.Contains(element) == false)
                 element.Game.scheduleDestroyElements.Enqueue(element);
@@ -157,6 +161,20 @@ namespace UniGameEngine
             {
                 Debug.LogException(e);
             }
+        }
+
+        internal static void DoGameElementDestroyEvents(GameElement element)
+        {
+            // Check for null
+            if (element == null)
+                return;
+
+            // Trigger event
+            try
+            {
+                element.OnDestroy();
+            }
+            catch (Exception e) { Debug.LogException(e); }
         }
     }
 }

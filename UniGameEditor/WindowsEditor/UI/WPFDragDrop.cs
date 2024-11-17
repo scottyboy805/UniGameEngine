@@ -61,6 +61,7 @@ namespace WindowsEditor.UI
                 {
                     // Commence the drag operation
                     DataObject obj = new DataObject("Object", data);
+                    obj.SetData("Sender", this);
 
                     // Check for string
                     if (data is string)
@@ -88,7 +89,7 @@ namespace WindowsEditor.UI
                 object obj = e.Data.GetData("Object");
 
                 // Check for drop allowed
-                if (DropHandler != null && DropHandler.CanDrop(obj) == true)
+                if (DropHandler != null && DropHandler.CanDrop(obj) == true && e.Data.GetData("Sender") != this)
                 {
                     element.AllowDrop = true;
                 }

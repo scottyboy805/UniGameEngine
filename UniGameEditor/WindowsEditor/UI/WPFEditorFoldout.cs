@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Windows;
 using System.Windows.Controls;
 using UniGameEditor;
 using UniGameEditor.UI;
@@ -50,10 +51,7 @@ namespace WindowsEditor.UI
         public WPFEditorFoldout(Panel parent, string text, bool isExpanded)
         {
             expander = new Expander();
-            dragDrop = new WPFDragDrop(expander);
-            expander.Content = stackPanel = new StackPanel();
-            expander.Header = text;
-            expander.IsExpanded = isExpanded;
+            InitializeExpanded(text, isExpanded);
 
             parent.Children.Add(expander);
         }
@@ -61,15 +59,24 @@ namespace WindowsEditor.UI
         public WPFEditorFoldout(ItemsControl parent, string text, bool isExpanded)
         {
             expander = new Expander();
-            dragDrop = new WPFDragDrop(expander);
-            expander.Content = stackPanel = new StackPanel();
-            expander.Header = text;
-            expander.IsExpanded = isExpanded;
+            InitializeExpanded(text, isExpanded);
 
             parent.Items.Add(expander);
         }
 
         // Methods
+        private void InitializeExpanded(string text, bool isExpanded)
+        {
+            dragDrop = new WPFDragDrop(expander);
+            expander.Content = stackPanel = new StackPanel();
+            expander.Header = text;
+            expander.IsExpanded = isExpanded;
+
+            // Add listener
+            expander.Expanded += (object sender, RoutedEventArgs e) => OnExpandedEvent(true);
+            expander.Collapsed += (object sender, RoutedEventArgs e) => OnExpandedEvent(false);
+        }
+
         public override EditorLabel AddLabel(string text)
         {
             return new WPFEditorLabel(stackPanel, text);
@@ -148,6 +155,11 @@ namespace WindowsEditor.UI
         public override EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true)
         {
             return new WPFEditorScrollView(stackPanel, horizontal, vertical);
+        }
+
+        public override void Clear()
+        {
+            stackPanel.Children.Clear();
         }
     }
 }

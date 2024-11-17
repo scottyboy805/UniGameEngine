@@ -18,6 +18,9 @@ namespace UniGameEditor.Windows
 
     internal sealed class PropertiesEditorWindow : EditorWindow
     {
+        // Private
+        private EditorLayoutControl mainControl = null;
+
         // Constructor
         public PropertiesEditorWindow()
         {
@@ -28,24 +31,41 @@ namespace UniGameEditor.Windows
         // Methods
         protected internal override void OnShow()
         {
-            RootControl.AddFoldoutLayout("My Foldout").AddButton("Hello");
+            // Add selection listener
+            Editor.Selection.OnSelectionChanged += RebuildProperties;
 
+            // Rebuild on show
+            RebuildProperties();
+        }
 
-            SerializedContent content = new SerializedContent(typeof(GameObject), new[] { new GameObject("Test") });
+        private void RebuildProperties()
+        {
+            // Remove existing
+            if (mainControl != null)
+                RootControl.Clear();
 
-            // Create the editor
-            ContentEditor editor = ContentEditor.ForType<GameObject>();
+            // Create main control
+            mainControl = RootControl.AddVerticalLayout();
 
-            // Initialize editor
-            editor.CreateContent(RootControl, content);
+            // Check for any selection
+            if (Editor.Selection.HasAnySelection == true)
+            {
+                // Get selection type
+                Type selectionType = Editor.Selection.SelectedType;
 
-            //PropertyEditor editor = PropertyEditor.ForType(typeof(Vector3));
+                // Create editor
+                SerializedContent content = new SerializedContent(selectionType, Editor.Selection.GetSelected().ToArray());
 
-            //DataContract contract = DataContract.ForType(typeof(TestObject));
+                // Create the editor
+                ContentEditor editor = ContentEditor.ForType(selectionType);
 
-            //// Create the property
-            //editor.CreateProperty(RootControl, new SerializedProperty(contract.SerializeProperties[0], new[] { new TestObject() }));
-
+                // Initialize editor
+                editor.CreateContent(mainControl, content);
+            }
+            else
+            {
+                mainControl.AddLabel("No Selection");
+            }
         }
     }
 }

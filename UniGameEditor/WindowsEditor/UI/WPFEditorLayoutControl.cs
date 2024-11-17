@@ -116,5 +116,10 @@ namespace WindowsEditor.UI
         {
             return new WPFEditorScrollView(Panel, horizontal, vertical);
         }
+
+        public override void Clear()
+        {
+            Panel.Children.Clear();
+        }
     }
 }

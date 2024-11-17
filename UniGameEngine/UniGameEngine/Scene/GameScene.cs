@@ -18,6 +18,7 @@ namespace UniGameEngine.Scene
         internal HashSet<IGameUpdate> sceneUpdateCalls = new HashSet<IGameUpdate>();
         internal HashSet<IGameFixedUpdate> sceneFixedUpdateCalls = new HashSet<IGameFixedUpdate>();
         internal bool startCalled = false;
+        internal bool expanded = true;
 
         // Private
         private Queue<IGameUpdate> sceneNewObjectsThisFrame = new Queue<IGameUpdate>();

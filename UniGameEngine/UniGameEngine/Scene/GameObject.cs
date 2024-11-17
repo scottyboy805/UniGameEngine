@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -34,6 +35,7 @@ namespace UniGameEngine
 
         // Internal
         internal GameScene scene = null;
+        internal bool expanded = false;
 
         // Properties
         public bool Enabled
@@ -117,6 +119,19 @@ namespace UniGameEngine
         {
             string nameInfo = (string.IsNullOrEmpty(Name) == false) ? Name : "null";
             return string.Format("{0}({1})", GetType().FullName, nameInfo);
+        }
+
+        protected internal override void OnDestroy()
+        {
+            // Check for parent
+            if(Transform.Parent != null)
+            {
+                Transform.Parent.GameObject.RemoveObject(this);
+            }
+            else
+            {
+                Scene.RemoveObject(this);
+            }
         }
 
         #region CreateGameObject
@@ -706,6 +721,42 @@ namespace UniGameEngine
                 {
                     // Recursive call
                     DoGameObjectEnabledEvents(child.GameObject, enabled, forceUpdate);
+                }
+            }
+        }
+
+        internal static void DoGameObjectDestroyEvents(GameObject gameObject)
+        {
+            try
+            {
+                gameObject.OnDestroy();
+            }
+            catch (Exception e) { Debug.LogException(e); }
+
+            // Update components
+            if (gameObject.components != null && gameObject.components.Count > 0)
+            {
+                // Update all components
+                foreach (Component component in gameObject.components)
+                {
+                    if (component != null && component.Enabled == true)
+                    {
+                        // Trigger component enabled callback
+                        DoGameElementDestroyEvents(component);
+                    }
+                }
+            }
+
+            // Get transform
+            Transform transform = gameObject.transform;
+
+            // Update children recursive
+            if (transform.children != null && transform.children.Count > 0)
+            {
+                foreach (Transform child in transform.children)
+                {
+                    // Recursive call
+                    DoGameObjectDestroyEvents(child.GameObject);
                 }
             }
         }
