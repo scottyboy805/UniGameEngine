@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using ModernWpf.Controls;
+using System.Windows.Controls;
 
 namespace WindowsEditor.UI
 {
@@ -14,12 +15,14 @@ namespace WindowsEditor.UI
         public WPFEditorWrapPanelLayout(Panel parent)
         {
             wrapPanel = new WrapPanel();
+            dragDrop = new WPFDragDrop(wrapPanel);
             parent.Children.Add(wrapPanel);
         }
 
         public WPFEditorWrapPanelLayout(ItemsControl parent)
         {
             wrapPanel = new WrapPanel();
+            dragDrop = new WPFDragDrop(wrapPanel);
             parent.Items.Add(wrapPanel);
         }
     }

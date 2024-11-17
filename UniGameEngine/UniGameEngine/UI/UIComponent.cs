@@ -119,7 +119,7 @@ namespace UniGameEngine.UI
                 Scene.sceneUpdateCalls.Add((IGameUpdate)this);
 
             // Register for UI events
-            if (this is UIGraphic)
+            if (this is UIGraphic && Dispatcher != null)
                 Dispatcher.AddRaycastTarget((UIGraphic)this);
         }
         protected override void UnregisterSubSystems()
@@ -133,7 +133,7 @@ namespace UniGameEngine.UI
                 Scene.sceneUpdateCalls.Remove((IGameUpdate)this);
 
             // Unregister UI event
-            if (this is UIGraphic)
+            if (this is UIGraphic && Dispatcher != null)
                 Dispatcher.AddRaycastTarget((UIGraphic)this);
         }
     }

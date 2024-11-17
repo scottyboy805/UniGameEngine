@@ -6,6 +6,7 @@ namespace WindowsEditor.UI
     internal sealed class WPFEditorInput : EditorInput
     {
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal TextBox textBox = null;
 
         // Properties
@@ -26,10 +27,23 @@ namespace WindowsEditor.UI
             set => textBox.Text = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorInput(Panel parent, string text)
         {
             textBox = new TextBox();
+            dragDrop = new WPFDragDrop(textBox);
             textBox.Text = text;
 
             textBox.FontSize = DefaultFontSize;
@@ -41,6 +55,7 @@ namespace WindowsEditor.UI
         public WPFEditorInput(ItemsControl parent, string text)
         {
             textBox = new TextBox();
+            dragDrop = new WPFDragDrop(textBox);
             textBox.Text = text;
 
             textBox.FontSize = DefaultFontSize;

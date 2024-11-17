@@ -11,6 +11,7 @@ using UniGameEngine.Graphics;
 using UniGameEngine.Physics;
 using UniGameEngine.Scene;
 
+[assembly: InternalsVisibleTo("UniGameEditor")]
 [assembly: InternalsVisibleTo("UniGamePipeline")]
 [assembly: InternalsVisibleTo("UniGamePipelineTests")]
 
@@ -18,8 +19,10 @@ namespace UniGameEngine
 {
     public abstract class UniGame : Game
     {
+        // Protected
+        protected static UniGame current = null;
+
         // Private
-        private static UniGame current = null;
         private static readonly GameUpdateComparer updateComparer = new GameUpdateComparer();
         private static readonly GameDrawComparer drawComparer = new GameDrawComparer();
 

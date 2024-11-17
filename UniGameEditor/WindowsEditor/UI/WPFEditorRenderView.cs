@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModernWpf.Controls;
 using MonoGame.Framework.WpfInterop;
 using MonoGame.Framework.WpfInterop.Input;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Controls;
 using UniGameEditor.UI;
 
@@ -85,6 +87,7 @@ namespace WindowsEditor.UI
         }
 
         // Private
+        internal WPFDragDrop dragDrop = null;
         private WPFInteropHostView renderView = null;
 
         public override float Width
@@ -98,10 +101,23 @@ namespace WindowsEditor.UI
             set => renderView.Height = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorRenderView(Panel parent, Game gameHost)
         {
             renderView = new WPFInteropHostView(gameHost);
+            dragDrop = new WPFDragDrop(renderView);
             //renderView.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
             //renderView.MinHeight = 150;
             parent.Children.Add(renderView);
@@ -110,6 +126,7 @@ namespace WindowsEditor.UI
         public WPFEditorRenderView(ItemsControl parent, Game gameHost)
         {
             renderView = new WPFInteropHostView(gameHost);
+            dragDrop = new WPFDragDrop(renderView);
             parent.Items.Add(renderView);
         }
 

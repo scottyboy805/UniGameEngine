@@ -120,6 +120,7 @@
 #begin WGPU-Logo.png
 /importer:TextureImporter
 /processor:TextureProcessor
+/processorParam:Guid=oihsdoif987098485
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False

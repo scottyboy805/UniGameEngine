@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using ModernWpf.Controls;
+using System.Windows;
+using System.Windows.Controls;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
@@ -6,6 +8,7 @@ namespace WindowsEditor.UI
     internal sealed class WPFEditorToggle : EditorToggle
     {
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal CheckBox checkBox = null;
 
         // Properties
@@ -31,10 +34,23 @@ namespace WindowsEditor.UI
             set => checkBox.IsChecked = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorToggle(Panel parent, string text, bool on)
         {
             checkBox = new CheckBox();
+            dragDrop = new WPFDragDrop(checkBox);
             checkBox.Content = text;
             checkBox.IsChecked = on;
 
@@ -47,6 +63,7 @@ namespace WindowsEditor.UI
         public WPFEditorToggle(ItemsControl parent, string text, bool on)
         {
             checkBox = new CheckBox();
+            dragDrop = new WPFDragDrop(checkBox);
             checkBox.Content = text;
             checkBox.IsChecked = on;
 

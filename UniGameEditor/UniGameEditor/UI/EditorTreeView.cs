@@ -10,5 +10,6 @@ namespace UniGameEditor.UI
         // Methods
         public abstract EditorTreeNode AddNode(string text);
         public abstract void RemoveNode(EditorTreeNode node);
+        public abstract void ClearNodes();
     }
 }

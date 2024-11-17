@@ -17,6 +17,8 @@ namespace UniGameEditor.Windows
     {
         // Events
         internal static event Action<EditorWindow, EditorWindowLocation> OnRequestOpenWindow;
+        internal static event Action<EditorWindow> OnRequestCloseWindow;
+        internal static event Action<EditorWindow> OnRequestFocusWindow;
 
         // Internal
         internal UniEditor editor = null;
@@ -75,6 +77,16 @@ namespace UniGameEditor.Windows
         protected internal virtual void OnShow() { }
 
         protected internal virtual void OnHide() { }
+
+        public void Close()
+        {
+            OnRequestCloseWindow(this);
+        }
+
+        public void Focus()
+        {
+            OnRequestFocusWindow(this);
+        }
 
         internal void Resize(float width, float height)
         {

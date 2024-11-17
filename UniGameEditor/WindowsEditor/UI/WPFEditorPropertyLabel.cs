@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ModernWpf.Controls;
+using System.Windows;
 using System.Windows.Controls;
 using UniGameEditor;
 using UniGameEditor.UI;
@@ -8,6 +9,7 @@ namespace WindowsEditor.UI
     internal sealed class WPFEditorPropertyLabel : EditorPropertyLabel
     {
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal IconTextContent content = null;
 
         // Properties
@@ -41,17 +43,31 @@ namespace WindowsEditor.UI
             set => content.Icon = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorPropertyLabel(Panel parent, SerializedProperty property, string text)
             : base(property)
         {
             content = new IconTextContent(parent, new Label(), text);
+            dragDrop = new WPFDragDrop(content.mainControl);
         }
 
         public WPFEditorPropertyLabel(ItemsControl parent, SerializedProperty property, string text)
             : base(property)
         {
             content = new IconTextContent(parent, new Label(), text);
+            dragDrop = new WPFDragDrop(content.mainControl);
         }
     }
 }

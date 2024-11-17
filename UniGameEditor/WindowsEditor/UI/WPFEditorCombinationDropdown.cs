@@ -45,6 +45,7 @@ namespace WindowsEditor.UI
         }
 
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal ComboBox combo = null;
         internal List<EditorOption> options = null;
 
@@ -86,10 +87,23 @@ namespace WindowsEditor.UI
             set => combo.Height = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorCombinationDropdown(Panel parent)
         {
             combo = new ComboBox();
+            dragDrop = new WPFDragDrop(combo);
             combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
 
             combo.FontSize = DefaultFontSize;
@@ -101,6 +115,7 @@ namespace WindowsEditor.UI
         public WPFEditorCombinationDropdown(ItemsControl parent)
         {
             combo = new ComboBox();
+            dragDrop = new WPFDragDrop(combo);
             combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
 
             combo.FontSize = DefaultFontSize;

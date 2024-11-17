@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
@@ -8,6 +7,7 @@ namespace WindowsEditor.UI
     internal sealed class WPFEditorTreeNode : EditorTreeNode
     {
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal WPFEditorTreeView treeView = null;
         internal TreeViewItem treeItem = null;
         internal IconTextContent content = null;
@@ -68,6 +68,18 @@ namespace WindowsEditor.UI
             get => nodes != null ? nodes.Count : 0;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorTreeNode(WPFEditorTreeView treeView, string text)
         {
@@ -90,6 +102,7 @@ namespace WindowsEditor.UI
         private void InitializeTreeItem(string text)
         {
             this.treeItem = new TreeViewItem();
+            this.dragDrop = new WPFDragDrop(treeItem);
 
             // Create content
             this.content = new IconTextContent(treeItem, text);
@@ -128,6 +141,14 @@ namespace WindowsEditor.UI
                 // Remove from tree
                 treeItems.Remove(((WPFEditorTreeNode)node).treeItem);
             }
+        }
+
+        public override void ClearNodes()
+        {
+            treeItems.Clear();
+
+            if(nodes != null)
+                nodes.Clear();
         }
     }
 }

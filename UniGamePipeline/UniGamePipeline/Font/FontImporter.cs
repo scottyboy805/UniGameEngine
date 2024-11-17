@@ -11,7 +11,7 @@ namespace UniGamePipeline.Font
         {
             // Read all bytes
             byte[] fontBytes = File.ReadAllBytes(filename);
-
+            
             // Create content
             return new FontContentItem(fontBytes);
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content.Pipeline;
+using Microsoft.Xna.Framework.Content.Pipeline.Processors;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using UniGameEngine.Content.Reader;
 
@@ -17,7 +18,7 @@ namespace UniGamePipeline.Font
         {
             // Write size
             output.Write(value.ImportedBytes.Length);
-
+            
             // Write bytes
             output.Write(value.ImportedBytes);
         }

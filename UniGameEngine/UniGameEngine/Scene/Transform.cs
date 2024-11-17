@@ -26,6 +26,29 @@ namespace UniGameEngine
         public Transform Parent
         {
             get { return parent; }
+            set
+            {
+                // Check for change
+                if (parent == value)
+                    return;
+
+                // Remove parent
+                if (parent != null)
+                {
+                    parent.GameObject.RemoveObject(GameObject, true);
+                }
+                else if(Scene != null)
+                {
+                    Scene.RemoveObject(gameObject, true);
+                }
+
+                // Update parent
+                this.parent = value;
+
+                // Check for not null
+                if (value != null)
+                    value.GameObject.CreateObject(GameObject, true);
+            }
         }
 
         public Transform Root

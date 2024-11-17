@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -215,6 +216,34 @@ namespace UniGameEngine.Content.Serializers
         public abstract void WriteValueObject(SerializedWriter writer, Type type, object value);
         public abstract void ReadValueObject(SerializedReader reader, Type type, ref object value);
 
+        public static string SerializeJson<T>(T value)
+        {
+            // Serialize to string
+            using (StringWriter stringWriter = new StringWriter())
+            {
+                using (JsonSerializedWriter jsonWriter = new JsonSerializedWriter(new JsonTextWriter(stringWriter)))
+                {
+                    Serialize<T>(jsonWriter, value);
+                }
+                // Get the string
+                return stringWriter.ToString();
+            }
+        }
+
+        public static string SerializeJson(object value)
+        {
+            // Serialize to string
+            using (StringWriter stringWriter = new StringWriter())
+            {
+                using (JsonSerializedWriter jsonWriter = new JsonSerializedWriter(new JsonTextWriter(stringWriter)))
+                {
+                    Serialize(jsonWriter, value);
+                }
+                // Get the string
+                return stringWriter.ToString();
+            }
+        }
+
         public static void Serialize<T>(SerializedWriter writer, T value)
         {
             // Check for null
@@ -284,6 +313,22 @@ namespace UniGameEngine.Content.Serializers
             // Serialize value
             serializer.serializeAsType = type;
             serializer.WriteValueObject(writer, type, value);
+        }
+
+        public static T DeserializeJson<T>(string json)
+        {
+            using (JsonSerializedReader jsonReader = new JsonSerializedReader(new JsonTextReader(new StringReader(json))))
+            {
+                return Deserialize<T>(jsonReader);
+            }
+        }
+
+        public static object DeserializeJson(string json, Type asType)
+        {
+            using (JsonSerializedReader jsonReader = new JsonSerializedReader(new JsonTextReader(new StringReader(json))))
+            {
+                return Deserialize(jsonReader, asType);
+            }
         }
 
         public static T Deserialize<T>(SerializedReader reader)

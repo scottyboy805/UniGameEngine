@@ -11,5 +11,9 @@ namespace UniGameEditor.UI
         public abstract float Width { get; set; }
 
         public abstract float Height { get; set; }
+
+        public abstract IDragHandler DragHandler { get; set; }
+
+        public abstract IDropHandler DropHandler { get; set; }
     }
 }

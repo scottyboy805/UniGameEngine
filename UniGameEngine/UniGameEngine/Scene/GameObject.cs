@@ -209,7 +209,7 @@ namespace UniGameEngine
             return result;
         }
 
-        private void CreateObject(GameObject go)
+        internal void CreateObject(GameObject go, bool doEnabledEvents = true)
         {
             // Check for child collection
             if (transform.children == null)
@@ -221,7 +221,31 @@ namespace UniGameEngine
             go.transform.parent = transform;
 
             // Trigger enable
-            GameObject.DoGameObjectEnabledEvents(go, true, true);
+            if(doEnabledEvents == true)
+                GameObject.DoGameObjectEnabledEvents(go, true, true);
+
+            // Update scene
+            if (scene != null)
+                scene.InvokeSceneModified();
+        }
+
+        internal void RemoveObject(GameObject go, bool doDisabledEvents = true)
+        {
+            if(transform.children != null && transform.children.Contains(go.Transform) == true)
+            {
+                // Trigger disable
+                if(doDisabledEvents == true)
+                    GameObject.DoGameObjectEnabledEvents(go, false, true);
+
+                // Unregister parent
+                transform.children.Remove(go.transform);
+                go.scene = null;
+                go.transform.parent = null;
+
+                // Update scene
+                if (scene != null)
+                    scene.InvokeSceneModified();
+            }
         }
         #endregion
 
@@ -274,6 +298,10 @@ namespace UniGameEngine
 
             // Trigger enable
             Component.DoComponentEnabledEvents(existingComponent, true, true);
+
+            // Check for scene
+            if (scene != null)
+                scene.InvokeSceneModified();
         }
         #endregion
 

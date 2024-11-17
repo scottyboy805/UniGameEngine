@@ -7,6 +7,9 @@ namespace WindowsEditor.UI
 {
     internal abstract class WPFEditorLayoutControl : EditorLayoutControl
     {
+        // Internal
+        internal WPFDragDrop dragDrop = null;
+
         // Properties
         public abstract Panel Panel { get; }
 
@@ -19,6 +22,18 @@ namespace WindowsEditor.UI
         {
             get => (float)Panel.ActualHeight;
             set => Panel.Height = value;
+        }
+
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
         }
 
         // Methods

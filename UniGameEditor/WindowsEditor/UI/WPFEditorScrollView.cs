@@ -16,6 +16,7 @@ namespace WindowsEditor.UI
         public WPFEditorScrollView(Panel parent, bool horizontal, bool vertical)
         {
             scrollViewer = new ScrollViewer();
+            dragDrop = new WPFDragDrop(scrollViewer);
             scrollViewer.Content = scrollPanel = new StackPanel();
             scrollViewer.HorizontalScrollBarVisibility = horizontal == true
                 ? ScrollBarVisibility.Auto
@@ -33,6 +34,7 @@ namespace WindowsEditor.UI
         public WPFEditorScrollView(ItemsControl parent, bool horizontal, bool vertical)
         {
             scrollViewer = new ScrollViewer();
+            dragDrop = new WPFDragDrop(scrollViewer);
             scrollViewer.Content = scrollPanel = new StackPanel();
             scrollViewer.HorizontalScrollBarVisibility = horizontal == true
                 ? ScrollBarVisibility.Auto

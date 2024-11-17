@@ -8,6 +8,7 @@ namespace WindowsEditor.UI
     internal sealed class WPFEditorButton : EditorButton
     {
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal Button button = null;
         internal IconTextContent content = null;
 
@@ -42,17 +43,31 @@ namespace WindowsEditor.UI
             set => content.Icon = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => button.AllowDrop = value != null;
+        }
+
         // Constructor
         public WPFEditorButton(Panel parent, string text)
         {
             button = new Button();
             content = new IconTextContent(parent, button, text);
+            dragDrop = new WPFDragDrop(content.mainControl);
         }
 
         public WPFEditorButton(ItemsControl parent, string text)
         {
             button = new Button();
             content = new IconTextContent(parent, button, text);
+            dragDrop = new WPFDragDrop(content.mainControl);
         }
 
         // Methods

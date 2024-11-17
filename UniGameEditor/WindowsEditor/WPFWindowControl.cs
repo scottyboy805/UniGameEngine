@@ -73,6 +73,17 @@ namespace WindowsEditor
             return false;
         }
 
+        public void FocusWindow(EditorWindow window)
+        {
+            // Get the tab
+            TabItem windowTab;
+            if(displayedWindows.TryGetValue(window, out windowTab) == true)
+            {
+                // Set active tab
+                tabControl.SelectedItem = windowTab;
+            }
+        }
+
         public void OpenWindow(EditorWindow window)
         {
             // Check for null
@@ -241,7 +252,7 @@ namespace WindowsEditor
             };
             menu.Items.Add(closeOption);
             closeOption.Click += (object sender, RoutedEventArgs e) => CloseWindow(window);
-
+            
             // Add dock option
             MenuItem dockOption = new MenuItem
             {

@@ -5,8 +5,7 @@ namespace UniGameEditor.UI
 {
     public abstract class EditorIcon
     {
-        // Private
-        
+        // Private        
         private static readonly Dictionary<string, EditorIcon> loadedIcons = new Dictionary<string, EditorIcon>();
 
         private string iconName = null;

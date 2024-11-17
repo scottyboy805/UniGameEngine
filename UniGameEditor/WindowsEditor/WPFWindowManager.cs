@@ -16,6 +16,8 @@ namespace WindowsEditor
 
             // Add listener
             EditorWindow.OnRequestOpenWindow += OnRequestOpenWindow;
+            EditorWindow.OnRequestCloseWindow += OnRequestCloseWindow;
+            EditorWindow.OnRequestFocusWindow += OnRequestFocusWindow;
         }
 
         // Methods
@@ -42,15 +44,20 @@ namespace WindowsEditor
             EditorWindow.OpenEditorWindow<HierarchyEditorWindow>(EditorWindowLocation.Left);
 
             // Add scene and game window
-            EditorWindow.OpenEditorWindow<SceneEditorWindow>(EditorWindowLocation.Center);
+            EditorWindow sceneWindow = EditorWindow.OpenEditorWindow<SceneEditorWindow>(EditorWindowLocation.Center);
             EditorWindow.OpenEditorWindow<GameEditorWindow>(EditorWindowLocation.Center);
 
             // Add content and console window
-            EditorWindow.OpenEditorWindow<ContentEditorWindow>(EditorWindowLocation.Bottom);
+            EditorWindow contentWindow = EditorWindow.OpenEditorWindow<ContentEditorWindow>(EditorWindowLocation.Bottom);
             EditorWindow.OpenEditorWindow<ConsoleEditorWindow>(EditorWindowLocation.Bottom);
 
             // Add properties window
             EditorWindow.OpenEditorWindow<PropertiesEditorWindow>(EditorWindowLocation.Right);
+
+
+            // Show scene and content window
+            sceneWindow.Focus();
+            contentWindow.Focus();
         }
 
         public void ChangeLocation(EditorWindow window, EditorWindowLocation location)
@@ -138,6 +145,16 @@ namespace WindowsEditor
                 windowDock.CloseWindow<T>();
         }
 
+        private WPFWindowControl GetWindowDock(EditorWindow window)
+        {
+            foreach (WPFWindowControl windowDock in windowDocks)
+            {
+                if (windowDock.IsWindowOpen(window) == true)
+                    return windowDock;
+            }
+            return null;
+        }
+
         private void OnRequestOpenWindow(EditorWindow window, EditorWindowLocation location)
         {
             // Check for open
@@ -146,6 +163,22 @@ namespace WindowsEditor
 
             // Open the window
             OpenWindow(window, location);
+        }
+
+        private void OnRequestCloseWindow(EditorWindow window)
+        {
+            if(window.isOpen == true)
+                CloseWindow(window);
+        }
+
+        private void OnRequestFocusWindow(EditorWindow window)
+        {
+            // Get the window dock
+            WPFWindowControl windowDock = GetWindowDock(window);
+
+            // Check for found
+            if(windowDock != null)
+                windowDock.FocusWindow(window);
         }
     }
 }

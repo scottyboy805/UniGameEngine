@@ -9,7 +9,7 @@ namespace WindowsEditor.UI
         // Type
         internal sealed class DropdownEditorOption : EditorOption
         {
-            // Internal
+            // Internal            
             internal ComboBoxItem item = null;
             internal IconTextContent content = null;
 
@@ -46,6 +46,7 @@ namespace WindowsEditor.UI
         }
 
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal ComboBox combo = null;
         internal List<EditorOption> options = null;
 
@@ -74,10 +75,23 @@ namespace WindowsEditor.UI
             set => combo.Height = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorDropdown(Panel parent)
         {
             combo = new ComboBox();
+            dragDrop = new WPFDragDrop(combo);
             combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
 
             combo.FontSize = DefaultFontSize;
@@ -89,6 +103,7 @@ namespace WindowsEditor.UI
         public WPFEditorDropdown(ItemsControl parent)
         {
             combo = new ComboBox();
+            dragDrop = new WPFDragDrop(combo);
             combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
 
             combo.FontSize = DefaultFontSize;

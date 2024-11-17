@@ -1,4 +1,5 @@
 ﻿using ModernWpf;
+using MonoGame.Framework.WpfInterop;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -27,13 +28,24 @@ namespace WindowsEditor
             // Set title
             Title = "UniGameEditor, " + UniGame.EngineVersion;
 
+            // Use single graphics device per render view
+            WpfGame.UseASingleSharedGraphicsDevice = true;
+
             // Set theme
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
             ThemeManager.Current.AccentColor = Colors.LightBlue;
 
-
             // Initialize window manager
             windowManager = new WPFWindowManager(editor);
+
+            // Initialize menu
+            editor.menu = new WPFEditorMenu(Menu);
+            editor.fileMenu = new WPFEditorMenu(FileMenu);
+            editor.editMenu = new WPFEditorMenu(EditMenu);
+            editor.contentMenu = new WPFEditorMenu(ContentMenu);
+            editor.gameObjectMenu = new WPFEditorMenu(GameObjectMenu);
+            editor.componentMenu = new WPFEditorMenu(ComponentMenu);
+            editor.windowMenu = new WPFEditorMenu(WindowMenu);
 
             // Initialize windows
             windowManager.AddWindowDock(new WPFWindowControl(CenterGrid, null, CenterTab, EditorWindowLocation.Center));
@@ -41,25 +53,31 @@ namespace WindowsEditor
             windowManager.AddWindowDock(new WPFWindowControl(LeftGrid, LeftSplitter, LeftTab, EditorWindowLocation.Left));
             windowManager.AddWindowDock(new WPFWindowControl(BottomGrid, BottomSplitter, BottomTab, EditorWindowLocation.Bottom));
 
-            // Initialize icons
+            // Initialize icons and menus
             WPFEditorIcon.InitializeIconProvider();
+            WPFEditorMenu.InitializeMenuProvider();
 
             // Initialize editors
             PropertyEditor.InitializePropertyEditors(editor);
             ContentEditor.InitializePropertyEditors(editor);
 
-            
-
             // Listen for window loaded
             Loaded += OnLoaded;
+            editor.GameInstance.OnInitialized += OnGameLoaded;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            editor.OpenProject("../../../../../ExampleProject/ExampleProject.unigame");
-
             // Show windows
             windowManager.ShowDefaultWindows();
+
+            // Initialize editor
+            editor.Initialize();            
+        }
+
+        private void OnGameLoaded()
+        {
+            editor.OpenProject("../../../../../ExampleProject/ExampleProject.unigame");
         }
 
         #region WindowEvents

@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using ModernWpf;
 using System.Windows.Controls;
-using System.Windows.Media;
 using UniGameEditor;
 using UniGameEditor.UI;
 
@@ -10,6 +8,7 @@ namespace WindowsEditor.UI
     internal sealed class WPFEditorFoldout : EditorFoldout
     {
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal Expander expander = null;
         internal StackPanel stackPanel = null;
 
@@ -35,10 +34,23 @@ namespace WindowsEditor.UI
             set => expander.IsExpanded = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorFoldout(Panel parent, string text, bool isExpanded)
         {
             expander = new Expander();
+            dragDrop = new WPFDragDrop(expander);
             expander.Content = stackPanel = new StackPanel();
             expander.Header = text;
             expander.IsExpanded = isExpanded;
@@ -49,6 +61,7 @@ namespace WindowsEditor.UI
         public WPFEditorFoldout(ItemsControl parent, string text, bool isExpanded)
         {
             expander = new Expander();
+            dragDrop = new WPFDragDrop(expander);
             expander.Content = stackPanel = new StackPanel();
             expander.Header = text;
             expander.IsExpanded = isExpanded;

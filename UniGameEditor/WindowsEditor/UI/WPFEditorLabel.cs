@@ -6,6 +6,7 @@ namespace WindowsEditor.UI
     internal class WPFEditorLabel : EditorLabel
     {
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal IconTextContent content = null;
 
         // Properties
@@ -39,15 +40,29 @@ namespace WindowsEditor.UI
             set => content.Icon = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorLabel(Panel parent, string text)
         {
             content = new IconTextContent(parent, new Label(), text);
+            dragDrop = new WPFDragDrop(content.mainControl);
         }
 
         public WPFEditorLabel(ItemsControl parent, string text)
         {
             content = new IconTextContent(parent, new Label(), text);
+            dragDrop = new WPFDragDrop(content.mainControl);
         }
     }
 }

@@ -1,11 +1,53 @@
-﻿
-using System.ComponentModel.Design;
-using UniGameEditor.UI;
+﻿using UniGameEditor.UI;
+using UniGameEngine;
+using UniGameEngine.Scene;
 
 namespace UniGameEditor.Windows
 {
     internal sealed class HierarchyEditorWindow : EditorWindow
     {
+        // Type
+        private sealed class HierarchyScene
+        {
+            // Public
+            public EditorFoldout Foldout;
+            public EditorTreeView Tree;
+        }
+
+        private sealed class HierarchyDragDrop : IDragHandler, IDropHandler
+        {
+            // Private
+            private GameObject gameObject = null;
+
+            // Constructor
+            public HierarchyDragDrop(GameObject gameObject)
+            {
+                this.gameObject = gameObject;
+            }
+
+            // Methods
+            public bool PerformDrag(out object dragData, out DragDropVisual visual)
+            {
+                dragData = gameObject;
+                visual = DragDropVisual.Move;
+                return gameObject != null;
+            }
+
+            public bool CanDrop(object dragData)
+            {
+                return dragData is GameObject;
+            }
+
+            public void PerformDrop(object dragData)
+            {
+                ((GameObject)dragData).Transform.Parent = gameObject.Transform;
+            }
+        }
+
+        // Private
+        //private EditorTreeView hierarchyTree = null;
+        private Dictionary<GameScene, HierarchyScene> scenes = new Dictionary<GameScene, HierarchyScene>();
+
         // Constructor
         public HierarchyEditorWindow()
         {
@@ -16,17 +58,117 @@ namespace UniGameEditor.Windows
         // Methods
         protected internal override void OnShow()
         {
-            // Create scene
-            EditorLayoutControl hLayout = RootControl.AddHorizontalLayout();
+            //// Create scene
+            //EditorLayoutControl hLayout = RootControl.AddHorizontalLayout();
 
-            hLayout.AddLabel("My Scene Name");
+            //hLayout.AddLabel("My Scene Name");
 
-            RootControl.AddLabel("Hello World");
+            //RootControl.AddLabel("Hello World");
 
-            // Add tree view
-            EditorTreeView tree = RootControl.AddTreeView();
-            tree.AddNode("Test1").AddNode("Child1").Icon = EditorIcon.FindIcon("FolderNormal");
-            tree.AddNode("Test2").AddNode("Child2").Icon = EditorIcon.FindIcon("FolderOpen");
+
+            // Add listener
+            Editor.OnSceneLoaded += AddScene;
+            Editor.OnSceneUnloaded += RemoveScene;
+        }
+
+        protected internal override void OnHide()
+        {
+            // Remove listener
+            Editor.OnSceneLoaded -= AddScene;
+            Editor.OnSceneUnloaded -= RemoveScene;
+        }
+
+        private void AddScene(GameScene scene)
+        {
+            if(scenes.ContainsKey(scene) == false)
+            {
+                // Create the scene tree view
+                scenes.Add(scene, new HierarchyScene
+                {
+                    Tree = RootControl.AddTreeView(),
+                });
+
+                // Rebuild the scene
+                RebuildHierarchy(scene);
+
+                // Add listener for modified
+                scene.OnSceneModified += () => RebuildHierarchy(scene);
+            }
+        }
+
+        private void RemoveScene(GameScene scene)
+        {
+            if(scenes.ContainsKey(scene) == true)
+            {
+                // Remove the scene
+            }
+        }
+
+        private void RebuildHierarchy()
+        {
+            // Process all scenes
+            foreach(GameScene scene in editor.GameInstance.Scenes)
+            {
+                // Rebuild the scene
+                RebuildHierarchy(scene);
+            }
+        }
+
+        private void RebuildHierarchy(GameScene scene)
+        {
+            // Get the tree
+            HierarchyScene hierarchyScene;
+            if (scenes.TryGetValue(scene, out hierarchyScene) == false)
+                return;
+
+            // Clear tree
+            hierarchyScene.Tree.ClearNodes();
+
+            // Get root objects
+            foreach (GameObject go in scene.GameObjects)
+            {
+                RebuildHierarchyObject(go, hierarchyScene.Tree);
+            }
+        }
+
+        private void RebuildHierarchyObject(GameObject current, EditorTreeView treeView)
+        {
+            // Create node
+            EditorTreeNode currentNode = treeView.AddNode(current.Name);
+
+            // Build children
+            RebuildHierarchyObjectChildren(current, currentNode);
+        }
+
+        private void RebuildHierarchyObject(GameObject current, EditorTreeNode treeNode)
+        {
+            // Create node
+            EditorTreeNode currentNode = treeNode.AddNode(current.Name);
+
+            // Build children
+            RebuildHierarchyObjectChildren(current, currentNode);
+        }
+
+        private void RebuildHierarchyObjectChildren(GameObject current, EditorTreeNode currentNode)
+        {
+            // Set expanded state
+            //currentNode.IsExpanded = 
+
+            // Create drag handler
+            HierarchyDragDrop dragDrop = new HierarchyDragDrop(current);
+
+            currentNode.DragHandler = dragDrop;
+            currentNode.DropHandler = dragDrop;
+
+            // Check for children
+            if(current.Transform.HasChildren == true)
+            {
+                // Process all children
+                foreach(Transform child in current.Transform.Children)
+                {
+                    RebuildHierarchyObject(child.GameObject, currentNode);
+                }
+            }
         }
     }
 }

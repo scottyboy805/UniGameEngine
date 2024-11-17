@@ -10,6 +10,9 @@ namespace UniGameEngine.Scene
     [DataContract]
     public sealed class GameScene : GameElement, IGameUpdate, IGameDraw, IContentCallback
     {
+        // Events
+        internal event Action OnSceneModified;
+
         // Internal
         internal HashSet<IGameDraw> sceneDrawCalls = new HashSet<IGameDraw>();
         internal HashSet<IGameUpdate> sceneUpdateCalls = new HashSet<IGameUpdate>();
@@ -63,6 +66,10 @@ namespace UniGameEngine.Scene
             // Check for active
             if (Game.scenes.Contains(this) == true)
                 throw new InvalidOperationException("Scene is already activated");
+
+            //// Check for editor
+            //if (Game.IsPlaying == false)
+            //    throw new InvalidOperationException("Scene cannot be activated in edit mode");
 
             // Set activated state
             activated = true;
@@ -230,14 +237,35 @@ namespace UniGameEngine.Scene
             return result;
         }
 
-        private void CreateObject(GameObject go)
+        internal void CreateObject(GameObject go, bool doEnabledEvents = true)
         {
             // Register object
             gameObjects.Add(go);
             go.scene = this;
 
             // Trigger enable
-            GameObject.DoGameObjectEnabledEvents(go, true, true);
+            if(doEnabledEvents == true)
+                GameObject.DoGameObjectEnabledEvents(go, true, true);
+
+            // Invoke modified
+            InvokeSceneModified();
+        }
+
+        internal void RemoveObject(GameObject go, bool doDisabledEvents = true)
+        {
+            if(gameObjects.Contains(go) == true)
+            {
+                // Trigger enable
+                if(doDisabledEvents == true)
+                    GameObject.DoGameObjectEnabledEvents(go, true, true);
+
+                // Unregister object
+                gameObjects.Remove(go);
+                go.scene = null;
+
+                // Invoke modified
+                InvokeSceneModified();
+            }
         }
 
         void IContentCallback.OnBeforeContentSave()
@@ -265,5 +293,11 @@ namespace UniGameEngine.Scene
 
         #region SearchGameObjects(T)
         #endregion
+
+        internal void InvokeSceneModified()
+        {
+            if (OnSceneModified != null)
+                OnSceneModified();
+        }
     }
 }

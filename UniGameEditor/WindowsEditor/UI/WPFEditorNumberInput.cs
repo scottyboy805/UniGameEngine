@@ -7,6 +7,7 @@ namespace WindowsEditor.UI
     internal sealed class WPFEditorNumberInput : EditorNumberInput
     {
         // Internal
+        internal WPFDragDrop dragDrop = null;
         internal NumberBox numberBox = null;
 
         // Properties
@@ -41,10 +42,23 @@ namespace WindowsEditor.UI
             set => numberBox.Maximum = value;
         }
 
+        public override IDragHandler DragHandler
+        {
+            get => dragDrop.DragHandler;
+            set => dragDrop.DragHandler = value;
+        }
+
+        public override IDropHandler DropHandler
+        {
+            get => dragDrop.DropHandler;
+            set => dragDrop.DropHandler = value;
+        }
+
         // Constructor
         public WPFEditorNumberInput(Panel parent, double value, double min, double max)
         {
             numberBox = new NumberBox();
+            dragDrop = new WPFDragDrop(numberBox);
             numberBox.Value = value;
             numberBox.Minimum = min;
             numberBox.Maximum = max;
@@ -58,6 +72,7 @@ namespace WindowsEditor.UI
         public WPFEditorNumberInput(ItemsControl parent, double value, double min, double max)
         {
             numberBox = new NumberBox();
+            dragDrop = new WPFDragDrop(numberBox);
             numberBox.Value = value;
             numberBox.Minimum = min;
             numberBox.Maximum = max;
