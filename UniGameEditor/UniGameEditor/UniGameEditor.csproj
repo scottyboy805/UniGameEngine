@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\UniGameEngine\UniGameEngine\UniGameEngine.csproj" />
+    <ProjectReference Include="..\..\UniGamePipeline\UniGamePipeline\UniGamePipeline.csproj" />
   </ItemGroup>
 
 </Project>

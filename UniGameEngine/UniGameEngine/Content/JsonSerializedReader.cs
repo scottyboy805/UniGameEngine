@@ -40,11 +40,6 @@ namespace UniGameEngine.Content
             SkipInvalid();
         }
 
-        static JsonSerializedReader()
-        {
-            Serializer.TypeManager.RegisterAssembly(typeof(UniGame).Assembly);
-        }
-
         // Methods
         public override void Dispose()
         {

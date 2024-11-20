@@ -87,8 +87,7 @@ namespace UniGameEditor
             }
 
             // Trigger event
-            if(OnSelectionChanged != null)
-                OnSelectionChanged();
+            UniEditor.DoEvent(OnSelectionChanged);
         }
 
         public void Select<T>(IEnumerable<T> selected)
@@ -112,9 +111,8 @@ namespace UniGameEditor
             if (selectedObjects.Count > 0)
                 selectedType = typeof(T);
 
-
             // Trigger event
-            OnSelectionChanged();
+            UniEditor.DoEvent(OnSelectionChanged);
         }
     }
 }

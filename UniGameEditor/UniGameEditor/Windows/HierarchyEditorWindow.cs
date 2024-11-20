@@ -33,12 +33,12 @@ namespace UniGameEditor.Windows
                 return gameObject != null;
             }
 
-            public bool CanDrop(object dragData)
+            public bool CanDrop(DragDropType type, object dragData)
             {
-                return dragData is GameObject;
+                return type == DragDropType.Object && dragData is GameObject;
             }
 
-            public void PerformDrop(object dragData)
+            public void PerformDrop(DragDropType type, object dragData)
             {
                 ((GameObject)dragData).Transform.Parent = gameObject.Transform;
             }

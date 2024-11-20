@@ -83,34 +83,70 @@ namespace WindowsEditor.UI
         private void OnDragOver(object sender, DragEventArgs e) 
         {
             element.AllowDrop = false;
-            if (e.Data.GetDataPresent("Object") == true)
-            {
-                // Get the object
-                object obj = e.Data.GetData("Object");
 
+            // Get the drop data
+            object dragSender;
+            object dropData;
+            DragDropType type = GetDataType(e.Data, out dragSender, out dropData);
+
+            // Check for supported type
+            if(type != DragDropType.None && dragSender != this)
+            {
                 // Check for drop allowed
-                if (DropHandler != null && DropHandler.CanDrop(obj) == true && e.Data.GetData("Sender") != this)
-                {
+                if (DropHandler != null && DropHandler.CanDrop(type, dropData) == true)
                     element.AllowDrop = true;
-                }
             }
             e.Handled = true;
         }
 
         private void OnDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent("Object") == true)
-            {
-                // Get the object
-                object obj = e.Data.GetData("Object");
+            // Get the drop data
+            object dropData;
+            DragDropType type = GetDataType(e.Data, out _, out dropData);
 
-                // Drop the object
-                DropHandler.PerformDrop(obj);
+            // Check for supported type
+            if (type != DragDropType.None)
+            {
+                // Perform the drop
+                DropHandler.PerformDrop(type, dropData);
 
                 // Reset allow drop state
-                element.AllowDrop = dropHandler != null;
+                element.AllowDrop = DropHandler != null;
             }
             e.Handled = true;
+        }
+
+        private DragDropType GetDataType(IDataObject data, out object sender, out object dropData)
+        {
+            // Check for sender
+            sender = data.GetDataPresent("Sender") == true
+                ? data.GetData("Sender")
+                : null;
+
+            // Get file
+            if (data.GetDataPresent(DataFormats.FileDrop) == true)
+            {
+                dropData = data.GetData(DataFormats.FileDrop);
+                return DragDropType.File;
+            }
+
+            // Get string
+            if (data.GetDataPresent(DataFormats.StringFormat) == true)
+            {
+                dropData = data.GetData(DataFormats.StringFormat);
+                return DragDropType.String;
+            }
+
+            // Get object
+            if (data.GetDataPresent("Object") == true)
+            {
+                dropData = data.GetData("Object");
+                return DragDropType.Object;
+            }
+
+            dropData = null;
+            return DragDropType.None;
         }
     }
 }

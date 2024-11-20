@@ -6,16 +6,21 @@ using UniGameEngine.UI.Events;
 using UniGameEngine.UI;
 using UniGameEngine.Graphics;
 using System.Windows;
+using UniGameEditor.Content;
+using System.Windows.Threading;
 
 namespace UniGameEditor
 {
     public sealed class UniEditor
     {
         // Events
+        public event Action OnProjectLoaded;
         public event Action<GameScene> OnSceneLoaded;
         public event Action<GameScene> OnSceneUnloaded;
 
         // Private
+        private static Dispatcher mainThreadDispatcher = null;
+
         private Selection selection = new Selection();
         private Undo undo = new Undo();
 
@@ -25,7 +30,8 @@ namespace UniGameEditor
         private string contentDirectory = null;
         private string libraryDirectory = null;
 
-        private UniEditorGameInstance gameInstance = null;
+        private ContentDatabase contentDatabase = null;
+        private UniEditorGameInstance gameInstance = null;        
 
         // Internal
         internal EditorMenu menu = null;
@@ -72,9 +78,19 @@ namespace UniGameEditor
             get { return gameInstance.Scenes.Count > 0 ? gameInstance.Scenes[0] : null; }
         }
 
+        public ContentDatabase ContentDatabase
+        {
+            get { return contentDatabase; }
+        }
+
         internal UniEditorGameInstance GameInstance
         {
             get { return gameInstance; }
+        }
+
+        internal Dispatcher MainThreadDispatcher
+        {
+            get { return mainThreadDispatcher; }
         }
 
         public EditorMenu Menu => menu;
@@ -89,6 +105,7 @@ namespace UniGameEditor
         public UniEditor()
         {
             gameInstance = new UniEditorGameInstance();
+            mainThreadDispatcher = Dispatcher.CurrentDispatcher;
         }
 
         // Methods
@@ -124,12 +141,26 @@ namespace UniGameEditor
             this.projectDirectory = Directory.GetParent(projectPath).FullName;
             this.contentDirectory = Path.Combine(projectDirectory, "Content");
             this.libraryDirectory = Path.Combine(projectDirectory, "Library");
-            
+
+            // Create content
+            contentDatabase = new ContentDatabase(projectDirectory, contentDirectory, libraryDirectory, gameInstance.Services);
+
             // Update content directory
-            gameInstance.Content.RootDirectory = libraryDirectory;
+            gameInstance.Content = contentDatabase;
+
+            // Refresh content database
+            contentDatabase.RefreshContent();
 
             // Load base content
             gameInstance.LoadEditorContent();
+
+
+            // Trigger event
+            if (OnProjectLoaded != null)
+                OnProjectLoaded();
+
+
+            contentDatabase.ImportContent("WGPU-Logo.png");
 
 
             GameScene scene = NewScene("My Scene");
@@ -279,9 +310,18 @@ namespace UniGameEditor
 
             };
             contentMenu.AddSeparator();
-            contentMenu.AddItem("Build");
-            contentMenu.AddItem("Rebuild");
-            contentMenu.AddItem("Clean");
+            contentMenu.AddItem("Build").OnClicked += () =>
+            {
+                ContentDatabase.BuildAllContent();
+            };
+            contentMenu.AddItem("Rebuild").OnClicked += () => 
+            { 
+                ContentDatabase.RebuildAllContent(); 
+            };
+            contentMenu.AddItem("Clean").OnClicked += () => 
+            { 
+                ContentDatabase.CleanAllContent(); 
+            };
         }
         #endregion
         #region GameObjectMenu
@@ -341,5 +381,35 @@ namespace UniGameEditor
 
         }
         #endregion
+
+        internal static void DoEvent(Action action)
+        {
+            try
+            {
+                if (action != null)
+                    mainThreadDispatcher.Invoke(action);
+            }
+            catch (Exception e) { Debug.LogException(e); }
+        }
+
+        internal static void DoEvent<T>(Action<T> action, T arg0)
+        {
+            try
+            {
+                if (action != null)
+                    mainThreadDispatcher.Invoke(action, arg0);
+            }
+            catch (Exception e) { Debug.LogException(e); }
+        }
+
+        internal static void DoEvent<T0, T1>(Action<T0, T1> action, T0 arg0, T1 arg1)
+        {
+            try
+            {
+                if (action != null)
+                    mainThreadDispatcher.Invoke(action, arg0, arg1);
+            }
+            catch (Exception e) { Debug.LogException(e); }
+        }
     }
 }

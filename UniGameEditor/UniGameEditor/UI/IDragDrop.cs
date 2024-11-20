@@ -7,6 +7,14 @@ namespace UniGameEditor.UI
         Move,
     }
 
+    public enum DragDropType
+    {
+        None = 0,
+        Object,
+        String,
+        File,
+    }
+
     public interface IDragHandler
     {
         // Methods
@@ -16,7 +24,7 @@ namespace UniGameEditor.UI
     public interface IDropHandler
     {
         // Methods
-        bool CanDrop(object dragData);
-        void PerformDrop(object dragData);
+        bool CanDrop(DragDropType type, object dragData);
+        void PerformDrop(DragDropType type, object dragData);
     }
 }

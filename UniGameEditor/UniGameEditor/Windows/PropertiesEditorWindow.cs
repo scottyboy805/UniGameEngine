@@ -60,7 +60,8 @@ namespace UniGameEditor.Windows
                 ContentEditor editor = ContentEditor.ForType(selectionType);
 
                 // Initialize editor
-                editor.CreateContent(mainControl, content);
+                if(editor != null)
+                    editor.CreateContent(mainControl, content);
             }
             else
             {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>D:/VisualStudio/UniGameEngine/ExampleProject/Content/Scene/TestScene.scene</SourceFile>
+  <SourceTime>2024-11-04T09:13:28.0605527+00:00</SourceTime>
+  <DestFile>D:/VisualStudio/UniGameEngine/ExampleProject/Library/bin/Scene/TestScene.xnb</DestFile>
+  <DestTime>2024-11-20T16:34:48.716087+00:00</DestTime>
+  <Importer>SceneImporter</Importer>
+  <ImporterTime>2024-11-20T11:39:04.3606219+00:00</ImporterTime>
+  <Processor>SceneProcessor</Processor>
+  <ProcessorTime>2024-11-20T11:39:04.3606219+00:00</ProcessorTime>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

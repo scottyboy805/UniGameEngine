@@ -108,7 +108,7 @@ namespace WindowsEditor.UI
             this.content = new IconTextContent(treeItem, text);
 
             // Add listeners
-            treeItem.Selected += (object sender, RoutedEventArgs e) => OnSelectedEvent();
+            treeItem.Selected += (object sender, RoutedEventArgs e) => { if (treeItem.IsSelected) OnSelectedEvent(); };
             treeItem.Expanded += (object sender, RoutedEventArgs e) => OnExpandedEvent(treeItem.IsExpanded);
             treeItem.Collapsed += (object sender, RoutedEventArgs e) => OnExpandedEvent(treeItem.IsExpanded);
  

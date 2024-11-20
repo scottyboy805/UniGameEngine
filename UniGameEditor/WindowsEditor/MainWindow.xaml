@@ -80,7 +80,7 @@
                     <GridSplitter x:Name="BottomSplitter" Grid.Row="1" HorizontalAlignment="Stretch" />
 
                     <!--Content Grid-->
-                    <Grid x:Name="BottomGrid" Grid.Row="2" MinHeight="150">
+                    <Grid x:Name="BottomGrid" Grid.Row="2" MinHeight="200">
                         <TabControl x:Name="BottomTab" Width="Auto" MaxHeight="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid }}}" />
                     </Grid>
                 </Grid>
