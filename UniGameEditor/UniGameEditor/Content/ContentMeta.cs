@@ -27,8 +27,6 @@ namespace UniGameEditor.Content
         //[DataMember(Name = "ProcessorParameters")]
         private Dictionary<string, object> processorParameters;
 
-        private Type contentType = null;
-
         // Properties
         public string ContentPath
         {
@@ -80,15 +78,6 @@ namespace UniGameEditor.Content
         {
             if(string.IsNullOrEmpty(guid) == true)
                 guid = System.Guid.NewGuid().ToString();
-        }
-
-        internal Type GetContentType(PipelineManager pipeline)
-        {
-            // Try to get processor type
-            if (contentType == null)
-                contentType = pipeline.GetProcessorType(processor);
-
-            return contentType;
         }
 
         public static ContentMeta CreateForFile(PipelineManager pipeline, string contentPath)

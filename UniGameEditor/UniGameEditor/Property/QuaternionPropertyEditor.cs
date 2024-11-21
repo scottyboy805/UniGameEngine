@@ -3,21 +3,24 @@ using UniGameEditor.UI;
 
 namespace UniGameEditor.Property
 {
-    [PropertyEditorFor(typeof(Vector3))]
-    internal sealed class Vector3PropertyEditor : PropertyEditor
+    [PropertyEditorFor(typeof(Quaternion))]
+    internal sealed class QuaternionPropertyEditor : PropertyEditor
     {
         // Private
         private SerializedProperty xProperty = null;
         private SerializedProperty yProperty = null;
         private SerializedProperty zProperty = null;
+        private SerializedProperty wProperty = null;
 
         // Methods
         protected internal override void OnShow()
         {
             // Find the component properties
-            xProperty = Property.FindPropertyName(nameof(Vector3.X));
-            yProperty = Property.FindPropertyName(nameof(Vector3.Y));
-            zProperty = Property.FindPropertyName(nameof(Vector3.Z));
+            xProperty = Property.FindPropertyName(nameof(Quaternion.X));
+            yProperty = Property.FindPropertyName(nameof(Quaternion.Y));
+            zProperty = Property.FindPropertyName(nameof(Quaternion.Z));
+            wProperty = Property.FindPropertyName(nameof(Quaternion.W));
+
 
             // Add layout
             EditorLayoutControl layout = RootControl.AddHorizontalLayout();
@@ -27,8 +30,7 @@ namespace UniGameEditor.Property
             propertyLabel.Width = EditorControl.PropertiesLabelWidth;
 
             // Get remaining width
-            float elementWidth = (RootControl.Width - propertyLabel.Width) / 3f;
-
+            float elementWidth = (RootControl.Width - propertyLabel.Width) / 4f;
             
             // X
             {
@@ -82,6 +84,24 @@ namespace UniGameEditor.Property
 
                 // Z input
                 EditorNumberInput zPropertyInput = zLayout.AddNumberInput(zValue);
+            }
+
+            // W
+            {
+                // Draw z element
+                EditorLayoutControl wLayout = layout.AddHorizontalLayout();
+                //zLayout.Width = elementWidth;
+
+                // Z property
+                EditorPropertyLabel wPropertyLabel = wLayout.AddPropertyLabel(wProperty);
+
+                // Z value
+                float wValue;
+                bool wMixed;
+                wProperty.GetValue(out wValue, out wMixed);
+
+                // Z input
+                EditorNumberInput wPropertyInput = wLayout.AddNumberInput(wValue);
             }
         }
     }

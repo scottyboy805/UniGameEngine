@@ -1,11 +1,12 @@
-﻿using UniGameEditor.Content;
+﻿using System.Runtime.Serialization;
+using System.Windows.Forms;
+using UniGameEditor.Content;
 using UniGameEditor.UI;
 
 namespace UniGameEditor.Windows
 {
     internal sealed class ContentEditorWindow : EditorWindow
     {
-        // Type
         private sealed class ContentDrop : IDropHandler
         {
             // Private
@@ -51,6 +52,7 @@ namespace UniGameEditor.Windows
         // Private
         private EditorTreeView contentFolderTreeView = null;
         private EditorTreeView contentFileTreeView = null;
+        private EditorTable contentFileTable = null;
         private EditorIcon folderNormalIcon = null;
         private EditorIcon folderOpenIcon = null;
         private Dictionary<string, bool> foldersExpanded = new Dictionary<string, bool>();
@@ -80,6 +82,7 @@ namespace UniGameEditor.Windows
             // Add tree view
             contentFolderTreeView = scrollLayoutLeft.AddTreeView();
             contentFileTreeView = scrollLayoutRight.AddTreeView();
+            //contentFileTable = scrollLayoutRight.AddTable();
 
             // Add listener
             Editor.OnProjectLoaded += OnProjectLoaded;
@@ -204,6 +207,9 @@ namespace UniGameEditor.Windows
                 // Create directory
                 EditorTreeNode fileNode = contentFileTreeView.AddNode(contentName);
 
+                // Add listeners
+                fileNode.OnSelected += (EditorTreeNode node) => Editor.Selection.Select(
+                    Editor.ContentDatabase.Load<object>(contentPath));
 
                 // Make folder
                 //rootNode.Icon = folderNormalIcon;
@@ -213,7 +219,7 @@ namespace UniGameEditor.Windows
 
                 // Add listeners
                 //rootNode.OnSelected += (EditorTreeNode node) => Editor.Selection.Select(new FolderObject(contentRelativePath));
-                
+
 
                 // Add drop handler
                 //rootNode.DropHandler = new ContentDrop(Editor.ContentDatabase, relativePath);

@@ -5,23 +5,21 @@ using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
 {
-    internal abstract class WPFEditorLayoutControl : EditorLayoutControl
+    internal class WPFEditorLayoutControl : EditorLayoutControl
     {
         // Internal
+        internal Panel panel = null;
         internal WPFDragDrop dragDrop = null;
-
-        // Properties
-        public abstract Panel Panel { get; }
 
         public override float Width
         {
-            get => (float)Panel.ActualWidth;
-            set => Panel.Width = value;
+            get => (float)panel.ActualWidth;
+            set => panel.Width = value;
         }
         public override float Height
         {
-            get => (float)Panel.ActualHeight;
-            set => Panel.Height = value;
+            get => (float)panel.ActualHeight;
+            set => panel.Height = value;
         }
 
         public override IDragHandler DragHandler
@@ -42,106 +40,132 @@ namespace WindowsEditor.UI
             set
             {
                 contextMenu = value;
-                Panel.ContextMenu = value != null
+                panel.ContextMenu = value != null
                     ? ((WPFEditorMenu)value).menu
                     : null;
             }
         }
 
+        // Constructor
+        public WPFEditorLayoutControl(Panel parent, Panel panel)
+        {
+            this.panel = panel;
+            this.dragDrop = new WPFDragDrop(panel);
+
+            // Add to parent
+            if(parent != null)
+                parent.Children.Add(panel);
+        }
+
+        public WPFEditorLayoutControl(ItemsControl parent, Panel panel)
+        {
+            this.panel = panel;
+            this.dragDrop = new WPFDragDrop(panel);
+
+            // Add to parent
+            if(parent != null)
+                parent.Items.Add(panel);
+        }
+
         // Methods
         public override EditorLabel AddLabel(string text)
         {
-            return new WPFEditorLabel(Panel, text);
+            return new WPFEditorLabel(panel, text);
         }
 
         public override EditorPropertyLabel AddPropertyLabel(SerializedProperty property, string overrideText)
         {
-            return new WPFEditorPropertyLabel(Panel, property, overrideText);
+            return new WPFEditorPropertyLabel(panel, property, overrideText);
         }
 
         public override EditorInput AddInput(string text)
         {
-            return new WPFEditorInput(Panel, text);
+            return new WPFEditorInput(panel, text);
         }
 
         public override EditorNumberInput AddNumberInput(double value, double min = double.MinValue, double max = double.MaxValue)
         {
-            return new WPFEditorNumberInput(Panel, value, min, max);
+            return new WPFEditorNumberInput(panel, value, min, max);
         }
 
         public override EditorButton AddButton(string text)
         {
-            return new WPFEditorButton(Panel, text);
+            return new WPFEditorButton(panel, text);
         }
 
         public override EditorToggleButton AddToggleButton(string text, bool on)
         {
-            return new WPFEditorToggleButton(Panel, text, on);
+            return new WPFEditorToggleButton(panel, text, on);
         }
 
         public override EditorToggle AddToggle(string text, bool on)
         {
-            return new WPFEditorToggle(Panel, text, on);
+            return new WPFEditorToggle(panel, text, on);
         }
 
         public override EditorDropdown AddDropdown()
         {
-            return new WPFEditorDropdown(Panel);
+            return new WPFEditorDropdown(panel);
         }
 
         public override EditorCombinationDropdown AddCombinationDropdown()
         {
-            return new WPFEditorCombinationDropdown(Panel);
+            return new WPFEditorCombinationDropdown(panel);
         }
 
         public override EditorRenderView AddRenderView(Game gameHost)
         {
-            return new WPFEditorRenderView(Panel, gameHost);
+            return new WPFEditorRenderView(panel, gameHost);
         }
 
         public override EditorTreeView AddTreeView()
         {
-            return new WPFEditorTreeView(Panel);
+            return new WPFEditorTreeView(panel);
+        }
+
+        public override EditorTable AddTable()
+        {
+            return new WPFEditorTable(panel);
         }
 
         public override EditorFoldout AddFoldoutLayout(string text, bool isExpanded = false)
         {
-            return new WPFEditorFoldout(Panel, text, isExpanded);
+            return new WPFEditorFoldout(panel, text, isExpanded);
         }
 
         public override EditorLayoutControl AddFlowLayout()
         {
-            return new WPFEditorWrapPanelLayout(Panel);
+            return new WPFEditorWrapPanelLayout(panel);
         }
 
         public override EditorLayoutControl AddHorizontalLayout()
         {
-            return new WPFEditorStackLayout(Panel, Orientation.Horizontal);
+            return new WPFEditorStackLayout(panel, Orientation.Horizontal);
         }
 
         public override EditorLayoutControl AddVerticalLayout()
         {
-            return new WPFEditorStackLayout(Panel, Orientation.Vertical);
+            return new WPFEditorStackLayout(panel, Orientation.Vertical);
         }        
 
         public override EditorSplitViewLayoutControl AddHorizontalSplitLayout()
         {
-            return new WPFSplitView(Panel, Orientation.Horizontal);
+            return new WPFSplitView(panel, Orientation.Horizontal);
         }
 
         public override EditorSplitViewLayoutControl AddVerticalSplitLayout()
         {
-            return new WPFSplitView(Panel, Orientation.Vertical);
+            return new WPFSplitView(panel, Orientation.Vertical);
         }
 
         public override EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true)
         {
-            return new WPFEditorScrollView(Panel, horizontal, vertical);
+            return new WPFEditorScrollView(panel, horizontal, vertical);
         }
 
         public override void Clear()
         {
-            Panel.Children.Clear();
+            panel.Children.Clear();
         }
     }
 }

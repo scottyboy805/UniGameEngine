@@ -83,13 +83,13 @@ namespace UniGameEditor
             if (selection != null)
             {
                 selectedObjects.Add(selection);
-                selectedType = typeof(T);
+                selectedType = selection.GetType();
             }
 
             // Trigger event
             UniEditor.DoEvent(OnSelectionChanged);
         }
-
+         
         public void Select<T>(IEnumerable<T> selected)
         {
             // Check for null

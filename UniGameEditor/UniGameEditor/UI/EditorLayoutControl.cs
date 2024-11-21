@@ -26,6 +26,7 @@ namespace UniGameEditor.UI
         public abstract EditorCombinationDropdown AddCombinationDropdown();
         public abstract EditorRenderView AddRenderView(Game hostGame);
         public abstract EditorTreeView AddTreeView();
+        public abstract EditorTable AddTable();
 
         public abstract void Clear();
     }

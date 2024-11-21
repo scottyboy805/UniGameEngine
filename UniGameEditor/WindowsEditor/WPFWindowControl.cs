@@ -96,8 +96,12 @@ namespace WindowsEditor
 
             // Create root item
             Grid rootGrid = new Grid();
-            window.rootControl = new WPFEditorScrollView(rootGrid, true, true); //new WPFEditorStackLayout(rootGrid, Orientation.Vertical);
-
+            //window.rootControl = new WPFEditorScrollView(rootGrid, true, true); //new WPFEditorStackLayout(rootGrid, Orientation.Vertical);
+            window.rootControl = new WPFEditorLayoutControl(rootGrid, new DockPanel 
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Top,
+            });
 
             StackPanel tabPanel = new StackPanel();
             tabPanel.Orientation = Orientation.Horizontal;

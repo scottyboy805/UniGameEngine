@@ -1,29 +1,18 @@
-﻿using ModernWpf.Controls;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace WindowsEditor.UI
 {
     internal sealed class WPFEditorWrapPanelLayout : WPFEditorLayoutControl
     {
-        // Internal
-        internal WrapPanel wrapPanel = null;
-
-        // Properties
-        public override Panel Panel => wrapPanel;
-
         // Constructor
         public WPFEditorWrapPanelLayout(Panel parent)
+            : base(parent, new WrapPanel())
         {
-            wrapPanel = new WrapPanel();
-            dragDrop = new WPFDragDrop(wrapPanel);
-            parent.Children.Add(wrapPanel);
         }
 
         public WPFEditorWrapPanelLayout(ItemsControl parent)
+            : base(parent, new WrapPanel()) 
         {
-            wrapPanel = new WrapPanel();
-            dragDrop = new WPFDragDrop(wrapPanel);
-            parent.Items.Add(wrapPanel);
         }
     }
 }

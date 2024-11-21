@@ -2,10 +2,12 @@
 using MonoGame.Framework.WpfInterop;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using UniGameEditor;
 using UniGameEditor.Content;
 using UniGameEditor.Property;
+using UniGameEditor.UI;
 using UniGameEditor.Windows;
 using UniGameEngine;
 using WindowsEditor.UI;
@@ -23,7 +25,7 @@ namespace WindowsEditor
 
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
 
             // Set title
             Title = "UniGameEditor, " + UniGame.EngineVersion;

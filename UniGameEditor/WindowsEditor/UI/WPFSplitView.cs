@@ -62,17 +62,17 @@ namespace WindowsEditor.UI
             if (orientation == Orientation.Horizontal)
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(5) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(150, GridUnitType.Auto) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
 
 
                 // Add layouts
-                layoutA = new WPFEditorStackLayout(grid, Orientation.Vertical);
-                layoutB = new WPFEditorStackLayout(grid, Orientation.Vertical);
-                layoutA.Panel.MinWidth = 250;
-                layoutA.Panel.HorizontalAlignment = HorizontalAlignment.Stretch;
-                layoutB.Panel.MinWidth = 150;
-                layoutB.Panel.HorizontalAlignment= HorizontalAlignment.Stretch;
+                layoutA = new WPFEditorLayoutControl(grid, new DockPanel());
+                layoutB = new WPFEditorLayoutControl(grid, new DockPanel()); //WPFEditorStackLayout(grid, Orientation.Vertical);
+                layoutA.panel.MinWidth = 250;
+                layoutA.panel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                layoutB.panel.MinWidth = 150;
+                layoutB.panel.HorizontalAlignment = HorizontalAlignment.Stretch;
 
                 // Add splitter
                 GridSplitter splitter = new GridSplitter();
@@ -80,9 +80,9 @@ namespace WindowsEditor.UI
                 grid.Children.Add(splitter);
 
                 // Setup layout
-                Grid.SetColumn(layoutA.Panel, 0);
+                Grid.SetColumn(layoutA.panel, 0);
                 Grid.SetColumn(splitter, 1);
-                Grid.SetColumn(layoutB.Panel, 2);
+                Grid.SetColumn(layoutB.panel, 2);
             }
             else
             {

@@ -7,18 +7,15 @@ namespace WindowsEditor.UI
     {
         // Internal
         internal ScrollViewer scrollViewer = null;
-        //internal StackPanel scrollPanel = null;
-        internal DockPanel scrollPanel = null;
-
-        // Properties
-        public override Panel Panel => scrollPanel;
 
         // Constructor
         public WPFEditorScrollView(Panel parent, bool horizontal, bool vertical)
+            : base((Panel)null, new DockPanel())
         {
+            ((DockPanel)panel).VerticalAlignment = System.Windows.VerticalAlignment.Top;
+
             scrollViewer = new ScrollViewer();
-            dragDrop = new WPFDragDrop(scrollViewer);
-            scrollViewer.Content = scrollPanel = new DockPanel(); //new StackPanel();
+            scrollViewer.Content = panel;
             scrollViewer.HorizontalScrollBarVisibility = horizontal == true
                 ? ScrollBarVisibility.Auto
                 : ScrollBarVisibility.Hidden;
@@ -33,10 +30,10 @@ namespace WindowsEditor.UI
         }
 
         public WPFEditorScrollView(ItemsControl parent, bool horizontal, bool vertical)
+            : base((ItemsControl)null, new DockPanel())
         {
             scrollViewer = new ScrollViewer();
-            dragDrop = new WPFDragDrop(scrollViewer);
-            scrollViewer.Content = scrollPanel = new DockPanel(); //new StackPanel();
+            scrollViewer.Content = panel;
             scrollViewer.HorizontalScrollBarVisibility = horizontal == true
                 ? ScrollBarVisibility.Auto
                 : ScrollBarVisibility.Hidden;

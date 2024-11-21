@@ -144,6 +144,11 @@ namespace WindowsEditor.UI
             return new WPFEditorTreeView(stackPanel);
         }
 
+        public override EditorTable AddTable()
+        {
+            return new WPFEditorTable(stackPanel);
+        }
+
         public override EditorFoldout AddFoldoutLayout(string text, bool isExpanded = false)
         {
             return new WPFEditorFoldout(stackPanel, text, isExpanded);

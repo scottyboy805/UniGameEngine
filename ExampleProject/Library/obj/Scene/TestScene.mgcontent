@@ -3,11 +3,11 @@
   <SourceFile>D:/VisualStudio/UniGameEngine/ExampleProject/Content/Scene/TestScene.scene</SourceFile>
   <SourceTime>2024-11-04T09:13:28.0605527+00:00</SourceTime>
   <DestFile>D:/VisualStudio/UniGameEngine/ExampleProject/Library/bin/Scene/TestScene.xnb</DestFile>
-  <DestTime>2024-11-21T15:26:07.4909023+00:00</DestTime>
+  <DestTime>2024-11-21T15:53:55.1586444+00:00</DestTime>
   <Importer>SceneImporter</Importer>
-  <ImporterTime>2024-11-21T15:26:02.9903118+00:00</ImporterTime>
+  <ImporterTime>2024-11-21T15:47:58.7549956+00:00</ImporterTime>
   <Processor>SceneProcessor</Processor>
-  <ProcessorTime>2024-11-21T15:26:02.9903118+00:00</ProcessorTime>
+  <ProcessorTime>2024-11-21T15:47:58.7549956+00:00</ProcessorTime>
   <Dependencies />
   <BuildAsset />
   <BuildOutput />

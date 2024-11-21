@@ -133,6 +133,22 @@ namespace UniGameEditor.Content
             return null;
         }
 
+        public Type GetContentType(string guid)
+        {
+            ContentMeta meta;
+            if (contentMetas.TryGetValue(guid, out meta) == true)
+            {
+                // Load the asset to determine the type
+                object loadedObj = Load<object>(meta.ContentPath);
+
+                // Get type if loaded
+                if (loadedObj != null)
+                    return loadedObj.GetType();
+            }
+
+            return null;
+        }
+
         public bool IsContentSupported(string path)
         {
             // Make sure path is valid
@@ -233,7 +249,7 @@ namespace UniGameEditor.Content
                         contentMetas.TryGetValue(guid, out meta);
                         
                         // Check for matching type
-                        if (meta == null || type.IsAssignableFrom(meta.GetContentType(pipelineManager)) == false)
+                        if (meta == null || type.IsAssignableFrom(GetContentType(guid)) == false)
                             continue;
                     }
 
@@ -565,6 +581,10 @@ namespace UniGameEditor.Content
 
         public override T Load<T>(string assetName)
         {
+            // Strip extension
+            if (Path.HasExtension(assetName) == true)
+                assetName = Path.ChangeExtension(assetName, null);
+
             // Load the asset normally
             T result = base.Load<T>(assetName);
 
@@ -583,6 +603,10 @@ namespace UniGameEditor.Content
 
         public override T LoadLocalized<T>(string assetName)
         {
+            // Strip extension
+            if (Path.HasExtension(assetName) == true)
+                assetName = Path.ChangeExtension(assetName, null);
+
             // Load the asset normally
             T result = base.LoadLocalized<T>(assetName);
 
