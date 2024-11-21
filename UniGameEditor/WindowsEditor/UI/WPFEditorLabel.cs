@@ -52,6 +52,18 @@ namespace WindowsEditor.UI
             set => dragDrop.DropHandler = value;
         }
 
+        public override EditorMenu ContextMenu
+        {
+            get => contextMenu;
+            set
+            {
+                contextMenu = value;
+                content.mainControl.ContextMenu = value != null
+                    ? ((WPFEditorMenu)value).menu
+                    : null;
+            }
+        }
+
         // Constructor
         public WPFEditorLabel(Panel parent, string text)
         {

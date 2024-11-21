@@ -36,6 +36,18 @@ namespace WindowsEditor.UI
             set => dragDrop.DropHandler = value;
         }
 
+        public override EditorMenu ContextMenu
+        {
+            get => contextMenu;
+            set
+            {
+                contextMenu = value;
+                Panel.ContextMenu = value != null
+                    ? ((WPFEditorMenu)value).menu
+                    : null;
+            }
+        }
+
         // Methods
         public override EditorLabel AddLabel(string text)
         {
@@ -110,6 +122,16 @@ namespace WindowsEditor.UI
         public override EditorLayoutControl AddVerticalLayout()
         {
             return new WPFEditorStackLayout(Panel, Orientation.Vertical);
+        }        
+
+        public override EditorSplitViewLayoutControl AddHorizontalSplitLayout()
+        {
+            return new WPFSplitView(Panel, Orientation.Horizontal);
+        }
+
+        public override EditorSplitViewLayoutControl AddVerticalSplitLayout()
+        {
+            return new WPFSplitView(Panel, Orientation.Vertical);
         }
 
         public override EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true)

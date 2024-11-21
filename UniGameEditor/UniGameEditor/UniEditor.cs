@@ -11,6 +11,13 @@ using System.Windows.Threading;
 
 namespace UniGameEditor
 {
+    public enum DialogOptions
+    {
+        Ok,
+        OkCancel,
+        YesNo,
+    }
+
     public sealed class UniEditor
     {
         // Events
@@ -231,6 +238,24 @@ namespace UniGameEditor
             folderName = null;
             return false;
         }
+
+        public bool ShowDialog(string title, string message, DialogOptions buttonOptions = DialogOptions.YesNo)
+        {
+            // Select option
+            MessageBoxButton buttons = buttonOptions switch
+            {
+                DialogOptions.OkCancel => MessageBoxButton.OKCancel,
+                DialogOptions.YesNo => MessageBoxButton.YesNo,
+                _ => MessageBoxButton.OK,
+            };
+
+            // Show the message box
+            MessageBoxResult result = MessageBox.Show(message, title, buttons);
+
+            // Check for success
+            return result == MessageBoxResult.Yes
+                || result == MessageBoxResult.OK;
+        }
         #endregion
 
         #region FileMenu
@@ -241,7 +266,6 @@ namespace UniGameEditor
                 string fileName = "My Project";
                 if(ShowSaveFileDialog(ref fileName, "New Project", "UniGame Project (*.unigame)|*.unigame") == true)
                 {
-
                 }
             };
             fileMenu.AddItem("Open Project").OnClicked += () =>

@@ -113,6 +113,18 @@ namespace WindowsEditor.UI
             set => dragDrop.DropHandler = value;
         }
 
+        public override EditorMenu ContextMenu
+        {
+            get => contextMenu;
+            set
+            {
+                contextMenu = value;
+                renderView.ContextMenu = value != null
+                    ? ((WPFEditorMenu)value).menu
+                    : null;
+            }
+        }
+
         // Constructor
         public WPFEditorRenderView(Panel parent, Game gameHost)
         {

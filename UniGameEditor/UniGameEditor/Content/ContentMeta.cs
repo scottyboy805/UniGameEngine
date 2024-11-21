@@ -60,7 +60,22 @@ namespace UniGameEditor.Content
             get { return processorParameters; }
         }
 
+        public bool ContentExists
+        {
+            get
+            {
+                return string.IsNullOrEmpty(contentPath) == false
+                    && File.Exists(contentPath) == true;
+            }
+        }
+
         // Methods
+        internal void UpdateContentPath(string path)
+        {
+            if(string.IsNullOrEmpty(this.contentPath) == true)
+                this.contentPath = path;
+        }
+
         internal void EnsureGuid()
         {
             if(string.IsNullOrEmpty(guid) == true)

@@ -55,6 +55,18 @@ namespace WindowsEditor.UI
             set => button.AllowDrop = value != null;
         }
 
+        public override EditorMenu ContextMenu 
+        { 
+            get => contextMenu; 
+            set
+            {
+                contextMenu = value;
+                button.ContextMenu = value != null
+                    ? ((WPFEditorMenu)value).menu
+                    : null;
+            }
+        }
+
         // Constructor
         public WPFEditorButton(Panel parent, string text)
         {

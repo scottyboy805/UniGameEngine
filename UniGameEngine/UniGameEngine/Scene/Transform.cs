@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using UniGameEngine.Scene;
 
 namespace UniGameEngine
 {
@@ -41,18 +42,32 @@ namespace UniGameEngine
                 {
                     parent.GameObject.RemoveObject(GameObject, true);
                 }
-                else if(Scene != null)
+                else if (Scene != null)
                 {
                     Scene.RemoveObject(gameObject, true);
                 }
 
                 // Update parent
                 this.parent = value;
-                this.GameObject.scene = value != null ? value.GameObject.scene : null;
 
-                // Check for not null
-                if (value != null)
+                // Check for null parent
+                if(value != null)
+                {
+                    this.GameObject.scene = value.GameObject.scene;
                     value.GameObject.CreateObject(GameObject, true);
+                }
+                else
+                {
+                    Scene.CreateObject(GameObject, true);
+                }
+
+                //// Update parent
+                //this.parent = value;
+                //this.GameObject.scene = value != null ? value.GameObject.scene : null;
+
+                //// Check for not null
+                //if (value != null)
+                //    value.GameObject.CreateObject(GameObject, true);
             }
         }
 

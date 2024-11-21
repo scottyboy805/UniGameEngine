@@ -160,11 +160,6 @@ namespace WindowsEditor
             RefreshGridControl();
         }
 
-        private void RootGrid_Initialized(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         public void CloseWindow(EditorWindow window)
         {
             // Check for null

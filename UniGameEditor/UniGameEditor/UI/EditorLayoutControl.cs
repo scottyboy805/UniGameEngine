@@ -10,6 +10,8 @@ namespace UniGameEditor.UI
         public abstract EditorLayoutControl AddFlowLayout();
         public abstract EditorLayoutControl AddHorizontalLayout();
         public abstract EditorLayoutControl AddVerticalLayout();
+        public abstract EditorSplitViewLayoutControl AddHorizontalSplitLayout();
+        public abstract EditorSplitViewLayoutControl AddVerticalSplitLayout();
         public abstract EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true);
 
         public abstract EditorLabel AddLabel(string text);

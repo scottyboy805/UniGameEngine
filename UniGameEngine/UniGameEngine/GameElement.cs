@@ -51,7 +51,7 @@ namespace UniGameEngine
             set { name = value; }
         }
 
-        [DataMember]
+        //[DataMember]
         public string Guid
         {
             get

@@ -254,7 +254,7 @@ namespace UniGameEngine
 
                 // Unregister parent
                 transform.children.Remove(go.transform);
-                go.scene = null;
+                go.scene = scene;
                 go.transform.parent = null;
 
                 // Update scene

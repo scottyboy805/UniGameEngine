@@ -14,13 +14,49 @@ namespace UniGameEditor.Windows
             public EditorTreeView Tree;
         }
 
-        private sealed class HierarchyDragDrop : IDragHandler, IDropHandler
+        private sealed class HierarchySceneDrop : IDropHandler
+        {
+            // Private
+            private GameScene scene = null;
+
+            // Constructor
+            public HierarchySceneDrop(GameScene scene)
+            {
+                this.scene = scene;
+            }
+
+            // Methods
+            public bool CanDrop(DragDropType type, object dragData)
+            {
+                return type == DragDropType.Object && dragData is GameObject;
+            }
+
+            public void PerformDrop(DragDropType type, object dragData)
+            {
+                // Get the game object
+                GameObject go = (GameObject)dragData;
+
+                // Check for scene
+                if(go.scene == scene)
+                {
+                    // Clear parent
+                    go.Transform.Parent = null;
+                }
+                else
+                {
+                    // Change scenes
+                    //go.Scene = scene;
+                }
+            }
+        }
+
+        private sealed class HierarchyGameObjectDragDrop : IDragHandler, IDropHandler
         {
             // Private
             private GameObject gameObject = null;
 
             // Constructor
-            public HierarchyDragDrop(GameObject gameObject)
+            public HierarchyGameObjectDragDrop(GameObject gameObject)
             {
                 this.gameObject = gameObject;
             }
@@ -87,6 +123,9 @@ namespace UniGameEditor.Windows
 
                 // Set expanded
                 foldout.IsExpanded = scene.expanded;
+
+                // Support drop
+                foldout.DropHandler = new HierarchySceneDrop(scene);
 
                 // Listen for expanded changed
                 foldout.OnExpanded += (EditorFoldout foldout, bool expanded) => scene.expanded = expanded;
@@ -171,7 +210,7 @@ namespace UniGameEditor.Windows
             currentNode.OnExpanded += (EditorTreeNode treeNode, bool expanded) => current.expanded = expanded;
 
             // Create drag handler
-            HierarchyDragDrop dragDrop = new HierarchyDragDrop(current);
+            HierarchyGameObjectDragDrop dragDrop = new HierarchyGameObjectDragDrop(current);
 
             currentNode.DragHandler = dragDrop;
             currentNode.DropHandler = dragDrop;

@@ -7,7 +7,8 @@ namespace WindowsEditor.UI
     {
         // Internal
         internal ScrollViewer scrollViewer = null;
-        internal StackPanel scrollPanel = null;
+        //internal StackPanel scrollPanel = null;
+        internal DockPanel scrollPanel = null;
 
         // Properties
         public override Panel Panel => scrollPanel;
@@ -17,7 +18,7 @@ namespace WindowsEditor.UI
         {
             scrollViewer = new ScrollViewer();
             dragDrop = new WPFDragDrop(scrollViewer);
-            scrollViewer.Content = scrollPanel = new StackPanel();
+            scrollViewer.Content = scrollPanel = new DockPanel(); //new StackPanel();
             scrollViewer.HorizontalScrollBarVisibility = horizontal == true
                 ? ScrollBarVisibility.Auto
                 : ScrollBarVisibility.Hidden;
@@ -35,7 +36,7 @@ namespace WindowsEditor.UI
         {
             scrollViewer = new ScrollViewer();
             dragDrop = new WPFDragDrop(scrollViewer);
-            scrollViewer.Content = scrollPanel = new StackPanel();
+            scrollViewer.Content = scrollPanel = new DockPanel(); //new StackPanel();
             scrollViewer.HorizontalScrollBarVisibility = horizontal == true
                 ? ScrollBarVisibility.Auto
                 : ScrollBarVisibility.Hidden;

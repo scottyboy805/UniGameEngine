@@ -53,6 +53,7 @@ namespace UniGameEditor.Content
             // Create watcher
             contentWatcher = new FileSystemWatcher(contentDirectory, "*");
             contentWatcher.EnableRaisingEvents = true;
+            contentWatcher.IncludeSubdirectories = true;
             contentWatcher.Created += OnContentWatcherCreated;
             contentWatcher.Deleted += OnContentWatcherDeleted;
 
@@ -200,6 +201,7 @@ namespace UniGameEditor.Content
             {
                 // Check directory
                 CheckContentPath(searchFolder, false);
+                searchFolder = Path.Combine(contentDirectory, searchFolder);
             }
 
             // Check for empty search
@@ -360,6 +362,10 @@ namespace UniGameEditor.Content
                     // Delete the content
                     ImportContent(relativePath);
                 }
+
+                // Trigger event
+                UniEditor.DoEvent(OnContentModified);
+                UniEditor.DoEvent(OnContentFolderCreated, path);
             }
             // Must be a file
             else
@@ -435,12 +441,14 @@ namespace UniGameEditor.Content
                 // Check for registered
                 if (contentPaths.ContainsKey(path) == true)
                 {
+                    string contentFullPath = Path.Combine(contentDirectory, path);
+
                     // Clean intermediate and output content
-                    pipelineManager.CleanContent(Path.Combine(contentDirectory, path));
+                    pipelineManager.CleanContent(contentFullPath);
 
                     // Delete files
-                    File.Delete(path);
-                    File.Delete(path + ".content");
+                    File.Delete(contentFullPath);
+                    File.Delete(contentFullPath + ".content");
                 }
 
                 // Get the guid
@@ -472,10 +480,10 @@ namespace UniGameEditor.Content
         public void OpenContent(string path)
         {
             // Make sure path is valid
-            CheckContentPath(path);
+            CheckContentPath(path, false);
 
             // Open process
-            using (Process.Start("explorer", "\"" + Path.Combine(contentDirectory, path) + "\"")) ;
+            using (Process.Start("explorer", "\"" + Path.Combine(contentDirectory, path.Replace('/', '\\')) + "\"")) ;
         }
 
         public void BuildAllContent()
@@ -591,11 +599,14 @@ namespace UniGameEditor.Content
             return result;
         }
 
-        private void OnContentWatcherCreated(object sender, FileSystemEventArgs e)
+        private async void OnContentWatcherCreated(object sender, FileSystemEventArgs e)
         {
             // Get the relative path
             string relativePath = GetContentRelativePath(e.FullPath);
-            
+
+            // Wait for time for IO to update
+            await Task.Delay(25);
+
             // Import the content
             ImportContent(relativePath);
         }
@@ -635,6 +646,9 @@ namespace UniGameEditor.Content
             // Load existing meta
             if(meta == null)
                 meta = Serializer.DeserializeJson<ContentMeta>(File.ReadAllText(Path.Combine(contentDirectory, path + ContentMetaExtension)));
+
+            // Update path
+            meta.UpdateContentPath(path);
 
             // Ensure guid
             meta.EnsureGuid();

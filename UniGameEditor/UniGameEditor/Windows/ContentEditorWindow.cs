@@ -49,9 +49,12 @@ namespace UniGameEditor.Windows
         }
 
         // Private
-        private EditorTreeView contentTreeView = null;
+        private EditorTreeView contentFolderTreeView = null;
+        private EditorTreeView contentFileTreeView = null;
         private EditorIcon folderNormalIcon = null;
         private EditorIcon folderOpenIcon = null;
+        private Dictionary<string, bool> foldersExpanded = new Dictionary<string, bool>();
+        private string selectedFolder = null;
 
         // Constructor
         public ContentEditorWindow()
@@ -67,18 +70,22 @@ namespace UniGameEditor.Windows
             folderNormalIcon = EditorIcon.FindIcon("FolderNormal");
             folderOpenIcon = EditorIcon.FindIcon("FolderOpen");
 
+            // Create main split
+            EditorSplitViewLayoutControl split = RootControl.AddHorizontalSplitLayout();
 
             // Add scroll 
-            EditorLayoutControl scrollLayout = RootControl.AddScrollLayout();
+            EditorLayoutControl scrollLayoutLeft = split.LayoutA.AddScrollLayout();// RootControl.AddScrollLayout();
+            EditorLayoutControl scrollLayoutRight = split.LayoutB.AddScrollLayout();
 
             // Add tree view
-            contentTreeView = scrollLayout.AddTreeView();
+            contentFolderTreeView = scrollLayoutLeft.AddTreeView();
+            contentFileTreeView = scrollLayoutRight.AddTreeView();
 
             // Add listener
             Editor.OnProjectLoaded += OnProjectLoaded;
 
             // Refresh content
-            RefreshContentTree();
+            RefreshContentFolderTree();
         }
 
         protected internal override void OnHide()
@@ -87,50 +94,92 @@ namespace UniGameEditor.Windows
             Editor.OnProjectLoaded -= OnProjectLoaded;
 
             if(Editor.ContentDatabase != null)
-                Editor.ContentDatabase.OnContentModified -= RefreshContentTree;
+                Editor.ContentDatabase.OnContentModified -= RefreshContentFolderTree;
         }
 
         private void OnProjectLoaded()
         {
-            RefreshContentTree();
-            Editor.ContentDatabase.OnContentModified += RefreshContentTree;
+            RefreshContentFolderTree();
+            RefreshContentFileTree();
+
+            // Add listeners
+            Editor.Selection.OnSelectionChanged += OnSelectionChanged;
+            Editor.ContentDatabase.OnContentModified += RefreshContentFolderTree;
         }
 
-        private void RefreshContentTree()
+        private void OnSelectionChanged()
+        {
+            // Get folder selection
+            FolderObject folderObject = Editor.Selection.GetSelected<FolderObject>().FirstOrDefault();
+
+            // Update search folder
+            if (folderObject != null)
+                selectedFolder = folderObject.ContentRelativePath;
+
+            // Refresh files
+            RefreshContentFileTree();
+        }
+
+        private void RefreshContentFolderTree()
         {
             // Clear old data
-            contentTreeView.ClearNodes();
+            contentFolderTreeView.ClearNodes();
 
             // Check for project open
             if (Editor.IsProjectOpen == true)
             {
                 // Refresh content
-                RefreshContentTree(Editor.ContentDirectory);
+                RefreshContentFolderTree(Editor.ContentDirectory);
             }
         }
 
-        private void RefreshContentTree(string directory, EditorTreeNode parent = null)
+        private void RefreshContentFileTree()
+        {
+            // Clear old data
+            contentFileTreeView.ClearNodes();
+
+            // Check for project open
+            if(Editor.IsProjectOpen == true)
+            {
+                // Refresh content
+                RefreshContentFileTree(selectedFolder);
+            }
+        }
+
+        private void RefreshContentFolderTree(string directory, EditorTreeNode parent = null)
         {
             // Get folder name
             string rootName = Path.GetFileName(directory);
 
             // Get relative path
             string relativePath = Editor.ContentDatabase.GetContentRelativePath(directory);
-            string contentRelativePath = string.IsNullOrEmpty(relativePath) == true || relativePath == "."
-                ? "Content"
-                : "Content/" + relativePath;
 
             // Create directory
             EditorTreeNode rootNode = parent != null
                 ? parent.AddNode(rootName)
-                : contentTreeView.AddNode(rootName);
+                : contentFolderTreeView.AddNode(rootName);
+
+            // Check expanded
+            bool expanded;
+            if (foldersExpanded.TryGetValue(relativePath, out expanded) == false)
+                foldersExpanded[relativePath] = false;
+
+            // Set expanded
+            rootNode.IsExpanded = expanded;
 
             // Make folder
             rootNode.Icon = folderNormalIcon;
 
+            // Set menu
+            rootNode.ContextMenu = CreateContentFolderContextMenu(relativePath, parent == null);
+
             // Add listeners
-            rootNode.OnSelected += (EditorTreeNode node) => Editor.Selection.Select(new FolderObject(contentRelativePath));
-            rootNode.OnExpanded += OnTreeNodeExpanded;
+            rootNode.OnSelected += (EditorTreeNode node) => Editor.Selection.Select(new FolderObject(relativePath));
+            rootNode.OnExpanded += (EditorTreeNode node, bool expanded) =>
+            {
+                foldersExpanded[relativePath] = expanded;
+                OnContentFolderTreeNodeExpanded(node, expanded);
+            };
 
             // Add drop handler
             rootNode.DropHandler = new ContentDrop(Editor.ContentDatabase, relativePath);
@@ -139,15 +188,71 @@ namespace UniGameEditor.Windows
             foreach (string subDir in Editor.ContentDatabase.SearchFolders(relativePath))
             {
                 // Add children
-                RefreshContentTree(subDir, rootNode);
+                RefreshContentFolderTree(subDir, rootNode);
             }
         }
 
-        private void OnTreeNodeExpanded(EditorTreeNode node, bool expanded)
+        private void RefreshContentFileTree(string directory)
+        {
+            // Search all files
+            foreach (string contentGuid in Editor.ContentDatabase.SearchContent(directory))
+            {
+                // Get the content path and name
+                string contentPath = Editor.ContentDatabase.GetContentPath(contentGuid);
+                string contentName = Path.GetFileNameWithoutExtension(contentPath);
+
+                // Create directory
+                EditorTreeNode fileNode = contentFileTreeView.AddNode(contentName);
+
+
+                // Make folder
+                //rootNode.Icon = folderNormalIcon;
+
+                //// Set menu
+                //rootNode.ContextMenu = CreateContentFolderContextMenu(relativePath, parent == null);
+
+                // Add listeners
+                //rootNode.OnSelected += (EditorTreeNode node) => Editor.Selection.Select(new FolderObject(contentRelativePath));
+                
+
+                // Add drop handler
+                //rootNode.DropHandler = new ContentDrop(Editor.ContentDatabase, relativePath);
+            }
+        }
+
+        private void OnContentFolderTreeNodeExpanded(EditorTreeNode node, bool expanded)
         {
             node.Icon = expanded == false
                 ? folderNormalIcon 
                 : folderOpenIcon;
+        }
+
+        private EditorMenu CreateContentFolderContextMenu(string directoryPath, bool isRoot)
+        {
+            // Create the menu
+            EditorMenu menu = EditorMenu.Create();
+
+            menu.AddItem("Open In Explorer").OnClicked += () =>
+            {
+                Editor.ContentDatabase.OpenContent(directoryPath);
+            };
+
+            // Dont allow modify options on root folder
+            if (isRoot == false)
+            {
+                menu.AddSeparator();
+                menu.AddItem("Delete").OnClicked += () =>
+                {
+                    if (Editor.ShowDialog("Delete Content Folder", "You cannot undo this action and all content within will be deleted!", DialogOptions.YesNo) == true)
+                        Editor.ContentDatabase.DeleteContent(directoryPath);
+                };
+                menu.AddItem("Rename").OnClicked += () =>
+                {
+
+                };
+            }
+
+            return menu;
         }
     }
 }

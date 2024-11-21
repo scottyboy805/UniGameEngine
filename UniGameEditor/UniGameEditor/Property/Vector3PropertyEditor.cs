@@ -24,7 +24,7 @@ namespace UniGameEditor.Property
 
             // Add property label
             EditorPropertyLabel propertyLabel = layout.AddPropertyLabel(Property);
-            propertyLabel.Width = 120;
+            propertyLabel.Width = EditorControl.PropertiesLabelWidth;
 
             // Get remaining width
             float elementWidth = (RootControl.Width - propertyLabel.Width) / 3f;

@@ -8,21 +8,31 @@ namespace UniGameEditor
     {
         // Internal
         [DataMember]
-        internal string contentFolder = null;
+        internal string projectRelativePath = null;
+        internal string contentRelativePath = null;
 
         // Properties
-        public string ContentFolder
+        public string ProjectRelativePath
         {
-            get { return contentFolder; }
+            get { return projectRelativePath; }
+        }
+
+        public string ContentRelativePath
+        {
+            get { return contentRelativePath; }
         }
 
         // Constructor
-        public FolderObject(string contentFolder) 
+        public FolderObject(string contentRelativePath) 
         { 
-            this.contentFolder = contentFolder;
+            this.contentRelativePath = contentRelativePath;
+            this.projectRelativePath = (string.IsNullOrEmpty(contentRelativePath) == true 
+                || contentRelativePath == ".")
+                    ? "Content"
+                    : "Content/" + contentRelativePath;
 
             // Check valid path
-            ContentDatabase.CheckContentPathValid(contentFolder);
+            ContentDatabase.CheckContentPathValid(projectRelativePath);
         }
     }
 }

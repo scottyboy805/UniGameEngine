@@ -13,7 +13,7 @@ namespace UniGameEditor.Content
             EditorIcon folderIcon = EditorIcon.FindIcon("FolderNormal");
 
             // Find the property
-            SerializedProperty property = Content.FindPropertyName(nameof(FolderObject.contentFolder));
+            SerializedProperty property = Content.FindPropertyName(nameof(FolderObject.projectRelativePath));
 
             // Get the folder name
             string folderName;
