@@ -7,7 +7,7 @@ namespace UniGameEditor.Content
     internal sealed class GameObjectContentEditor : ContentEditor
     {
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Get properties
             SerializedProperty enabledProperty = Content.FindSerializedName(nameof(GameObject.Enabled));

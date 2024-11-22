@@ -6,7 +6,7 @@ namespace UniGameEditor.Property
     internal sealed class PrimitiveBoolPropertyEditor : PropertyEditor
     {
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Add layout
             EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
@@ -29,7 +29,7 @@ namespace UniGameEditor.Property
     internal sealed class PrimitiveStringPropertyEditor : PropertyEditor
     {
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Add layout
             EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
@@ -45,6 +45,9 @@ namespace UniGameEditor.Property
 
             // Create toggle field
             EditorInput input = layout.AddInput(value);
+
+            // Check for read only
+            input.IsReadOnly = Property.IsReadOnly;
         }
     }
 
@@ -174,7 +177,7 @@ namespace UniGameEditor.Property
         // Methods
         protected abstract EditorNumberInput CreateNumberInput(EditorLayoutControl layout, T value, bool isMixed);
 
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Add layout
             EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);

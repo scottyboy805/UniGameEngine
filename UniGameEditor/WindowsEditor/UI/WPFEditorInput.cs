@@ -27,6 +27,12 @@ namespace WindowsEditor.UI
             set => textBox.Text = value;
         }
 
+        public override bool IsReadOnly
+        {
+            get => textBox.IsReadOnly; 
+            set => textBox.IsReadOnly = value; 
+        }
+
         public override IDragHandler DragHandler
         {
             get => dragDrop.DragHandler;

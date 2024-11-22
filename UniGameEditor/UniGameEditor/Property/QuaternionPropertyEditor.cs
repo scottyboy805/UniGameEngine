@@ -13,7 +13,7 @@ namespace UniGameEditor.Property
         private SerializedProperty wProperty = null;
 
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Find the component properties
             xProperty = Property.FindPropertyName(nameof(Quaternion.X));

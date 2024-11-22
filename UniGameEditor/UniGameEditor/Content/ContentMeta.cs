@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content.Pipeline;
 using MonoGame.Framework.Content.Pipeline.Builder;
 using System.Runtime.Serialization;
+using UniGameEngine;
 
 namespace UniGameEditor.Content
 {
@@ -20,8 +21,10 @@ namespace UniGameEditor.Content
         private string guid = "";
         [DataMember(Name = "Action")]
         private BuildAction action = BuildAction.Build;
-        [DataMember(Name = "Importer")]
+        [DataMemberReadOnly]
+        [DataMember(Name = "Importer")]        
         private string importer = "";
+        [DataMemberReadOnly]
         [DataMember(Name = "Processor")]
         private string processor = "";
         //[DataMember(Name = "ProcessorParameters")]

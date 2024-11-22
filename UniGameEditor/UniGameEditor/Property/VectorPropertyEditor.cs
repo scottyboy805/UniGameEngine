@@ -11,7 +11,7 @@ namespace UniGameEditor.Property
         private SerializedProperty yProperty = null;
 
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Find the component properties
             xProperty = Property.FindPropertyName(nameof(Vector2.X));
@@ -75,7 +75,7 @@ namespace UniGameEditor.Property
         private SerializedProperty zProperty = null;
 
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Find the component properties
             xProperty = Property.FindPropertyName(nameof(Vector3.X));
@@ -159,7 +159,7 @@ namespace UniGameEditor.Property
         private SerializedProperty wProperty = null;
 
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Find the component properties
             xProperty = Property.FindPropertyName(nameof(Vector4.X));

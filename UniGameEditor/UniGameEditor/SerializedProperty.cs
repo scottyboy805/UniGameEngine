@@ -1,5 +1,6 @@
 ﻿using SharpDX.Direct2D1;
 using System.Collections;
+using System.Diagnostics.Contracts;
 using UniGameEngine;
 using UniGameEngine.Content.Contract;
 
@@ -91,6 +92,11 @@ namespace UniGameEditor
         }
 
         // Methods
+        public override string ToString()
+        {
+            return string.Format("Serialize Property ({0}): {1}", property.SerializeName, property.PropertyType);
+        }
+
         public bool GetValue<T>(out T value, out bool isMixed)
         {
             // Check for type

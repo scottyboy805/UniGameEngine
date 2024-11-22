@@ -35,9 +35,9 @@ namespace UniGameEditor.Property
         }
 
         // Methods
-        protected internal virtual void OnShow() { }
+        protected virtual void OnShow() { }
 
-        protected internal virtual void OnHide() { }
+        protected virtual void OnHide() { }
 
         public void CreateProperty(EditorLayoutControl rootControl, SerializedProperty property)
         {

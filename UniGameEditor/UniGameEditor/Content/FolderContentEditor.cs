@@ -7,7 +7,7 @@ namespace UniGameEditor.Content
     internal sealed class FolderContentEditor : ContentEditor
     {
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Get folder icon
             EditorIcon folderIcon = EditorIcon.FindIcon("FolderNormal");

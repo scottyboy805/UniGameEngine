@@ -44,9 +44,9 @@ namespace UniGameEditor.Content
         }
 
         // Methods
-        protected internal virtual void OnShow() { }
+        protected virtual void OnShow() { }
 
-        protected internal virtual void OnHide() { }
+        protected virtual void OnHide() { }
 
         public void CreateContent(EditorLayoutControl rootControl, SerializedContent content)
         {
@@ -156,7 +156,7 @@ namespace UniGameEditor.Content
                     if (type.IsDefined(typeof(ContentEditorForAttribute)) == true)
                     {
                         // Get the attribute
-                        ContentEditorForAttribute attrib = type.GetCustomAttribute<ContentEditorForAttribute>();
+                        IEnumerable<ContentEditorForAttribute> attributes = type.GetCustomAttributes<ContentEditorForAttribute>();
 
                         // Check for type
                         if (typeof(ContentEditor).IsAssignableFrom(type) == false)
@@ -165,27 +165,31 @@ namespace UniGameEditor.Content
                             break;
                         }
 
-                        // Create instance of editor
-                        ContentEditor contentEditor = (ContentEditor)Activator.CreateInstance(type);
-                        contentEditor.editor = editor;
-
-                        // Check for specific
-                        if (attrib.ForDerivedTypes == false)
+                        // Process all
+                        foreach (ContentEditorForAttribute attrib in attributes)
                         {
-                            // Check for already added
-                            if (specificContentEditors.ContainsKey(attrib.ForType) == true)
+                            // Create instance of editor
+                            ContentEditor contentEditor = (ContentEditor)Activator.CreateInstance(type);
+                            contentEditor.editor = editor;
+
+                            // Check for specific
+                            if (attrib.ForDerivedTypes == false)
                             {
-                                Debug.LogError("A content editor already exists for type: " + attrib.ForType);
-                                continue;
-                            }
+                                // Check for already added
+                                if (specificContentEditors.ContainsKey(attrib.ForType) == true)
+                                {
+                                    Debug.LogError("A content editor already exists for type: " + attrib.ForType);
+                                    continue;
+                                }
 
-                            specificContentEditors[attrib.ForType] = contentEditor;
-                        }
-                        // Add derived
-                        else
-                        {
-                            // Add to derived
-                            derivedContentEditors.Add((attrib.ForType, contentEditor));
+                                specificContentEditors[attrib.ForType] = contentEditor;
+                            }
+                            // Add derived
+                            else
+                            {
+                                // Add to derived
+                                derivedContentEditors.Add((attrib.ForType, contentEditor));
+                            }
                         }
                     }
                 }

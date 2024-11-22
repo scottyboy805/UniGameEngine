@@ -17,6 +17,11 @@ namespace UniGameEditor
             get { return selectedObjects.Count > 0; }
         }
 
+        public bool IsSingleSelection
+        {
+            get { return selectedObjects.Count == 1; }
+        }
+
         public bool IsCommonSelection
         {
             get
@@ -66,6 +71,21 @@ namespace UniGameEditor
                 if(selection is T)
                     yield return (T)selection;
             }
+        }
+
+        public object GetMainSelected()
+        {
+            return selectedObjects.Count >= 1
+                ? selectedObjects[0] 
+                : null;
+        }
+
+        public T GetMainSelected<T>()
+        {
+            if (selectedObjects.Count >= 1 && selectedObjects[0] is T value)
+                return value;
+
+            return default;
         }
 
         public void Clear()

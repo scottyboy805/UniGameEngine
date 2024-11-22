@@ -54,8 +54,23 @@ namespace UniGameEditor.Windows
                 // Get selection type
                 Type selectionType = Editor.Selection.SelectedType;
 
+                // Get the meta for the content
+                ContentMeta meta = null;
+                if (Editor.Selection.IsSingleSelection == true)
+                {
+                    // Get main selected object
+                    object mainSelection = Editor.Selection.GetMainSelected();
+
+                    // Get the guid
+                    string guid = Editor.ContentDatabase.GetContentGuid(mainSelection);
+
+                    // Get meta if content is imported
+                    if (guid != null)
+                        meta = Editor.ContentDatabase.GetContentMeta(guid);
+                }
+
                 // Create editor
-                SerializedContent content = new SerializedContent(selectionType, Editor.Selection.GetSelected().ToArray());
+                SerializedContent content = new SerializedContent(selectionType, Editor.Selection.GetSelected().ToArray(), meta);
 
                 // Create the editor
                 ContentEditor editor = ContentEditor.ForType(selectionType);

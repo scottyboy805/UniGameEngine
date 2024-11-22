@@ -4,7 +4,7 @@
     internal sealed class ObjectPropertyEditor : PropertyEditor
     {
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Get all properties
             foreach(SerializedProperty childProperty in Property.VisibleChildren)

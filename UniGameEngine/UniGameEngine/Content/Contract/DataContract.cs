@@ -55,6 +55,11 @@ namespace UniGameEngine.Content.Contract
         }
 
         // Methods
+        public override string ToString()
+        {
+            return string.Format("Data Contract ({0}): {1}", contractType.Name, contractType);
+        }
+
         private void InitializeMembers(Type type)
         {
             // Search base type first

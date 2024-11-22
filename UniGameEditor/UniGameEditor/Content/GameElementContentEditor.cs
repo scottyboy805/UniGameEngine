@@ -8,7 +8,7 @@ namespace UniGameEditor.Content
     internal sealed class GameElementContentEditor : ContentEditor
     {
         // Methods
-        protected internal override void OnShow()
+        protected override void OnShow()
         {
             // Add element type
             EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);

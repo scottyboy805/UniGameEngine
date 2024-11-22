@@ -133,6 +133,14 @@ namespace UniGameEditor.Content
             return null;
         }
 
+        public ContentMeta GetContentMeta(string guid)
+        {
+            ContentMeta meta;
+            contentMetas.TryGetValue(guid, out meta);
+
+            return meta;
+        }
+
         public Type GetContentType(string guid)
         {
             ContentMeta meta;
@@ -581,6 +589,9 @@ namespace UniGameEditor.Content
 
         public override T Load<T>(string assetName)
         {
+            // Get the full asset name
+            string fullAssetName = assetName;
+
             // Strip extension
             if (Path.HasExtension(assetName) == true)
                 assetName = Path.ChangeExtension(assetName, null);
@@ -588,21 +599,24 @@ namespace UniGameEditor.Content
             // Load the asset normally
             T result = base.Load<T>(assetName);
 
-            //// Check for loaded
-            //if (result != null)
-            //{
-            //    // Get meta
-            //    ContentMeta meta;
-            //    contentMetas.TryGetValue(assetName, out meta);
+            // Check for loaded
+            if (result != null)
+            {
+                // Get guid
+                string guid;
+                contentPaths.TryGetValue(fullAssetName, out guid);
 
-            //    // Add to loaded
-            //    contentObjects[result] = meta.Guid;
-            //}
+                // Add to loaded
+                contentObjects[result] = guid;
+            }
             return result;
         }
 
         public override T LoadLocalized<T>(string assetName)
         {
+            // Get the full asset name
+            string fullAssetName = assetName;
+
             // Strip extension
             if (Path.HasExtension(assetName) == true)
                 assetName = Path.ChangeExtension(assetName, null);
@@ -610,16 +624,16 @@ namespace UniGameEditor.Content
             // Load the asset normally
             T result = base.LoadLocalized<T>(assetName);
 
-            //// Check for loaded
-            //if (result != null)
-            //{
-            //    // Get meta
-            //    ContentMeta meta;
-            //    contentMetas.TryGetValue(assetName, out meta);
+            // Check for loaded
+            if (result != null)
+            {
+                // Get guid
+                string guid;
+                contentPaths.TryGetValue(fullAssetName, out guid);
 
-            //    // Add to loaded
-            //    contentObjects[result] = meta.Guid;
-            //}
+                // Add to loaded
+                contentObjects[result] = guid;
+            }
             return result;
         }
 
@@ -677,19 +691,6 @@ namespace UniGameEditor.Content
             // Ensure guid
             meta.EnsureGuid();
             return meta;
-        }
-
-        private ContentMeta GetContentMeta(string guid)
-        {
-            // Try to find meta
-            ContentMeta meta;
-            if (contentMetas.TryGetValue(guid, out meta) == true)
-            {
-                // Get the path
-                return meta;
-            }
-            // Not found
-            return null;
         }
 
         private void CheckContentPath(string path, bool checkExists = true, string hintName = null)
