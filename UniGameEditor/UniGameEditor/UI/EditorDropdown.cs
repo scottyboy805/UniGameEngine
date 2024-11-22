@@ -12,7 +12,7 @@ namespace UniGameEditor.UI
         public abstract EditorOption SelectedOption { get; set; }
 
         // Methods
-        public abstract EditorOption AddOption(string text);
+        public abstract EditorOption AddOption();
         public abstract void RemoveOption(EditorOption option);
     }
 }

@@ -10,25 +10,18 @@ namespace WindowsEditor.UI
         {
             // Internal
             internal ComboBoxItem item = null;
-            internal IconTextContent content = null;
+            internal WPFEditorLayoutControl layout = null;
 
             // Properties
-            public override string Text
+            public override EditorLayoutControl Content
             {
-                get => content.Text;
-                set => content.Text = value;
+                get { return layout; }
             }
 
             public override string Tooltip
             {
-                get => content.Tooltip;
-                set => content.Tooltip = value;
-            }
-
-            public override EditorIcon Icon
-            {
-                get => content.Icon;
-                set => content.Icon = value;
+                get => (string)item.ToolTip;
+                set => item.ToolTip = value;
             }
 
             public override bool IsSelected
@@ -37,10 +30,14 @@ namespace WindowsEditor.UI
             }
 
             // Constructor
-            public DropdownCombinationEditorOption(ItemCollection parent, string text)
+            public DropdownCombinationEditorOption(ItemsControl parent)
             {
                 item = new ComboBoxItem();
-                content = new IconTextContent(parent, item, text);
+                layout = new WPFEditorLayoutControl(parent, new StackPanel
+                {
+                    Orientation = Orientation.Vertical,
+                    Height = DefaultLineHeight,
+                });
             }
         }
 
@@ -137,14 +134,14 @@ namespace WindowsEditor.UI
         }
 
         // Methods
-        public override EditorOption AddOption(string text)
+        public override EditorOption AddOption()
         {
             // Add to options
             if (options == null)
                 options = new List<EditorOption>();
 
             // Create option
-            DropdownCombinationEditorOption option = new DropdownCombinationEditorOption(combo.Items, text);
+            DropdownCombinationEditorOption option = new DropdownCombinationEditorOption(combo);
 
             // Add to options
             options.Add(option);

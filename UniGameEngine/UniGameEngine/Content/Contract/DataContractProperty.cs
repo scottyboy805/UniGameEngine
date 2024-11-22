@@ -12,6 +12,7 @@ namespace UniGameEngine.Content.Contract
         {
             Object,
             Array,
+            ArrayElement,
             Property,
         }
 
@@ -74,6 +75,11 @@ namespace UniGameEngine.Content.Contract
         public bool IsArray
         {
             get { return dataType == DataType.Array; }
+        }
+
+        public bool IsArrayElement
+        {
+            get { return dataType == DataType.ArrayElement; }
         }
 
         public bool IsProperty

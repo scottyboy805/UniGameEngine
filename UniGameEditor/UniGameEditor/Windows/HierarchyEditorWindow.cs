@@ -119,7 +119,8 @@ namespace UniGameEditor.Windows
             if(scenes.ContainsKey(scene) == false)
             {
                 // Create the control
-                EditorFoldout foldout = RootControl.AddFoldoutLayout(scene.Name);
+                EditorFoldout foldout = RootControl.AddFoldoutLayout();
+                foldout.Header.AddLabel(scene.Name);
 
                 // Set expanded
                 foldout.IsExpanded = scene.expanded;
@@ -183,7 +184,8 @@ namespace UniGameEditor.Windows
         private void RebuildHierarchyObject(GameObject current, EditorTreeView treeView)
         {
             // Create node
-            EditorTreeNode currentNode = treeView.AddNode(current.Name);
+            EditorTreeNode currentNode = treeView.AddNode();
+            currentNode.Header.AddLabel(current.Name);
 
             // Build children
             RebuildHierarchyObjectChildren(current, currentNode);
@@ -192,7 +194,8 @@ namespace UniGameEditor.Windows
         private void RebuildHierarchyObject(GameObject current, EditorTreeNode treeNode)
         {
             // Create node
-            EditorTreeNode currentNode = treeNode.AddNode(current.Name);
+            EditorTreeNode currentNode = treeNode.AddNode();
+            currentNode.Header.AddLabel(current.Name);
 
             // Build children
             RebuildHierarchyObjectChildren(current, currentNode);

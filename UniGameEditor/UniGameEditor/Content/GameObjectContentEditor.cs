@@ -15,10 +15,10 @@ namespace UniGameEditor.Content
             SerializedProperty staticProperty = Content.FindSerializedName(nameof(GameObject.IsStatic));
 
             SerializedProperty transformProperty = Content.FindSerializedName(nameof(GameObject.Transform));
-
+            SerializedProperty componentsProperty = Content.FindSerializedName("Components");
 
             // Create name layout
-            EditorLayoutControl nameLayout = RootControl.AddHorizontalLayout();
+            EditorLayoutControl nameLayout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
 
             // Enabled
             {
@@ -27,7 +27,7 @@ namespace UniGameEditor.Content
                 enabledProperty.GetValue(out enabled, out isMixed);
 
                 // Add enabled toggle
-                EditorToggle enabledToggle = nameLayout.AddToggle(null, enabled);
+                EditorToggle enabledToggle = nameLayout.AddToggle(enabled);
             }
 
             // Name
@@ -48,7 +48,8 @@ namespace UniGameEditor.Content
                 staticProperty.GetValue(out isStatic, out isMixed);
 
                 // Add static toggle
-                EditorToggle staticToggle = nameLayout.AddToggle("Static", isStatic);
+                EditorToggle staticToggle = nameLayout.AddToggle(isStatic);
+                staticToggle.Content.AddLabel("Static");
             }
 
 
@@ -64,17 +65,49 @@ namespace UniGameEditor.Content
                 // Create drawer
                 ContentEditor transformEditor = ContentEditor.ForType(transformContent.Contract.ContractType);
 
-                // Create drawer
+                // Initialize drawer
                 transformEditor.CreateContent(transformFoldout, transformContent);
+            }
+
+
+            // Components
+            foreach(SerializedProperty childProperty in componentsProperty.Children)
+            {
+                // Create component header
+                EditorFoldout componentFoldout = CreateComponentHeader(childProperty);
+
+                // Create the serialized content
+                SerializedContent componentContent = childProperty.CreateContent();
+
+                // Create drawer
+                ContentEditor componentEditor = ContentEditor.ForType(componentContent.Contract.ContractType);
+
+                // Initialize drawer
+                componentEditor.CreateContent(componentFoldout, componentContent);
             }
         }
 
         private EditorFoldout CreateComponentHeader(SerializedProperty property)
         {
+            // Get the name
+            string displayName = property.DisplayName;
+
+            // Check for array element
+            if(property.IsArrayElement == true)
+            {
+                // Get the value
+                Component componentInstance;
+                property.GetValue(out componentInstance, out _);
+
+                // Get the component name
+                displayName = componentInstance.Name;
+            }
+
             // Get the component type
 
             // Create the foldout
-            EditorFoldout componentFoldout = RootControl.AddFoldoutLayout(property.DisplayName);
+            EditorFoldout componentFoldout = RootControl.AddFoldoutLayout();
+            componentFoldout.Header.AddLabel(displayName);
 
             return componentFoldout;
         }

@@ -3,11 +3,11 @@
   <SourceFile>D:/VisualStudio/UniGameEngine/ExampleProject/Content/Test.prefab</SourceFile>
   <SourceTime>2024-11-02T21:33:34.2308661+00:00</SourceTime>
   <DestFile>D:/VisualStudio/UniGameEngine/ExampleProject/Library/bin/Test.xnb</DestFile>
-  <DestTime>2024-11-21T15:53:55.0828448+00:00</DestTime>
+  <DestTime>2024-11-22T09:13:47.0152985+00:00</DestTime>
   <Importer>PrefabImporter</Importer>
-  <ImporterTime>2024-11-21T15:47:58.7549956+00:00</ImporterTime>
+  <ImporterTime>2024-11-22T08:05:13.4222425+00:00</ImporterTime>
   <Processor>PrefabProcessor</Processor>
-  <ProcessorTime>2024-11-21T15:47:58.7549956+00:00</ProcessorTime>
+  <ProcessorTime>2024-11-22T08:05:13.4222425+00:00</ProcessorTime>
   <Dependencies />
   <BuildAsset />
   <BuildOutput />

@@ -83,24 +83,29 @@ namespace WindowsEditor.UI
             return new WPFEditorInput(panel, text);
         }
 
+        public override EditorImage AddImage(EditorIcon icon)
+        {
+            return new WPFEditorImage(panel, icon);
+        }
+
         public override EditorNumberInput AddNumberInput(double value, double min = double.MinValue, double max = double.MaxValue)
         {
             return new WPFEditorNumberInput(panel, value, min, max);
         }
 
-        public override EditorButton AddButton(string text)
+        public override EditorButton AddButton()
         {
-            return new WPFEditorButton(panel, text);
+            return new WPFEditorButton(panel);
         }
 
-        public override EditorToggleButton AddToggleButton(string text, bool on)
+        public override EditorToggleButton AddToggleButton(bool on)
         {
-            return new WPFEditorToggleButton(panel, text, on);
+            return new WPFEditorToggleButton(panel, on);
         }
 
-        public override EditorToggle AddToggle(string text, bool on)
+        public override EditorToggle AddToggle(bool on)
         {
-            return new WPFEditorToggle(panel, text, on);
+            return new WPFEditorToggle(panel, on);
         }
 
         public override EditorDropdown AddDropdown()
@@ -128,9 +133,9 @@ namespace WindowsEditor.UI
             return new WPFEditorTable(panel);
         }
 
-        public override EditorFoldout AddFoldoutLayout(string text, bool isExpanded = false)
+        public override EditorFoldout AddFoldoutLayout(bool isExpanded = false)
         {
-            return new WPFEditorFoldout(panel, text, isExpanded);
+            return new WPFEditorFoldout(panel, isExpanded);
         }
 
         public override EditorLayoutControl AddFlowLayout()
@@ -138,24 +143,14 @@ namespace WindowsEditor.UI
             return new WPFEditorWrapPanelLayout(panel);
         }
 
-        public override EditorLayoutControl AddHorizontalLayout()
+        public override EditorLayoutControl AddDirectionalLayout(EditorLayoutDirection direction)
         {
-            return new WPFEditorStackLayout(panel, Orientation.Horizontal);
-        }
+            return new WPFEditorStackLayout(panel, (Orientation)direction);
+        }   
 
-        public override EditorLayoutControl AddVerticalLayout()
+        public override EditorSplitViewLayoutControl AddDirectionalSplitLayout(EditorLayoutDirection direction)
         {
-            return new WPFEditorStackLayout(panel, Orientation.Vertical);
-        }        
-
-        public override EditorSplitViewLayoutControl AddHorizontalSplitLayout()
-        {
-            return new WPFSplitView(panel, Orientation.Horizontal);
-        }
-
-        public override EditorSplitViewLayoutControl AddVerticalSplitLayout()
-        {
-            return new WPFSplitView(panel, Orientation.Vertical);
+            return new WPFSplitView(panel, (Orientation)direction);
         }
 
         public override EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true)

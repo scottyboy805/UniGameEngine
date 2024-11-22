@@ -1,4 +1,4 @@
-﻿using ModernWpf.Controls;
+﻿using System.Windows;
 using System.Windows.Controls;
 using UniGameEditor.UI;
 
@@ -11,25 +11,18 @@ namespace WindowsEditor.UI
         {
             // Internal            
             internal ComboBoxItem item = null;
-            internal IconTextContent content = null;
+            internal WPFEditorLayoutControl layout = null;
 
             // Properties
-            public override string Text
+            public override EditorLayoutControl Content
             {
-                get => content.Text;
-                set => content.Text = value;
+                get { return layout; }
             }
 
             public override string Tooltip
             {
-                get => content.Tooltip;
-                set => content.Tooltip = value;
-            }
-
-            public override EditorIcon Icon
-            {
-                get => content.Icon;
-                set => content.Icon = value;
+                get => (string)item.ToolTip;
+                set => item.ToolTip = value;
             }
 
             public override bool IsSelected
@@ -38,10 +31,14 @@ namespace WindowsEditor.UI
             }
 
             // Constructor
-            public DropdownEditorOption(ItemCollection parent, string text)
+            public DropdownEditorOption(ItemsControl parent)
             {
                 item = new ComboBoxItem();
-                content = new IconTextContent(parent, item, text);
+                layout = new WPFEditorLayoutControl(parent, new StackPanel
+                {
+                    Orientation = Orientation.Vertical,
+                    Height = DefaultLineHeight,
+                });
             }
         }
 
@@ -104,7 +101,7 @@ namespace WindowsEditor.UI
         {
             combo = new ComboBox();
             dragDrop = new WPFDragDrop(combo);
-            combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
+            combo.HorizontalContentAlignment = HorizontalAlignment.Left;
 
             combo.FontSize = DefaultFontSize;
             combo.MinHeight = DefaultLineHeight;
@@ -116,7 +113,7 @@ namespace WindowsEditor.UI
         {
             combo = new ComboBox();
             dragDrop = new WPFDragDrop(combo);
-            combo.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
+            combo.HorizontalContentAlignment = HorizontalAlignment.Left;
 
             combo.FontSize = DefaultFontSize;
             combo.MinHeight = DefaultLineHeight;
@@ -125,14 +122,14 @@ namespace WindowsEditor.UI
         }
 
         // Methods
-        public override EditorOption AddOption(string text)
+        public override EditorOption AddOption()
         {
             // Add to options
             if (options == null)
                 options = new List<EditorOption>();
 
             // Create option
-            DropdownEditorOption option = new DropdownEditorOption(combo.Items, text);
+            DropdownEditorOption option = new DropdownEditorOption(combo);
 
             // Add to options
             options.Add(option);

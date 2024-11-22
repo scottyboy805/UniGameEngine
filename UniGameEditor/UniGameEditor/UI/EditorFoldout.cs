@@ -7,9 +7,11 @@ namespace UniGameEditor.UI
         public event Action<EditorFoldout, bool> OnExpanded;
 
         // Properties
-        public abstract string Text { get; set; }
+        public abstract EditorLayoutControl Header { get; }
+        public abstract string Tooltip { get; set; }
         public abstract bool IsExpanded { get; set; }
 
+        // Methods
         protected void OnExpandedEvent(bool isExpanded)
         {
             OnExpanded?.Invoke(this, isExpanded);

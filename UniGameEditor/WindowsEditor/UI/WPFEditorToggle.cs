@@ -1,6 +1,4 @@
-﻿using ModernWpf.Controls;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
@@ -10,6 +8,7 @@ namespace WindowsEditor.UI
         // Internal
         internal WPFDragDrop dragDrop = null;
         internal CheckBox checkBox = null;
+        internal WPFEditorLayoutControl layout = null;
 
         // Properties
         public override float Width
@@ -23,11 +22,6 @@ namespace WindowsEditor.UI
             set => checkBox.Height = value;
         }
 
-        public override string Text
-        {
-            get => (string)checkBox.Content;
-            set => checkBox.Content = value;
-        }
         public override bool IsChecked
         {
             get => (bool)checkBox.IsChecked;
@@ -58,31 +52,49 @@ namespace WindowsEditor.UI
             }
         }
 
+        public override EditorLayoutControl Content
+        {
+            get { return layout; }
+        }
+
+        public override string Tooltip
+        {
+            get => (string)checkBox.ToolTip;
+            set => checkBox.ToolTip = value;
+        }
+
         // Constructor
-        public WPFEditorToggle(Panel parent, string text, bool on)
+        public WPFEditorToggle(Panel parent, bool on)
         {
             checkBox = new CheckBox();
-            dragDrop = new WPFDragDrop(checkBox);
-            checkBox.Content = text;
-            checkBox.IsChecked = on;
-
-            checkBox.FontSize = DefaultFontSize;
-            checkBox.MinHeight = DefaultLineHeight;
+            InitializeToggle(on);
 
             parent.Children.Add(checkBox);
         }
 
-        public WPFEditorToggle(ItemsControl parent, string text, bool on)
+        public WPFEditorToggle(ItemsControl parent, bool on)
         {
             checkBox = new CheckBox();
-            dragDrop = new WPFDragDrop(checkBox);
-            checkBox.Content = text;
-            checkBox.IsChecked = on;
-
-            checkBox.FontSize = DefaultFontSize;
-            checkBox.MinHeight = DefaultLineHeight;
+            InitializeToggle(on);
 
             parent.Items.Add(checkBox);
+        }
+
+        // Methods
+        private void InitializeToggle(bool on)
+        {
+            dragDrop = new WPFDragDrop(checkBox);
+            layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                MinHeight = DefaultLineHeight,
+            });
+
+            // Set content
+            checkBox.Content = layout.panel;
+            checkBox.IsChecked = on;
+            checkBox.FontSize = DefaultFontSize;
+            checkBox.MinHeight = DefaultLineHeight;
         }
     }
 }

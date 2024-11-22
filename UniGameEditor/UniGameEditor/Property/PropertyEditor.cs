@@ -13,7 +13,10 @@ namespace UniGameEditor.Property
         // Internal
         internal UniEditor editor = null;
         internal EditorLayoutControl rootControl = null;
-        internal SerializedProperty property = null;        
+        internal SerializedProperty property = null;
+
+        // Public
+        public const float PropertyLabelWidth = 100;
 
         // Properties
         public UniEditor Editor

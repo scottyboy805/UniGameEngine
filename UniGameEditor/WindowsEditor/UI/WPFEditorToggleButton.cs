@@ -1,5 +1,4 @@
-﻿using ModernWpf.Controls;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using UniGameEditor.UI;
 
@@ -10,7 +9,7 @@ namespace WindowsEditor.UI
         // Internal
         internal WPFDragDrop dragDrop = null;
         internal ToggleButton toggleButton = null;
-        internal IconTextContent content = null;
+        internal WPFEditorLayoutControl layout = null;
 
         // Properties
         public override float Width
@@ -22,24 +21,6 @@ namespace WindowsEditor.UI
         {
             get => (float)toggleButton.ActualHeight;
             set => toggleButton.Height = value;
-        }
-
-        public override string Text
-        {
-            get => content.Text;
-            set => content.Text = value;
-        }
-
-        public override string Tooltip
-        {
-            get => content.Tooltip;
-            set => content.Tooltip = value;
-        }
-
-        public override EditorIcon Icon
-        {
-            get => content.Icon;
-            set => content.Icon = value;
         }
 
         public override bool IsChecked
@@ -72,21 +53,47 @@ namespace WindowsEditor.UI
             }
         }
 
-        // Constructor
-        public WPFEditorToggleButton(Panel parent, string text, bool on)
+        public override EditorLayoutControl Content
         {
-            toggleButton = new ToggleButton();
-            dragDrop = new WPFDragDrop(toggleButton);
-            toggleButton.IsChecked = on;
-            content = new IconTextContent(parent, toggleButton, text);
+            get { return layout; }
         }
 
-        public WPFEditorToggleButton(ItemsControl parent, string text, bool on)
+        public override string Tooltip
+        {
+            get => (string)toggleButton.ToolTip;
+            set => toggleButton.ToolTip = value;
+        }
+
+        // Constructor
+        public WPFEditorToggleButton(Panel parent, bool on)
         {
             toggleButton = new ToggleButton();
+            InitializeToggleButton(on);
+
+            parent.Children.Add(toggleButton);
+        }
+
+        public WPFEditorToggleButton(ItemsControl parent, bool on)
+        {
+            toggleButton = new ToggleButton();
+            InitializeToggleButton(on);
+
+            parent.Items.Add(toggleButton);
+        }
+
+        // Methods
+        private void InitializeToggleButton(bool on)
+        {
             dragDrop = new WPFDragDrop(toggleButton);
+            layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                MinHeight = DefaultLineHeight,
+            });
+
+            // Set content
+            toggleButton.Content = layout.panel;
             toggleButton.IsChecked = on;
-            content = new IconTextContent(parent, toggleButton, text);
         }
     }
 }

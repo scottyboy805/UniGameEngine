@@ -1,5 +1,4 @@
-﻿using ModernWpf.Controls;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
@@ -79,10 +78,10 @@ namespace WindowsEditor.UI
         }
 
         // Methods
-        public override EditorTreeNode AddNode(string text)
+        public override EditorTreeNode AddNode()
         {
             // Create node
-            WPFEditorTreeNode node = new WPFEditorTreeNode(this, text);
+            WPFEditorTreeNode node = new WPFEditorTreeNode(this);
 
             // Create nodes
             if (nodes == null)

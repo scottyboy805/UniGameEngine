@@ -11,7 +11,7 @@ namespace UniGameEditor.Content
         protected internal override void OnShow()
         {
             // Add element type
-            EditorLayoutControl layout = RootControl.AddHorizontalLayout();
+            EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
 
             // Add type field
             layout.AddLabel(Content.DisplayName);

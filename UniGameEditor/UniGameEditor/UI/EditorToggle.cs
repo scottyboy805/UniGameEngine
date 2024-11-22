@@ -8,7 +8,8 @@ namespace UniGameEditor.UI
         public event Action<bool> OnChecked;
 
         // Properties
-        public abstract string Text { get; set; }
+        public abstract EditorLayoutControl Content { get; }
+        public abstract string Tooltip { get; set; }
         public abstract bool IsChecked { get; set; }
     }
 }

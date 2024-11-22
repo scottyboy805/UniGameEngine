@@ -11,7 +11,8 @@ namespace WindowsEditor.UI
         // Internal
         internal WPFDragDrop dragDrop = null;
         internal Expander expander = null;
-        internal StackPanel stackPanel = null;
+        internal WPFEditorLayoutControl layout = null;
+        internal Panel content = null;
 
         // Properties
         public override float Width
@@ -23,11 +24,6 @@ namespace WindowsEditor.UI
         {
             get => (float)expander.ActualHeight;
             set => expander.Height = value;
-        }
-        public override string Text
-        {
-            get => (string)expander.Content;
-            set => expander.Content = value;
         }
         public override bool IsExpanded
         {
@@ -59,29 +55,47 @@ namespace WindowsEditor.UI
             }
         }
 
+        public override EditorLayoutControl Header
+        {
+            get { return layout; }
+        }
+
+        public override string Tooltip
+        {
+            get => (string)expander.ToolTip;
+            set => expander.ToolTip = value;
+        }
+
         // Constructor
-        public WPFEditorFoldout(Panel parent, string text, bool isExpanded)
+        public WPFEditorFoldout(Panel parent, bool isExpanded)
         {
             expander = new Expander();
-            InitializeExpanded(text, isExpanded);
+            InitializeExpanded(isExpanded);
 
             parent.Children.Add(expander);
         }
 
-        public WPFEditorFoldout(ItemsControl parent, string text, bool isExpanded)
+        public WPFEditorFoldout(ItemsControl parent, bool isExpanded)
         {
             expander = new Expander();
-            InitializeExpanded(text, isExpanded);
+            InitializeExpanded(isExpanded);
 
             parent.Items.Add(expander);
         }
 
         // Methods
-        private void InitializeExpanded(string text, bool isExpanded)
+        private void InitializeExpanded(bool isExpanded)
         {
             dragDrop = new WPFDragDrop(expander);
-            expander.Content = stackPanel = new StackPanel();
-            expander.Header = text;
+            layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                MinHeight = DefaultLineHeight,
+            });
+
+            // Set content
+            expander.Content = content = new StackPanel();
+            expander.Header = layout.panel;
             expander.IsExpanded = isExpanded;
 
             // Add listener
@@ -91,102 +105,97 @@ namespace WindowsEditor.UI
 
         public override EditorLabel AddLabel(string text)
         {
-            return new WPFEditorLabel(stackPanel, text);
+            return new WPFEditorLabel(content, text);
         }
 
         public override EditorPropertyLabel AddPropertyLabel(SerializedProperty property, string overrideText)
         {
-            return new WPFEditorPropertyLabel(stackPanel, property, overrideText);
+            return new WPFEditorPropertyLabel(content, property, overrideText);
         }
 
         public override EditorInput AddInput(string text)
         {
-            return new WPFEditorInput(stackPanel, text);
+            return new WPFEditorInput(content, text);
         }
 
         public override EditorNumberInput AddNumberInput(double value, double min = double.MinValue, double max = double.MaxValue)
         {
-            return new WPFEditorNumberInput(stackPanel, value, min, max);
+            return new WPFEditorNumberInput(content, value, min, max);
         }
 
-        public override EditorButton AddButton(string text)
+        public override EditorImage AddImage(EditorIcon icon)
         {
-            return new WPFEditorButton(stackPanel, text);
+            return new WPFEditorImage(content, icon);
         }
 
-        public override EditorToggleButton AddToggleButton(string text, bool on)
+        public override EditorButton AddButton()
         {
-            return new WPFEditorToggleButton(stackPanel, text, on);
+            return new WPFEditorButton(content);
         }
 
-        public override EditorToggle AddToggle(string text, bool on)
+        public override EditorToggleButton AddToggleButton(bool on)
         {
-            return new WPFEditorToggle(stackPanel, text, on);
+            return new WPFEditorToggleButton(content, on);
+        }
+
+        public override EditorToggle AddToggle(bool on)
+        {
+            return new WPFEditorToggle(content, on);
         }
 
         public override EditorDropdown AddDropdown()
         {
-            return new WPFEditorDropdown(stackPanel);
+            return new WPFEditorDropdown(content);
         }
 
         public override EditorCombinationDropdown AddCombinationDropdown()
         {
-            return new WPFEditorCombinationDropdown(stackPanel);
+            return new WPFEditorCombinationDropdown(content);
         }
 
         public override EditorRenderView AddRenderView(Game gameHost)
         {
-            return new WPFEditorRenderView(stackPanel, gameHost);
+            return new WPFEditorRenderView(content, gameHost);
         }
 
         public override EditorTreeView AddTreeView()
         {
-            return new WPFEditorTreeView(stackPanel);
+            return new WPFEditorTreeView(content);
         }
 
         public override EditorTable AddTable()
         {
-            return new WPFEditorTable(stackPanel);
+            return new WPFEditorTable(content);
         }
 
-        public override EditorFoldout AddFoldoutLayout(string text, bool isExpanded = false)
+        public override EditorFoldout AddFoldoutLayout(bool isExpanded = false)
         {
-            return new WPFEditorFoldout(stackPanel, text, isExpanded);
+            return new WPFEditorFoldout(content, isExpanded);
         }
 
         public override EditorLayoutControl AddFlowLayout()
         {
-            return new WPFEditorWrapPanelLayout(stackPanel);
+            return new WPFEditorWrapPanelLayout(content);
         }
 
-        public override EditorLayoutControl AddHorizontalLayout()
+        public override EditorLayoutControl AddDirectionalLayout(EditorLayoutDirection direction)
         {
-            return new WPFEditorStackLayout(stackPanel, Orientation.Horizontal);
+            return new WPFEditorStackLayout(content, (Orientation)direction);
         }
 
-        public override EditorLayoutControl AddVerticalLayout()
+        public override EditorSplitViewLayoutControl AddDirectionalSplitLayout(EditorLayoutDirection direction)
         {
-            return new WPFEditorStackLayout(stackPanel, Orientation.Vertical);
-        }
-
-        public override EditorSplitViewLayoutControl AddHorizontalSplitLayout()
-        {
-            return new WPFSplitView(stackPanel, Orientation.Horizontal);
-        }
-
-        public override EditorSplitViewLayoutControl AddVerticalSplitLayout()
-        {
-            return new WPFSplitView(stackPanel, Orientation.Vertical);
+            return new WPFSplitView(content, (Orientation)direction);
         }
 
         public override EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true)
         {
-            return new WPFEditorScrollView(stackPanel, horizontal, vertical);
+            return new WPFEditorScrollView(content, horizontal, vertical);
         }
 
         public override void Clear()
         {
-            stackPanel.Children.Clear();
+            content.Children.Clear();
         }
     }
 }

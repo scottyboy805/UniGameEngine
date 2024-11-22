@@ -73,7 +73,7 @@ namespace UniGameEditor.Windows
             folderOpenIcon = EditorIcon.FindIcon("FolderOpen");
 
             // Create main split
-            EditorSplitViewLayoutControl split = RootControl.AddHorizontalSplitLayout();
+            EditorSplitViewLayoutControl split = RootControl.AddDirectionalSplitLayout(EditorLayoutDirection.Horizontal);
 
             // Add scroll 
             EditorLayoutControl scrollLayoutLeft = split.LayoutA.AddScrollLayout();// RootControl.AddScrollLayout();
@@ -158,9 +158,9 @@ namespace UniGameEditor.Windows
             string relativePath = Editor.ContentDatabase.GetContentRelativePath(directory);
 
             // Create directory
-            EditorTreeNode rootNode = parent != null
-                ? parent.AddNode(rootName)
-                : contentFolderTreeView.AddNode(rootName);
+            EditorTreeNode folderNode = parent != null
+                ? parent.AddNode()
+                : contentFolderTreeView.AddNode();
 
             // Check expanded
             bool expanded;
@@ -168,30 +168,33 @@ namespace UniGameEditor.Windows
                 foldersExpanded[relativePath] = false;
 
             // Set expanded
-            rootNode.IsExpanded = expanded;
+            folderNode.IsExpanded = expanded;
 
-            // Make folder
-            rootNode.Icon = folderNormalIcon;
+            // Set content
+            EditorImage folderImage = folderNode.Header.AddImage(folderNormalIcon);
+            folderNode.Header.AddLabel(rootName);
 
             // Set menu
-            rootNode.ContextMenu = CreateContentFolderContextMenu(relativePath, parent == null);
+            folderNode.ContextMenu = CreateContentFolderContextMenu(relativePath, parent == null);
 
             // Add listeners
-            rootNode.OnSelected += (EditorTreeNode node) => Editor.Selection.Select(new FolderObject(relativePath));
-            rootNode.OnExpanded += (EditorTreeNode node, bool expanded) =>
+            folderNode.OnSelected += (EditorTreeNode node) => Editor.Selection.Select(new FolderObject(relativePath));
+            folderNode.OnExpanded += (EditorTreeNode node, bool expanded) =>
             {
                 foldersExpanded[relativePath] = expanded;
-                OnContentFolderTreeNodeExpanded(node, expanded);
+                folderImage.Icon = expanded == false
+                    ? folderNormalIcon
+                    : folderOpenIcon;
             };
 
             // Add drop handler
-            rootNode.DropHandler = new ContentDrop(Editor.ContentDatabase, relativePath);
+            folderNode.DropHandler = new ContentDrop(Editor.ContentDatabase, relativePath);
 
             // Get all directories
             foreach (string subDir in Editor.ContentDatabase.SearchFolders(relativePath))
             {
                 // Add children
-                RefreshContentFolderTree(subDir, rootNode);
+                RefreshContentFolderTree(subDir, folderNode);
             }
         }
 
@@ -205,7 +208,10 @@ namespace UniGameEditor.Windows
                 string contentName = Path.GetFileNameWithoutExtension(contentPath);
 
                 // Create directory
-                EditorTreeNode fileNode = contentFileTreeView.AddNode(contentName);
+                EditorTreeNode fileNode = contentFileTreeView.AddNode();
+
+                // Set content
+                fileNode.Header.AddLabel(contentName);
 
                 // Add listeners
                 fileNode.OnSelected += (EditorTreeNode node) => Editor.Selection.Select(
@@ -224,13 +230,6 @@ namespace UniGameEditor.Windows
                 // Add drop handler
                 //rootNode.DropHandler = new ContentDrop(Editor.ContentDatabase, relativePath);
             }
-        }
-
-        private void OnContentFolderTreeNodeExpanded(EditorTreeNode node, bool expanded)
-        {
-            node.Icon = expanded == false
-                ? folderNormalIcon 
-                : folderOpenIcon;
         }
 
         private EditorMenu CreateContentFolderContextMenu(string directoryPath, bool isRoot)

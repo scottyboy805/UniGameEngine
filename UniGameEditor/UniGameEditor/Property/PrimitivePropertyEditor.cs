@@ -9,11 +9,11 @@ namespace UniGameEditor.Property
         protected internal override void OnShow()
         {
             // Add layout
-            EditorLayoutControl layout = RootControl.AddHorizontalLayout();
+            EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
 
             // Add property label
             EditorPropertyLabel propertyLabel = layout.AddPropertyLabel(Property);
-            propertyLabel.Width = EditorControl.PropertiesLabelWidth;
+            propertyLabel.Width = PropertyLabelWidth;
 
             // Get the current value
             bool value;
@@ -21,7 +21,7 @@ namespace UniGameEditor.Property
             Property.GetValue(out value, out isMixed);
 
             // Create toggle field
-            EditorToggle toggle = layout.AddToggle(null, value);
+            EditorToggle toggle = layout.AddToggle(value);
         }
     }
 
@@ -32,11 +32,11 @@ namespace UniGameEditor.Property
         protected internal override void OnShow()
         {
             // Add layout
-            EditorLayoutControl layout = RootControl.AddHorizontalLayout();
+            EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
 
             // Add property label
             EditorPropertyLabel propertyLabel = layout.AddPropertyLabel(Property);
-            propertyLabel.Width = 120;
+            propertyLabel.Width = PropertyLabelWidth;
 
             // Get the current value
             string value;
@@ -177,11 +177,11 @@ namespace UniGameEditor.Property
         protected internal override void OnShow()
         {
             // Add layout
-            EditorLayoutControl layout = RootControl.AddHorizontalLayout();
+            EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
 
             // Add property label
             EditorPropertyLabel propertyLabel = layout.AddPropertyLabel(Property);
-            propertyLabel.Width = 120;
+            propertyLabel.Width = PropertyLabelWidth;
 
             // Get the current value
             T value;

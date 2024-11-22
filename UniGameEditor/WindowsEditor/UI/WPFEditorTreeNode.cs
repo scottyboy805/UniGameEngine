@@ -10,7 +10,7 @@ namespace WindowsEditor.UI
         internal WPFDragDrop dragDrop = null;
         internal WPFEditorTreeView treeView = null;
         internal TreeViewItem treeItem = null;
-        internal IconTextContent content = null;
+        internal WPFEditorLayoutControl layout = null;
 
         internal ItemCollection treeItems = null;
         internal List<EditorTreeNode> nodes = null;
@@ -26,24 +26,6 @@ namespace WindowsEditor.UI
         {
             get => (float)treeItem.ActualHeight;
             set => treeItem.Height = value;
-        }
-
-        public override string Text
-        {
-            get => content.Text;
-            set => content.Text = value;
-        }
-
-        public override string Tooltip
-        {
-            get => content.Tooltip;
-            set => content.Tooltip = value;
-        }
-
-        public override EditorIcon Icon
-        {
-            get => content.Icon;
-            set => content.Icon = value;
         }
 
         public override bool IsExpanded
@@ -92,32 +74,47 @@ namespace WindowsEditor.UI
             }
         }
 
+        public override EditorLayoutControl Header
+        {
+            get { return layout; }
+        }
+
+        public override string Tooltip
+        {
+            get => (string)treeItem.ToolTip;
+            set => treeItem.ToolTip = value;
+        }
+
         // Constructor
-        public WPFEditorTreeNode(WPFEditorTreeView treeView, string text)
+        public WPFEditorTreeNode(WPFEditorTreeView treeView)
         {
             this.treeView = treeView;
             this.treeItems = treeView.treeView.Items;
 
-            InitializeTreeItem(text);
-
+            InitializeTreeItem();
         }        
 
-        public WPFEditorTreeNode(WPFEditorTreeNode treeNode, string text)
+        public WPFEditorTreeNode(WPFEditorTreeNode treeNode)
         {
             this.treeView = treeNode.treeView;
             this.treeItems = treeNode.treeItem.Items;
 
-            InitializeTreeItem(text);
+            InitializeTreeItem();
         }
 
         // Methods
-        private void InitializeTreeItem(string text)
+        private void InitializeTreeItem()
         {
             this.treeItem = new TreeViewItem();
             this.dragDrop = new WPFDragDrop(treeItem);
+            layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                MinHeight = DefaultLineHeight,
+            });
 
-            // Create content
-            this.content = new IconTextContent(treeItem, text);
+            // Set content
+            treeItem.Header = layout.panel;
 
             // Add listeners
             treeItem.Selected += (object sender, RoutedEventArgs e) => { if (treeItem.IsSelected) OnSelectedEvent(); };
@@ -127,10 +124,10 @@ namespace WindowsEditor.UI
             treeItems.Add(treeItem);
         }
 
-        public override EditorTreeNode AddNode(string text)
+        public override EditorTreeNode AddNode()
         {
             // Create node
-            WPFEditorTreeNode node = new WPFEditorTreeNode(this, text);
+            WPFEditorTreeNode node = new WPFEditorTreeNode(this);
 
             // Create nodes
             if(nodes == null)

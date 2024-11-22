@@ -7,11 +7,8 @@ namespace UniGameEditor.UI
         public const int DefaultFontSize = 12;
         public const float DefaultLineHeight = 20;
 
-        public const float PropertiesLabelWidth = 100;
-
         // Protected
         protected EditorMenu contextMenu = null;
-
 
         // Properties
         public abstract float Width { get; set; }

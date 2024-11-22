@@ -3,11 +3,11 @@
   <SourceFile>D:/VisualStudio/UniGameEngine/ExampleProject/Content/OpenSans-Regular.ttf</SourceFile>
   <SourceTime>2024-11-15T08:58:16.536829+00:00</SourceTime>
   <DestFile>D:/VisualStudio/UniGameEngine/ExampleProject/Library/bin/OpenSans-Regular.xnb</DestFile>
-  <DestTime>2024-11-21T15:53:55.0737742+00:00</DestTime>
+  <DestTime>2024-11-22T09:13:47.00674+00:00</DestTime>
   <Importer>FontImporter</Importer>
-  <ImporterTime>2024-11-21T15:47:58.7549956+00:00</ImporterTime>
+  <ImporterTime>2024-11-22T08:05:13.4222425+00:00</ImporterTime>
   <Processor>FontProcessor</Processor>
-  <ProcessorTime>2024-11-21T15:47:58.7549956+00:00</ProcessorTime>
+  <ProcessorTime>2024-11-22T08:05:13.4222425+00:00</ProcessorTime>
   <Dependencies />
   <BuildAsset />
   <BuildOutput />

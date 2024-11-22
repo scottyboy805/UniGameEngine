@@ -10,7 +10,7 @@ namespace WindowsEditor.UI
         // Internal
         internal WPFDragDrop dragDrop = null;
         internal Button button = null;
-        internal IconTextContent content = null;
+        internal WPFEditorLayoutControl layout = null;
 
         // Properties
         public override float Width
@@ -23,24 +23,6 @@ namespace WindowsEditor.UI
         {
             get => (float)button.ActualHeight;
             set => button.Height = value;
-        }
-
-        public override string Text
-        {
-            get => content.Text;
-            set => content.Text = value;
-        }
-
-        public override string Tooltip
-        {
-            get => content.Tooltip;
-            set => content.Tooltip = value;
-        }
-
-        public override EditorIcon Icon
-        {
-            get => content.Icon;
-            set => content.Icon = value;
         }
 
         public override IDragHandler DragHandler
@@ -67,22 +49,48 @@ namespace WindowsEditor.UI
             }
         }
 
-        // Constructor
-        public WPFEditorButton(Panel parent, string text)
+        public override EditorLayoutControl Content
         {
-            button = new Button();
-            content = new IconTextContent(parent, button, text);
-            dragDrop = new WPFDragDrop(content.mainControl);
+            get { return layout; }
         }
 
-        public WPFEditorButton(ItemsControl parent, string text)
+        public override string Tooltip
+        {
+            get => (string)button.ToolTip;
+            set => button.ToolTip = value;
+        }
+
+        // Constructor
+        public WPFEditorButton(Panel parent)
         {
             button = new Button();
-            content = new IconTextContent(parent, button, text);
-            dragDrop = new WPFDragDrop(content.mainControl);
+            InitializeButton();
+
+            parent.Children.Add(button);
+        }
+
+        public WPFEditorButton(ItemsControl parent)
+        {
+            button = new Button();
+            InitializeButton();
+
+            parent.Items.Add(button);
         }
 
         // Methods
+        private void InitializeButton()
+        {
+            dragDrop = new WPFDragDrop(button);
+            layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                MinHeight = DefaultLineHeight,
+            });
+
+            // Set content
+            button.Content = layout.panel;
+        }
+
         public override void Perform()
         {
             button.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));

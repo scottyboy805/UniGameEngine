@@ -23,11 +23,11 @@ namespace UniGameEditor.Property
 
 
             // Add layout
-            EditorLayoutControl layout = RootControl.AddHorizontalLayout();
+            EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
 
             // Add property label
             EditorPropertyLabel propertyLabel = layout.AddPropertyLabel(Property);
-            propertyLabel.Width = EditorControl.PropertiesLabelWidth;
+            propertyLabel.Width = PropertyLabelWidth;
 
             // Get remaining width
             float elementWidth = (RootControl.Width - propertyLabel.Width) / 4f;
@@ -35,7 +35,7 @@ namespace UniGameEditor.Property
             // X
             {
                 // Draw X element
-                EditorLayoutControl xLayout = layout.AddHorizontalLayout();
+                EditorLayoutControl xLayout = layout.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
                 //xLayout.Width = elementWidth;
 
                 // X property
@@ -53,7 +53,7 @@ namespace UniGameEditor.Property
             // Y
             {
                 // Draw y element
-                EditorLayoutControl yLayout = layout.AddHorizontalLayout();
+                EditorLayoutControl yLayout = layout.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
                 //yLayout.Width = elementWidth;
 
                 // Y property
@@ -71,7 +71,7 @@ namespace UniGameEditor.Property
             // Z
             {
                 // Draw z element
-                EditorLayoutControl zLayout = layout.AddHorizontalLayout();
+                EditorLayoutControl zLayout = layout.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
                 //zLayout.Width = elementWidth;
 
                 // Z property
@@ -89,7 +89,7 @@ namespace UniGameEditor.Property
             // W
             {
                 // Draw z element
-                EditorLayoutControl wLayout = layout.AddHorizontalLayout();
+                EditorLayoutControl wLayout = layout.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
                 //zLayout.Width = elementWidth;
 
                 // Z property

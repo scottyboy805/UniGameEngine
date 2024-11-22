@@ -45,7 +45,7 @@ namespace UniGameEditor.Windows
                 RootControl.Clear();
 
             // Create main control
-            mainControl = RootControl.AddVerticalLayout();
+            mainControl = RootControl.AddDirectionalLayout(EditorLayoutDirection.Vertical);
 
             // Check for any selection
             if (Editor.Selection.HasAnySelection == true)

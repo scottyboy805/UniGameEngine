@@ -1,4 +1,5 @@
-﻿using UniGameEngine.Content.Contract;
+﻿using System.Collections;
+using UniGameEngine.Content.Contract;
 
 namespace UniGameEditor
 {
@@ -28,6 +29,11 @@ namespace UniGameEditor
         public bool IsArray
         {
             get { return property.IsArray; }
+        }
+
+        public bool IsArrayElement
+        {
+            get { return property.IsArrayElement; }
         }
 
         public IReadOnlyList<SerializedProperty> Children
@@ -149,6 +155,35 @@ namespace UniGameEditor
 
                     // Add the property
                     childProperties.Add(new SerializedProperty(childProperty, instanceValues));
+                }
+            }
+            // Check for array
+            else if(property.IsArray == true)
+            {
+                // Create array objects
+                IList[] arrayInstances = new IList[instances.Length];
+                int maxSize = -1;
+
+                // Fetch all array instances
+                for (int i = 0; i < arrayInstances.Length; i++)
+                {
+                    // Get the array
+                    arrayInstances[i] = (IList)property.GetInstanceValue(instances[i]);
+
+                    // Assign the max size
+                    if(maxSize == -1 || arrayInstances[i].Count > maxSize)
+                        maxSize = arrayInstances[i].Count;
+                }
+
+                // Create collection
+                childProperties = new List<SerializedProperty>(maxSize);
+
+                // Create all elements
+                for (int i = 0; i < maxSize; i++)
+                {
+                    // Add the property
+                    childProperties.Add(new SerializedProperty(
+                        new DataContractElement(property.ElementType, i), arrayInstances));
                 }
             }
         }

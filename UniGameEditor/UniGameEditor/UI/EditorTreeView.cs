@@ -8,7 +8,7 @@ namespace UniGameEditor.UI
         public abstract int NodeCount { get; }
 
         // Methods
-        public abstract EditorTreeNode AddNode(string text);
+        public abstract EditorTreeNode AddNode();
         public abstract void RemoveNode(EditorTreeNode node);
         public abstract void ClearNodes();
     }

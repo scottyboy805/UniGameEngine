@@ -21,30 +21,39 @@ namespace UniGameEditor.Windows
             
 
             // Add toolbar
-            EditorLayoutControl topBar = RootControl.AddHorizontalLayout();
+            EditorLayoutControl topBar = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
 
             // Add button
-            EditorButton clearButton = topBar.AddButton("Clear");
+            EditorButton clearButton = topBar.AddButton();
+            clearButton.Content.AddLabel("Clear");
 
             // Add dropdown
             EditorDropdown dropdown = topBar.AddDropdown();
             dropdown.Width = 150;
-            dropdown.AddOption("Hello");
-            dropdown.AddOption("World");
+            dropdown.AddOption().Content.AddLabel("Hello");
+            dropdown.AddOption().Content.AddLabel("World");
 
             // Add search
             topBar.AddLabel("Search:");
             topBar.AddInput("").Width = 250;
 
             // Add toggle
-            topBar.AddToggleButton("Message").Icon = infoIcon;
-            topBar.AddToggleButton("Warning").Icon = warningIcon;
-            topBar.AddToggleButton("Error").Icon = errorIcon;
+            EditorToggleButton messageButton = topBar.AddToggleButton();
+            messageButton.Content.AddImage(infoIcon);
+            messageButton.Content.AddLabel("Message");
+
+            EditorToggleButton warningButton = topBar.AddToggleButton();
+            warningButton.Content.AddImage(warningIcon);
+            warningButton.Content.AddLabel("Error");
+
+            EditorToggleButton errorButton = topBar.AddToggleButton();
+            errorButton.Content.AddImage(errorIcon);
+            errorButton.Content.AddLabel("Error");
 
 
             EditorCombinationDropdown drop = RootControl.AddCombinationDropdown();
 
-            drop.AddOption("Option1");
+            drop.AddOption().Content.AddLabel("Option 1");
             //drop.AddOption("Option2");
             //drop.AddOption("Option3");
         }
