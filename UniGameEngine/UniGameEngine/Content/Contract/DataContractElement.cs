@@ -7,12 +7,17 @@ namespace UniGameEngine.Content.Contract
     {
         // Private
         private int index = 0;
+        private bool readOnly = false;
+
+        // Properties
+        public override bool IsReadOnly => readOnly;
 
         // Constructor
-        public DataContractElement(Type elementType, int index)
+        public DataContractElement(Type elementType, int index, bool readOnly = false)
             : base(index.ToString(), elementType)
         {
             this.index = index;
+            this.readOnly = readOnly;
             this.dataType = DataType.ArrayElement;
         }
 

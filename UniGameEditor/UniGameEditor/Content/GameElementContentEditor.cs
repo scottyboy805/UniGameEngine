@@ -13,12 +13,9 @@ namespace UniGameEditor.Content
             // Add element type
             EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
 
-            // Add type field
-            layout.AddLabel(Content.DisplayName);
-
 
             // Get all properties
-            foreach (SerializedProperty property in Content.Properties)
+            foreach (SerializedProperty property in Content.VisibleProperties)
             {
                 // Get type
                 Type propertyType = property.Property.PropertyType;

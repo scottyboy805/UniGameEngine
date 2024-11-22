@@ -61,7 +61,7 @@ namespace WindowsEditor.UI
                 {
                     // Commence the drag operation
                     DataObject obj = new DataObject("Object", data);
-                    obj.SetData("Sender", this);
+                    obj.SetData("Sender", element);
 
                     // Check for string
                     if (data is string)
@@ -90,7 +90,7 @@ namespace WindowsEditor.UI
             DragDropType type = GetDataType(e.Data, out dragSender, out dropData);
 
             // Check for supported type
-            if(type != DragDropType.None && dragSender != this)
+            if(type != DragDropType.None && dragSender != element)
             {
                 // Check for drop allowed
                 if (DropHandler != null && DropHandler.CanDrop(type, dropData) == true)
@@ -102,14 +102,16 @@ namespace WindowsEditor.UI
         private void OnDrop(object sender, DragEventArgs e)
         {
             // Get the drop data
+            object dragSender;
             object dropData;
-            DragDropType type = GetDataType(e.Data, out _, out dropData);
+            DragDropType type = GetDataType(e.Data, out dragSender, out dropData);
 
             // Check for supported type
-            if (type != DragDropType.None)
+            if (type != DragDropType.None && dragSender != element)
             {
                 // Perform the drop
-                DropHandler.PerformDrop(type, dropData);
+                if(DropHandler != null)
+                    DropHandler.PerformDrop(type, dropData);
 
                 // Reset allow drop state
                 element.AllowDrop = DropHandler != null;

@@ -55,11 +55,7 @@ namespace WindowsEditor.UI
         public WPFEditorInput(Panel parent, string text)
         {
             textBox = new TextBox();
-            dragDrop = new WPFDragDrop(textBox);
-            textBox.Text = text;
-
-            textBox.FontSize = DefaultFontSize;
-            textBox.MinHeight = DefaultLineHeight;
+            InitializeInput(text);
 
             parent.Children.Add(textBox);
         }
@@ -67,13 +63,19 @@ namespace WindowsEditor.UI
         public WPFEditorInput(ItemsControl parent, string text)
         {
             textBox = new TextBox();
-            dragDrop = new WPFDragDrop(textBox);
-            textBox.Text = text;
-
-            textBox.FontSize = DefaultFontSize;
-            textBox.MinHeight = DefaultLineHeight;
+            InitializeInput(text);
 
             parent.Items.Add(textBox);
+        }
+
+        // Methods
+        private void InitializeInput(string text)
+        {
+            dragDrop = new WPFDragDrop(textBox);
+
+            textBox.Text = text;
+            textBox.FontSize = DefaultFontSize;
+            textBox.Height = DefaultControlHeight;
         }
     }
 }

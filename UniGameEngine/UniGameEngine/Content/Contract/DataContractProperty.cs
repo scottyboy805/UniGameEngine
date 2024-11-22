@@ -32,6 +32,8 @@ namespace UniGameEngine.Content.Contract
         protected AccessFlags dataAccess = 0;
 
         // Properties
+        public abstract bool IsReadOnly { get; }
+
         public string PropertyName
         {
             get { return propertyName; }

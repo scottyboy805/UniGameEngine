@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using UniGameEditor;
 using UniGameEditor.UI;
 
@@ -90,7 +91,7 @@ namespace WindowsEditor.UI
             layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
             {
                 Orientation = Orientation.Horizontal,
-                MinHeight = DefaultLineHeight,
+                MinHeight = DefaultHeaderHeight,
             });
 
             // Set content
@@ -101,6 +102,11 @@ namespace WindowsEditor.UI
             // Add listener
             expander.Expanded += (object sender, RoutedEventArgs e) => OnExpandedEvent(true);
             expander.Collapsed += (object sender, RoutedEventArgs e) => OnExpandedEvent(false);
+        }
+
+        public override EditorControl AddSpacer(float width, float height)
+        {
+            return new WPFEditorSpacer(content, width, height);
         }
 
         public override EditorLabel AddLabel(string text)

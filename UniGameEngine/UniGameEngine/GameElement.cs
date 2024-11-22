@@ -45,6 +45,7 @@ namespace UniGameEngine
         }
 
         [DataMember]
+        [DataMemberHideInEditor]
         public string Name
         {
             get { return name; }

@@ -172,6 +172,7 @@ namespace UniGameEditor.Windows
 
             // Set content
             EditorImage folderImage = folderNode.Header.AddImage(folderNormalIcon);
+            folderNode.Header.AddSpacer(4, 0);
             folderNode.Header.AddLabel(rootName);
 
             // Set menu

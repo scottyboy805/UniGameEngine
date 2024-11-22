@@ -70,13 +70,7 @@ namespace WindowsEditor.UI
         public WPFEditorNumberInput(Panel parent, double value, double min, double max)
         {
             numberBox = new NumberBox();
-            dragDrop = new WPFDragDrop(numberBox);
-            numberBox.Value = value;
-            numberBox.Minimum = min;
-            numberBox.Maximum = max;
-
-            numberBox.FontSize = DefaultFontSize;
-            numberBox.MinHeight = DefaultLineHeight;
+            InitializeNumberInput(value, min, max);
 
             parent.Children.Add(numberBox);
         }
@@ -84,15 +78,21 @@ namespace WindowsEditor.UI
         public WPFEditorNumberInput(ItemsControl parent, double value, double min, double max)
         {
             numberBox = new NumberBox();
+            InitializeNumberInput(value, min, max);
+
+            parent.Items.Add(numberBox);
+        }
+
+        // Methods
+        private void InitializeNumberInput(double value, double min, double max)
+        {
             dragDrop = new WPFDragDrop(numberBox);
+
             numberBox.Value = value;
             numberBox.Minimum = min;
             numberBox.Maximum = max;
-
             numberBox.FontSize = DefaultFontSize;
-            numberBox.MinHeight = DefaultLineHeight;
-
-            parent.Items.Add(numberBox);
+            numberBox.Height = DefaultControlHeight;
         }
     }
 }

@@ -87,14 +87,15 @@ namespace WindowsEditor.UI
             layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
             {
                 Orientation = Orientation.Horizontal,
-                MinHeight = DefaultLineHeight,
+                Height = DefaultLineHeight,
+
             });
 
             // Set content
             checkBox.Content = layout.panel;
             checkBox.IsChecked = on;
             checkBox.FontSize = DefaultFontSize;
-            checkBox.MinHeight = DefaultLineHeight;
+            checkBox.Height = DefaultControlHeight;
         }
     }
 }

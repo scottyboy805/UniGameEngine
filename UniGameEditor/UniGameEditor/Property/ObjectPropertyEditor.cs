@@ -7,7 +7,7 @@
         protected internal override void OnShow()
         {
             // Get all properties
-            foreach(SerializedProperty childProperty in Property.Children)
+            foreach(SerializedProperty childProperty in Property.VisibleChildren)
             {
                 // Get type
                 Type propertyType = childProperty.Property.PropertyType;

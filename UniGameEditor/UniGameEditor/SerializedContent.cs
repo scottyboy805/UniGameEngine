@@ -1,4 +1,5 @@
-﻿using UniGameEngine.Content.Contract;
+﻿using UniGameEngine;
+using UniGameEngine.Content.Contract;
 
 namespace UniGameEditor
 {
@@ -8,6 +9,7 @@ namespace UniGameEditor
         private DataContract contract = null;
         private object[] instances = null;
         private List<SerializedProperty> properties = null;
+        private List<SerializedProperty> visibleProperties = null;
 
         // Properties
         public DataContract Contract
@@ -28,6 +30,21 @@ namespace UniGameEditor
                     return properties;
 
                 return Array.Empty<SerializedProperty>();
+            }
+        }
+
+        public IReadOnlyList<SerializedProperty> VisibleProperties
+        {
+            get
+            {
+                // Create properties
+                if (visibleProperties == null && properties != null)
+                    visibleProperties = new List<SerializedProperty>(properties.Where(p => p.IsVisible == true));
+
+                // Get result
+                return visibleProperties != null
+                    ? visibleProperties
+                    : Array.Empty<SerializedProperty>();
             }
         }
 

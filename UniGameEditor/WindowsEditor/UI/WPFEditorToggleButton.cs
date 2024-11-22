@@ -88,12 +88,14 @@ namespace WindowsEditor.UI
             layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
             {
                 Orientation = Orientation.Horizontal,
-                MinHeight = DefaultLineHeight,
+                Height = DefaultLineHeight,
             });
 
             // Set content
             toggleButton.Content = layout.panel;
             toggleButton.IsChecked = on;
+            toggleButton.FontSize = DefaultFontSize;
+            toggleButton.Height = DefaultControlHeight;
         }
     }
 }

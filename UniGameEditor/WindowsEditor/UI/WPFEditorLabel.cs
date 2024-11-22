@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using UniGameEditor.UI;
 
 namespace WindowsEditor.UI
@@ -7,37 +8,31 @@ namespace WindowsEditor.UI
     {
         // Internal
         internal WPFDragDrop dragDrop = null;
-        internal IconTextContent content = null;
+        internal Label label = null;
 
         // Properties
         public override float Width
         {
-            get => (float)content.Width;
-            set => content.Width = value;
+            get => (float)label.Width;
+            set => label.Width = value;
         }
 
         public override float Height
         {
-            get => (float)content.Height;
-            set => content.Height = value;
+            get => (float)label.Height;
+            set => label.Height = value;
         }
 
         public override string Text
         {
-            get => content.Text;
-            set => content.Text = value;
+            get => (string)label.Content;
+            set => label.Content = value;
         }
 
         public override string Tooltip
         {
-            get => content.Tooltip;
-            set => content.Tooltip = value;
-        }
-
-        public override EditorIcon Icon
-        {
-            get => content.Icon;
-            set => content.Icon = value;
+            get => (string)label.ToolTip;
+            set => label.ToolTip = value;
         }
 
         public override IDragHandler DragHandler
@@ -58,7 +53,7 @@ namespace WindowsEditor.UI
             set
             {
                 contextMenu = value;
-                content.mainControl.ContextMenu = value != null
+                label.ContextMenu = value != null
                     ? ((WPFEditorMenu)value).menu
                     : null;
             }
@@ -67,14 +62,30 @@ namespace WindowsEditor.UI
         // Constructor
         public WPFEditorLabel(Panel parent, string text)
         {
-            content = new IconTextContent(parent, new Label(), text);
-            dragDrop = new WPFDragDrop(content.mainControl);
+            label = new Label();
+            InitializeLabel(text);
+
+            parent.Children.Add(label);
         }
 
         public WPFEditorLabel(ItemsControl parent, string text)
         {
-            content = new IconTextContent(parent, new Label(), text);
-            dragDrop = new WPFDragDrop(content.mainControl);
+            label = new Label();
+            InitializeLabel(text);
+
+            parent.Items.Add(label);
+        }
+
+        // Methods
+        private void InitializeLabel(string text)
+        {
+            dragDrop = new WPFDragDrop(label);
+
+            // Set content
+            label.Content = text;
+            label.FontSize = DefaultFontSize;
+            label.Height = DefaultLineHeight;
+            label.VerticalContentAlignment = VerticalAlignment.Center;
         }
     }
 }

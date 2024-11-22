@@ -7,6 +7,16 @@ namespace UniGameEngine.Content.Contract
         // Private
         private FieldInfo field = null;
 
+        // Properties
+        public override bool IsReadOnly
+        {
+            get
+            {
+                return (field.Attributes & FieldAttributes.InitOnly) != 0
+                    || HasAttribute<DataMemberReadOnly>() == true;
+            }
+        }
+
         // Constructor
         public DataContractFieldMember(FieldInfo field)
             : base(field.Name, GetSerializeName(field), field.FieldType)

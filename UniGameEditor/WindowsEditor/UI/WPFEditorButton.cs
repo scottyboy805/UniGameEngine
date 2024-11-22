@@ -84,11 +84,13 @@ namespace WindowsEditor.UI
             layout = new WPFEditorLayoutControl((Panel)null, new StackPanel
             {
                 Orientation = Orientation.Horizontal,
-                MinHeight = DefaultLineHeight,
+                Height = DefaultLineHeight,
             });
 
             // Set content
             button.Content = layout.panel;
+            button.FontSize = DefaultFontSize;
+            button.Height = DefaultControlHeight;
         }
 
         public override void Perform()

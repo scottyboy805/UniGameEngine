@@ -19,9 +19,13 @@ namespace UniGameEditor.Content
             string folderName;
             property.GetValue(out folderName, out _);
 
+            EditorLayoutControl layout = RootControl.AddDirectionalLayout(EditorLayoutDirection.Horizontal);
+
+            // Add icon
+            layout.AddImage(folderIcon);
+
             // Add main label
-            EditorLabel mainLabel = RootControl.AddLabel(folderName);
-            mainLabel.Icon = folderIcon;
+            EditorLabel mainLabel = layout.AddLabel(folderName);
         }
     }
 }

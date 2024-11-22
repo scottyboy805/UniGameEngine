@@ -25,6 +25,7 @@ namespace UniGameEditor.UI
         public abstract EditorSplitViewLayoutControl AddDirectionalSplitLayout(EditorLayoutDirection direction);
         public abstract EditorLayoutControl AddScrollLayout(bool horizontal = true, bool vertical = true);
 
+        public abstract EditorControl AddSpacer(float width, float height);
         public abstract EditorLabel AddLabel(string text);
         public EditorPropertyLabel AddPropertyLabel(SerializedProperty property) => AddPropertyLabel(property, property.DisplayName);
         public abstract EditorPropertyLabel AddPropertyLabel(SerializedProperty property, string overrideText);

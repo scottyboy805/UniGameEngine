@@ -68,6 +68,11 @@ namespace WindowsEditor.UI
         }
 
         // Methods
+        public override EditorControl AddSpacer(float width, float height)
+        {
+            return new WPFEditorSpacer(panel, width, height);
+        }
+
         public override EditorLabel AddLabel(string text)
         {
             return new WPFEditorLabel(panel, text);
