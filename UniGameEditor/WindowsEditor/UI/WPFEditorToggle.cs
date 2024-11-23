@@ -22,6 +22,22 @@ namespace WindowsEditor.UI
             set => checkBox.Height = value;
         }
 
+        public override string Tooltip
+        {
+            get => (string)checkBox.ToolTip;
+            set => checkBox.ToolTip = value;
+        }
+
+        public override bool IsReadOnly
+        {
+            get => checkBox.IsHitTestVisible;
+            set
+            {
+                checkBox.IsHitTestVisible = value;
+                checkBox.Focusable = value;
+            }
+        }
+
         public override bool IsChecked
         {
             get => (bool)checkBox.IsChecked;
@@ -55,12 +71,6 @@ namespace WindowsEditor.UI
         public override EditorLayoutControl Content
         {
             get { return layout; }
-        }
-
-        public override string Tooltip
-        {
-            get => (string)checkBox.ToolTip;
-            set => checkBox.ToolTip = value;
         }
 
         // Constructor

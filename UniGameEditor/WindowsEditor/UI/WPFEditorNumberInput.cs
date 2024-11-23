@@ -42,6 +42,22 @@ namespace WindowsEditor.UI
             set => numberBox.Maximum = value;
         }
 
+        public override string Tooltip
+        {
+            get => (string)numberBox.ToolTip;
+            set => numberBox.ToolTip = value;
+        }
+
+        public override bool IsReadOnly
+        {
+            get => numberBox.IsHitTestVisible;
+            set
+            {
+                numberBox.IsHitTestVisible = value;
+                numberBox.Focusable = value;
+            }
+        }
+
         public override IDragHandler DragHandler
         {
             get => dragDrop.DragHandler;

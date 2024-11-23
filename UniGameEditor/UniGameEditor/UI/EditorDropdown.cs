@@ -10,6 +10,8 @@ namespace UniGameEditor.UI
         // Properties
         public abstract int SelectedIndex { get; set; }
         public abstract EditorOption SelectedOption { get; set; }
+        public abstract string Tooltip { get; set; }
+        public abstract bool IsReadOnly { get; set; }
 
         // Methods
         public abstract EditorOption AddOption();

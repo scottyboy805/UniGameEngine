@@ -84,6 +84,18 @@ namespace WindowsEditor.UI
             set => combo.Height = value;
         }
 
+        public override string Tooltip
+        {
+            get => (string)combo.ToolTip;
+            set => combo.ToolTip = value;
+        }
+
+        public override bool IsReadOnly
+        {
+            get => combo.IsReadOnly;
+            set => combo.IsReadOnly = value;
+        }
+
         public override IDragHandler DragHandler
         {
             get => dragDrop.DragHandler;

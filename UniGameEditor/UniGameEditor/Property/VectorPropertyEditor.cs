@@ -44,6 +44,9 @@ namespace UniGameEditor.Property
 
                 // X input
                 EditorNumberInput xPropertyInput = xLayout.AddNumberInput(xValue);
+
+                // Check for read only
+                xPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
 
             // Y
@@ -62,6 +65,9 @@ namespace UniGameEditor.Property
 
                 // Y input
                 EditorNumberInput yPropertyInput = yLayout.AddNumberInput(yValue);
+
+                // Check for read only
+                yPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
         }
     }
@@ -109,6 +115,9 @@ namespace UniGameEditor.Property
 
                 // X input
                 EditorNumberInput xPropertyInput = xLayout.AddNumberInput(xValue);
+
+                // Check for read only
+                xPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
 
             // Y
@@ -127,6 +136,9 @@ namespace UniGameEditor.Property
 
                 // Y input
                 EditorNumberInput yPropertyInput = yLayout.AddNumberInput(yValue);
+
+                // Check for read only
+                yPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
 
             // Z
@@ -145,6 +157,9 @@ namespace UniGameEditor.Property
 
                 // Z input
                 EditorNumberInput zPropertyInput = zLayout.AddNumberInput(zValue);
+
+                // Check for read only
+                zPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
         }
     }
@@ -194,6 +209,9 @@ namespace UniGameEditor.Property
 
                 // X input
                 EditorNumberInput xPropertyInput = xLayout.AddNumberInput(xValue);
+
+                // Check for read only
+                xPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
 
             // Y
@@ -212,6 +230,9 @@ namespace UniGameEditor.Property
 
                 // Y input
                 EditorNumberInput yPropertyInput = yLayout.AddNumberInput(yValue);
+
+                // Check for read only
+                yPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
 
             // Z
@@ -230,6 +251,9 @@ namespace UniGameEditor.Property
 
                 // Z input
                 EditorNumberInput zPropertyInput = zLayout.AddNumberInput(zValue);
+
+                // Check for read only
+                zPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
 
             // W
@@ -248,6 +272,9 @@ namespace UniGameEditor.Property
 
                 // Z input
                 EditorNumberInput wPropertyInput = wLayout.AddNumberInput(wValue);
+
+                // Check for read only
+                wPropertyInput.IsReadOnly = Property.IsReadOnly;
             }
         }
     }

@@ -10,6 +10,7 @@ namespace UniGameEditor.UI
         // Properties
         public abstract EditorLayoutControl Content { get; }
         public abstract string Tooltip { get; set; }
+        public abstract bool IsReadOnly { get; set; }
         public abstract bool IsChecked { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace UniGameEditor.UI
 
         // Properties
         public abstract string Text { get; set; }
+        public abstract string Tooltip { get; set; }
         public abstract bool IsReadOnly { get; set; }
     }
 }

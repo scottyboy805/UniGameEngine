@@ -86,7 +86,7 @@ namespace WindowsEditor.UI
                 Orientation = Orientation.Horizontal,
                 Height = DefaultLineHeight,
             });
-
+            
             // Set content
             button.Content = layout.panel;
             button.FontSize = DefaultFontSize;

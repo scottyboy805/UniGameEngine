@@ -22,6 +22,9 @@ namespace UniGameEditor.Property
 
             // Create toggle field
             EditorToggle toggle = layout.AddToggle(value);
+
+            // Check for read only
+            toggle.IsReadOnly = Property.IsReadOnly;
         }
     }
 
@@ -193,6 +196,9 @@ namespace UniGameEditor.Property
 
             // Create number field
             EditorNumberInput numberInput = CreateNumberInput(layout, value, isMixed);
+
+            // Check for read only
+            numberInput.IsReadOnly = Property.IsReadOnly;
         }
     }
     #endregion

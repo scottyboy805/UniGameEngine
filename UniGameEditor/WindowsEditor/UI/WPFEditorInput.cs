@@ -27,6 +27,12 @@ namespace WindowsEditor.UI
             set => textBox.Text = value;
         }
 
+        public override string Tooltip
+        {
+            get => (string)textBox.ToolTip;
+            set => textBox.ToolTip = value;
+        }
+
         public override bool IsReadOnly
         {
             get => textBox.IsReadOnly; 

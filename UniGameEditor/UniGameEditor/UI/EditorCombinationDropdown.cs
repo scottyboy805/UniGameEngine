@@ -11,6 +11,8 @@ namespace UniGameEditor.UI
         public abstract int SelectedCount { get; }
         public abstract int[] SelectedIndexes { get; set; }
         public abstract EditorOption[] SelectedOptions { get; set; }
+        public abstract string Tooltip { get; set; }
+        public abstract bool IsReadOnly { get; set; }
 
         // Methods
         public abstract EditorOption AddOption();
