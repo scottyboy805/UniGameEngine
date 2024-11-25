@@ -33,7 +33,7 @@ namespace UniGameEditor
                     // Create element
                     createdElement = (GameElement)Serializer.DeserializeJson(serializedJson, serializedType);
 
-                    // Clear serailzie info
+                    // Clear serialize info
                     serializedType = null;
                     serializedJson = null;
                 }
@@ -51,6 +51,40 @@ namespace UniGameEditor
                     GameElement.Destroy(createdElement);
                     createdElement = null;
                 }                
+            }
+        }
+
+        private sealed class ModifyPropertyUndoAction<T> : IUndoAction
+        {
+            // Private
+            private SerializedProperty property = null;
+            private T originalValue = default;
+            private T newValue = default;
+
+            // Constructor
+            public ModifyPropertyUndoAction(SerializedProperty property, in T newValue)
+            {
+                this.property = property;
+                this.newValue = newValue;
+
+                // Get the original value
+                property.GetValue(out originalValue, out _);
+
+                // Perform modify now
+                Perform();
+            }
+
+            // Methods
+            public void Perform()
+            {
+                // Modify the property
+                property.SetValue(newValue);
+            }
+
+            public void Rollback()
+            {
+                // Revert the property
+                property.SetValue(originalValue);
             }
         }
 
@@ -104,9 +138,14 @@ namespace UniGameEditor
             }
         }
 
-        public void RecordElementCreated(GameElement element)
+        public void RecordElementCreated(GameElement newElement)
         {
-            Record(new CreateElementUndoAction(element));
+            Record(new CreateElementUndoAction(newElement));
+        }
+
+        public void RecordPropertyModified<T>(SerializedProperty property, in T newValue)
+        {
+            Record(new ModifyPropertyUndoAction<T>(property, newValue));
         }
 
         private void Record(IUndoAction action)

@@ -36,7 +36,7 @@ namespace WindowsEditor.UI
                 item = new ComboBoxItem();
                 layout = new WPFEditorLayoutControl(parent, new StackPanel
                 {
-                    Orientation = Orientation.Vertical,
+                    Orientation = Orientation.Horizontal,
                     Height = DefaultLineHeight,
                 });
             }
@@ -130,9 +130,18 @@ namespace WindowsEditor.UI
         {
             dragDrop = new WPFDragDrop(combo);
 
+            combo.Width = 150;  // Hack - otherwise the combo keeps expanding until off screen
             combo.HorizontalContentAlignment = HorizontalAlignment.Left;
             combo.FontSize = DefaultFontSize;
             combo.Height = DefaultControlHeight;
+
+            // Add listeners
+            combo.SelectionChanged += (object sender, SelectionChangedEventArgs e) =>
+            {
+                // Trigger events
+                OnSelectedIndexChangedEvent(SelectedIndex);
+                OnSelectedOptionChangedEvent(SelectedOption);
+            };
         }
 
         public override EditorOption AddOption()
@@ -148,7 +157,7 @@ namespace WindowsEditor.UI
             options.Add(option);
 
             // Update selection
-            if(combo.SelectedIndex < 0)
+            if (combo.SelectedIndex < 0)
                 combo.SelectedIndex = 0;
 
             return option;

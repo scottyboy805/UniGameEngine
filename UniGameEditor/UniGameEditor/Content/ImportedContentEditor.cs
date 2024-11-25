@@ -41,9 +41,19 @@ namespace UniGameEditor.Content
 
             // Get meta
             SerializedProperty metaProperty = Content.FindSerializedName("$meta");
+            SerializedProperty actionProperty = metaProperty.FindSerializedName(nameof(ContentMeta.Action));
             SerializedProperty importerProperty = metaProperty.FindSerializedName(nameof(ContentMeta.Importer));
             SerializedProperty processorProperty = metaProperty.FindSerializedName(nameof(ContentMeta.Processor));
 
+
+            // Action property
+            {
+                // Get drawer
+                PropertyEditor actionEditor = PropertyEditor.ForType(actionProperty.Property.PropertyType);
+
+                // Create drawer
+                actionEditor.CreateProperty(root, actionProperty);
+            }
 
             // Importer property
             {

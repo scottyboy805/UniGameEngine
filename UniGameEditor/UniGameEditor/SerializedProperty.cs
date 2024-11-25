@@ -1,6 +1,7 @@
 ﻿using SharpDX.Direct2D1;
 using System.Collections;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using UniGameEngine;
 using UniGameEngine.Content.Contract;
 
@@ -8,6 +9,9 @@ namespace UniGameEditor
 {
     public sealed class SerializedProperty
     {
+        // Events
+        public event Action OnModified;
+
         // Private
         private DataContractProperty property = null;
         private object[] instances = null;
@@ -32,7 +36,7 @@ namespace UniGameEditor
 
         public bool IsReadOnly
         {
-            get { return property.IsReadOnly; }
+            get { return property.CanWrite == false || property.HasAttribute<DataMemberReadOnly>() == true; }
         }
 
         public bool IsObject
@@ -97,10 +101,35 @@ namespace UniGameEditor
             return string.Format("Serialize Property ({0}): {1}", property.SerializeName, property.PropertyType);
         }
 
+        public bool SetValue<T>(in T value)
+        {
+            // Check for write access
+            if (IsReadOnly == true)
+                throw new InvalidOperationException("Property is readonly and cannot be modified");
+
+            // Check for type
+            if(property.PropertyType != typeof(T) && (value != null && property.PropertyType != value.GetType()))
+                throw new InvalidOperationException("Cannot set property value as type: " + typeof(T) + ", property is of type: " + property.PropertyType);
+
+            // Check for none
+            if (instances == null || instances.Length == 0)
+                return false;
+
+            // Update all instances
+            for (int i = 0; i < instances.Length; i++)
+            {
+                property.SetInstanceValue(ref instances[i], value);
+            }
+
+            // Trigger event
+            UniEditor.DoEvent(OnModified);
+            return true;
+        }
+
         public bool GetValue<T>(out T value, out bool isMixed)
         {
             // Check for type
-            if (property.PropertyType != typeof(T))
+            if (property.PropertyType != typeof(T) && typeof(T).IsAssignableFrom(property.PropertyType) == false)
                 throw new InvalidOperationException("Cannot get property value as type: " + typeof(T) + ", property is of type: " + property.PropertyType);
 
             // Check for none
@@ -145,6 +174,36 @@ namespace UniGameEditor
                 }
             }
             return true;
+        }
+
+        public bool IsMixed()
+        {
+            // Check for simple case
+            if (instances == null || instances.Length <= 1)
+                return false;
+
+            // Store values
+            object firstValue = instances[0] != null
+                    ? property.GetInstanceValue(instances[0])
+                    : default;
+
+            // Check all
+            for (int i = 1; i < instances.Length; i++)
+            {
+                // Get value
+                object otherValue = instances[i] != null
+                    ? property.GetInstanceValue(instances[i])
+                    : default;
+
+                // Check for mixed
+                if ((firstValue != null && firstValue.Equals(otherValue) == false)
+                    || (otherValue != null && otherValue.Equals(firstValue) == false))
+                {
+                    // Value is mixed
+                    return true;
+                }
+            }
+            return false;
         }
 
         public SerializedProperty FindPropertyName(string name)
@@ -254,7 +313,7 @@ namespace UniGameEditor
                 {
                     // Add the property
                     childProperties.Add(new SerializedProperty(
-                        new DataContractElement(property.ElementType, i, property.IsReadOnly), arrayInstances));
+                        new DataContractElement(property.ElementType, i, property.DataAccess), arrayInstances));
                 }
             }
         }

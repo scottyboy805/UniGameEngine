@@ -120,7 +120,6 @@ namespace WindowsEditor.UI
             treeItem.Selected += (object sender, RoutedEventArgs e) => { if (treeItem.IsSelected) OnSelectedEvent(); };
             treeItem.Expanded += (object sender, RoutedEventArgs e) => OnExpandedEvent(treeItem.IsExpanded);
             treeItem.Collapsed += (object sender, RoutedEventArgs e) => OnExpandedEvent(treeItem.IsExpanded);
- 
             treeItems.Add(treeItem);
         }
 

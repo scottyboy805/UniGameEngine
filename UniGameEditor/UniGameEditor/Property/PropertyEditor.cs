@@ -41,6 +41,10 @@ namespace UniGameEditor.Property
 
         public void CreateProperty(EditorLayoutControl rootControl, SerializedProperty property)
         {
+            // Check for null
+            if(property == null)
+                throw new ArgumentNullException(nameof(property));
+
             this.rootControl = rootControl;
             this.property = property;
 

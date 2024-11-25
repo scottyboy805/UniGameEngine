@@ -89,6 +89,9 @@ namespace WindowsEditor.UI
             label.FontSize = DefaultFontSize;
             label.Height = DefaultLineHeight;
             label.VerticalContentAlignment = VerticalAlignment.Center;
+
+            // Trigger initialized
+            OnInitialized();
         }
     }
 }

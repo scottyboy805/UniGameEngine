@@ -7,16 +7,6 @@ namespace UniGameEngine.Content.Contract
         // Private
         private PropertyInfo property = null;
 
-        // Properties
-        public override bool IsReadOnly
-        {
-            get
-            {
-                return property.SetMethod == null
-                    || HasAttribute<DataMemberReadOnly>() == true;
-            }
-        }
-
         // Constructor
         public DataContractPropertyMember(PropertyInfo property)
             : base(property.Name, GetSerializeName(property), property.PropertyType, GetPropertyFlags(property))

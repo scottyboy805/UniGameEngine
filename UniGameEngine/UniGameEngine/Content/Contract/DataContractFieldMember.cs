@@ -7,16 +7,6 @@ namespace UniGameEngine.Content.Contract
         // Private
         private FieldInfo field = null;
 
-        // Properties
-        public override bool IsReadOnly
-        {
-            get
-            {
-                return (field.Attributes & FieldAttributes.InitOnly) != 0
-                    || HasAttribute<DataMemberReadOnly>() == true;
-            }
-        }
-
         // Constructor
         public DataContractFieldMember(FieldInfo field)
             : base(field.Name, GetSerializeName(field), field.FieldType)
@@ -39,6 +29,16 @@ namespace UniGameEngine.Content.Contract
         protected override T GetAttributeImpl<T>()
         {
             return field.GetCustomAttribute<T>();
+        }
+
+        private static AccessFlags GetPropertyFlags(FieldInfo field)
+        {
+            AccessFlags flags = 0;
+
+            if ((field.Attributes & FieldAttributes.InitOnly) == 0) flags |= AccessFlags.Read;
+            flags |= AccessFlags.Write;
+
+            return flags;
         }
 
         public override string ToString()

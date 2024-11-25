@@ -17,7 +17,7 @@ namespace UniGameEngine.Content.Contract
         }
 
         [Flags]
-        protected enum AccessFlags
+        protected internal enum AccessFlags
         {
             Read = 1,
             Write = 2,
@@ -32,8 +32,6 @@ namespace UniGameEngine.Content.Contract
         protected AccessFlags dataAccess = 0;
 
         // Properties
-        public abstract bool IsReadOnly { get; }
-
         public string PropertyName
         {
             get { return propertyName; }
@@ -87,6 +85,11 @@ namespace UniGameEngine.Content.Contract
         public bool IsProperty
         {
             get { return dataType == DataType.Property; }
+        }
+
+        internal AccessFlags DataAccess
+        {
+            get { return dataAccess; }
         }
 
         // Constructor
@@ -159,7 +162,7 @@ namespace UniGameEngine.Content.Contract
             {
                 return DataType.Array;
             }
-            else if (type.IsPrimitive == false && type != typeof(string))
+            else if (type.IsPrimitive == false && type.IsEnum == false && type != typeof(string))
             {
                 return DataType.Object;
             }

@@ -22,12 +22,12 @@ namespace UniGameEditor.UI
 
         protected void OnSelectedEvent()
         {
-            OnSelected?.Invoke(this);
+            UniEditor.DoEvent(OnSelected, this);
         }
 
         protected void OnExpandedEvent(bool isExpanded)
         {
-            OnExpanded?.Invoke(this, isExpanded);
+            UniEditor.DoEvent(OnExpanded, this, isExpanded);
         }
     }
 }

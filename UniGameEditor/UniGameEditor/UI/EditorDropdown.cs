@@ -4,8 +4,8 @@ namespace UniGameEditor.UI
     public abstract class EditorDropdown : EditorControl
     {
         // Events
-        public event Action<int> OnSelectedIndexChanged;
-        public event Action<EditorOption> OnSelectedOptionChanged;
+        public event Action<EditorDropdown, int> OnSelectedIndexChanged;
+        public event Action<EditorDropdown, EditorOption> OnSelectedOptionChanged;
 
         // Properties
         public abstract int SelectedIndex { get; set; }
@@ -16,5 +16,15 @@ namespace UniGameEditor.UI
         // Methods
         public abstract EditorOption AddOption();
         public abstract void RemoveOption(EditorOption option);
+
+        protected void OnSelectedIndexChangedEvent(int index)
+        {
+            UniEditor.DoEvent(OnSelectedIndexChanged, this, index);
+        }
+
+        protected void OnSelectedOptionChangedEvent(EditorOption option)
+        {
+            UniEditor.DoEvent(OnSelectedOptionChanged, this, option);
+        }
     }
 }
