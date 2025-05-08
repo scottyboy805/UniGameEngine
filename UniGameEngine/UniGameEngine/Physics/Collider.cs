@@ -70,6 +70,10 @@ namespace UniGameEngine.Physics
         // Methods
         protected override void RegisterSubSystems()
         {
+            // Check for no physics
+            if (Physics == null)
+                return;
+
             // Register collider
             Physics.activeColliders[physicsShape] = this;
 
@@ -97,6 +101,10 @@ namespace UniGameEngine.Physics
 
         protected override void UnregisterSubSystems()
         {
+            // Check for no physics
+            if (Physics == null)
+                return;
+
             // Remove dynamic
             if (attachedBody != null)
             {

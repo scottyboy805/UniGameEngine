@@ -1,0 +1,10 @@
+// Folders
+[Ll]ibrary
+[Bb]uild
+[Tt]emp
+
+// Vs
+.vs
+
+// Extensions
+*.sln

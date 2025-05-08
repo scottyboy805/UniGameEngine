@@ -34,15 +34,15 @@ namespace UniGameEditor.Content
         public const string ContentMetaExtension = ".content";
 
         // Properties
-        public ContentDatabase(string projectDirectory, string contentDirectory, string libraryDirectory, IServiceProvider serviceProvider) 
+        public ContentDatabase(string projectDirectory, string contentDirectory, string buildDirectory, IServiceProvider serviceProvider) 
             : base(serviceProvider)
         {
             this.projectDirectory = projectDirectory;
             this.contentDirectory = contentDirectory;
 
             // Create directories
-            intermediateDirectory = Path.Combine(libraryDirectory, "obj");
-            outputDirectory = Path.Combine(libraryDirectory, "bin");
+            intermediateDirectory = Path.Combine(buildDirectory, "obj");
+            outputDirectory = Path.Combine(buildDirectory, "bin");
 
             // Create pipeline manager
             pipelineManager = new PipelineManager(contentDirectory, outputDirectory, intermediateDirectory);

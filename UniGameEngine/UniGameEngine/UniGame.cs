@@ -113,7 +113,7 @@ namespace UniGameEngine
             current = this;
 
             // Create sprite batch
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);            
 
             // Register modules
             typeManager.RegisterAssembly(typeof(UniGame).Assembly);
@@ -279,6 +279,8 @@ namespace UniGameEngine
 
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
             // Get rendering cameras
             IReadOnlyList<Camera> activeSortedRenderingCameras = Camera.AllActiveCameras;
 

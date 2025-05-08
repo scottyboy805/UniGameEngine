@@ -8,6 +8,10 @@ using UniGameEngine.Graphics;
 using System.Windows;
 using UniGameEditor.Content;
 using System.Windows.Threading;
+using UniGameEngine.Physics;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using UniGameEditor.Build;
 
 namespace UniGameEditor
 {
@@ -26,17 +30,14 @@ namespace UniGameEditor
         public event Action<GameScene> OnSceneUnloaded;
 
         // Private
-        private static Dispatcher mainThreadDispatcher = null;
+        private static Dispatcher mainThreadDispatcher;
 
+        private string editorPath;
+        private string editorFolder;
         private Selection selection = new Selection();
         private Undo undo = new Undo();
 
-        private bool isProjectOpen = false;
-        private string projectPath = null;
-        private string projectDirectory = null;
-        private string contentDirectory = null;
-        private string libraryDirectory = null;
-
+        private Project project = null;
         private ContentDatabase contentDatabase = null;
         private UniEditorGameInstance gameInstance = null;        
 
@@ -50,55 +51,16 @@ namespace UniGameEditor
         internal EditorMenu windowMenu = null;
 
         // Properties
-        public Selection Selection
-        {
-            get { return selection; }
-        }
-
-        public Undo Undo
-        {
-            get { return undo; }
-        }
-
-        public bool IsProjectOpen
-        {
-            get { return isProjectOpen; }
-        }
-
-        public string ProjectPath
-        {
-            get { return projectPath; }
-        }
-
-        public string ProjectDirectory
-        {
-            get { return projectDirectory; }
-        }
-
-        public string ContentDirectory
-        {
-            get { return contentDirectory; }
-        }
-
-        public GameScene ActiveScene
-        {
-            get { return gameInstance.Scenes.Count > 0 ? gameInstance.Scenes[0] : null; }
-        }
-
-        public ContentDatabase ContentDatabase
-        {
-            get { return contentDatabase; }
-        }
-
-        internal UniEditorGameInstance GameInstance
-        {
-            get { return gameInstance; }
-        }
-
-        internal Dispatcher MainThreadDispatcher
-        {
-            get { return mainThreadDispatcher; }
-        }
+        public string EditorPath => editorPath;
+        public string EditorFolder => editorFolder;
+        public Selection Selection => selection;
+        public Undo Undo => undo;
+        public bool IsProjectOpen => project != null;
+        public Project Project => project;
+        public GameScene ActiveScene => gameInstance.Scenes.Count > 0 ? gameInstance.Scenes[0] : null;
+        public ContentDatabase ContentDatabase => contentDatabase;
+        internal UniEditorGameInstance GameInstance => gameInstance;
+        internal Dispatcher MainThreadDispatcher => mainThreadDispatcher;
 
         public EditorMenu Menu => menu;
         public EditorMenu FileMenu => fileMenu;
@@ -109,14 +71,17 @@ namespace UniGameEditor
         public EditorMenu WindowMenu => windowMenu;
 
         // Constructor
-        public UniEditor()
+        internal UniEditor()
         {
             gameInstance = new UniEditorGameInstance();
             mainThreadDispatcher = Dispatcher.CurrentDispatcher;
+
+            editorPath = Environment.ProcessPath;
+            editorFolder = Directory.GetParent(editorPath).FullName;
         }
 
         // Methods
-        public void Initialize()
+        internal void Initialize()
         {
             // Initialize menus
             InitializeFileMenu();
@@ -131,6 +96,29 @@ namespace UniGameEditor
             // Create the scene
             GameScene scene = new GameScene(sceneName);
 
+            // Create default cube
+            ModelRenderer cube = scene.CreateObject<ModelRenderer>("Cube", typeof(BoxCollider));
+            cube.Transform.WorldPosition = new Vector3(0f, 1f, 0f);
+            cube.Transform.LocalScale *= 0.01f;
+            cube.Model = ContentDatabase.Load<Model>("DefaultCube");
+            cube.GameObject.CreateComponent<TestScript>();
+
+            // Create ground cube
+            ModelRenderer ground = scene.CreateObject<ModelRenderer>("Ground", typeof(BoxCollider));
+            ground.Transform.LocalScale = new Vector3(5f, 0.01f, 5f);
+            ground.Transform.LocalScale *= 0.01f;
+            ground.Model = cube.Model;
+
+            // Create light
+            Light light = scene.CreateObject<Light>("Light");
+            light.Transform.LocalEulerAngles = new Vector3(-60, -90, 0);
+
+            // Create camera
+            Camera camera = scene.CreateObject<Camera>("Camera");
+            camera.Transform.WorldPosition = new Vector3(-7, 1, -4);
+            //camera.Transform.WorldPosition = new Vector3(5, -1, -5);
+            camera.Transform.WorldRotation = Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(45));
+
             // Activate the scene
             scene.Activate();
 
@@ -141,16 +129,22 @@ namespace UniGameEditor
             return scene;
         }
 
+        public void NewProject(string createInFolder, string projectName)
+        {
+            // Create project
+            project = Project.CreateNew(createInFolder, projectName);
+
+            // Open the newly created project
+            OpenProject(project.ProjectPath);
+        }
+
         public void OpenProject(string projectPath)
         {
-            this.isProjectOpen = true;
-            this.projectPath = projectPath;
-            this.projectDirectory = Directory.GetParent(projectPath).FullName;
-            this.contentDirectory = Path.Combine(projectDirectory, "Content");
-            this.libraryDirectory = Path.Combine(projectDirectory, "Library");
+            // Create project
+            project = new Project(projectPath);
 
             // Create content
-            contentDatabase = new ContentDatabase(projectDirectory, contentDirectory, libraryDirectory, gameInstance.Services);
+            contentDatabase = new ContentDatabase(project.ProjectFolder, project.ContentFolder, project.ContentBuildFolder, gameInstance.Services);
 
             // Update content directory
             gameInstance.Content = contentDatabase;
@@ -167,13 +161,16 @@ namespace UniGameEditor
                 OnProjectLoaded();
 
 
-            contentDatabase.ImportContent("WGPU-Logo.png");
+            //contentDatabase.ImportContent("WGPU-Logo.png");
 
+
+            var result = ScriptPipeline.CreateNewCSharpProject(project, "TestProject");
+            string outputPath = result.GetOutputAssemblyPath(project);
 
             GameScene scene = NewScene("My Scene");
 
-            scene.CreateObject<Camera>("Camera");
-            UICanvas canvas = scene.CreateObject<UICanvas>("Canvas", typeof(UIEventDispatcher));
+            //scene.CreateObject<Camera>("Camera");
+            //UICanvas canvas = scene.CreateObject<UICanvas>("Canvas", typeof(UIEventDispatcher));
             //Image.Create(canvas.GameObject);
 
             //PipelineProject

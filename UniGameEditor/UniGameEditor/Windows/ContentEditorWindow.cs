@@ -132,7 +132,7 @@ namespace UniGameEditor.Windows
             if (Editor.IsProjectOpen == true)
             {
                 // Refresh content
-                RefreshContentFolderTree(Editor.ContentDirectory);
+                RefreshContentFolderTree(Editor.Project.ContentFolder);
             }
         }
 

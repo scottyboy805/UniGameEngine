@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace UniGameEngine
 {
-    internal class TestScript : BehaviourScript
+    public class TestScript : BehaviourScript
     {
         BasicEffect e;
         public override void OnUpdate(GameTime gameTime)
