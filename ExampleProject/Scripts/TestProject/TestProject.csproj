@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
     <OutDir>..\..\Library\script-build</OutDir>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="UniGameEngine">
+      <HintPath>..\..\Library\script-build\UniGameEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

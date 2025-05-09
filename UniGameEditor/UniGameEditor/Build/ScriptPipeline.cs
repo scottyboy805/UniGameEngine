@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using UniGameEngine;
 
 namespace UniGameEditor.Build
 {
@@ -63,8 +64,7 @@ namespace UniGameEditor.Build
 
             // Get relative output path and intermediate paths
             string relativeOutputPath = Path.GetRelativePath(projectFolderPath, project.ScriptBuildFolder);
-            //string relativeIntermediatePath = Path.GetRelativePath(projectFolderPath, project.ScriptIntermediateFolder);
-
+            
             // Set output directory
             scriptProject.OutputPath = relativeOutputPath;
 
@@ -73,15 +73,12 @@ namespace UniGameEditor.Build
             scriptProject.Save();
 
 
-            
-
 
             // Refresh the solution
             RefreshCSharpSolution(project);
 
-
-            // Generate build dir props file
-            GenerateBuildDirectoryProperties(project, projectFolderPath);
+            // Add default references - make sure to run after solution gen because that step will copy reference assemblies to the library
+            AddDefaultProjectReferences(project, scriptProject);
 
 
             return scriptProject;
@@ -117,6 +114,42 @@ namespace UniGameEditor.Build
                 // Run create command
                 RunDotnetCommand(addCommand);
             }
+
+            // Generate build dir props file
+            GenerateBuildDirectoryProperties(project);
+
+            // Ensure dependant assemblies are copied to the library
+            RestoreReferenceAssemblies(project);
+        }
+
+        public static void RestoreReferenceAssemblies(Project project)
+        {
+            // Check for null
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
+
+            // Get reference assembly paths
+            string[] referenceAssemblies =
+            {
+                typeof(UniGame).Assembly.Location,
+            };
+
+            // Copy all references
+            foreach (string referenceAssembly in referenceAssemblies)
+            {
+                // Get copy path
+                string targetPath = Path.Combine(project.ScriptBuildFolder, Path.GetFileName(referenceAssembly));
+
+                // Get target directory
+                string targetFolder = Directory.GetParent(targetPath).FullName;
+
+                // Create if required
+                if(Directory.Exists(targetFolder) == false)
+                    Directory.CreateDirectory(targetFolder);
+
+                // Copy the file with overwrite
+                File.Copy(referenceAssembly, targetPath, true);
+            }
         }
 
         public static IEnumerable<ScriptProject> GetCSharpProjects(Project project)
@@ -144,17 +177,10 @@ namespace UniGameEditor.Build
             }
         }
 
-        public static void GenerateBuildDirectoryProperties(Project project, string projectFolder)
+        private static void GenerateBuildDirectoryProperties(Project project)
         {
-            // Check for null
-            if (project == null)
-                throw new ArgumentNullException(nameof(project));
-
-            // Get relative path
-            string relativeIntermediatePath = Path.GetRelativePath(projectFolder, project.ScriptIntermediateFolder);
-
             // Get target file
-            string dirPropFile = Path.Combine(projectFolder, DirectoryPropertiesFile);
+            string dirPropFile = Path.Combine(project.ScriptFolder, DirectoryPropertiesFile);
 
             // Check for exists
             if (File.Exists(dirPropFile) == false)
@@ -163,7 +189,7 @@ namespace UniGameEditor.Build
                 string xml = $@"<?xml version=""1.0""?>
 <Project>
     <PropertyGroup>
-        <BaseIntermediateOutputPath>{relativeIntermediatePath}</BaseIntermediateOutputPath>
+        <BaseIntermediateOutputPath>$(SolutionDir)\{Path.GetRelativePath(project.ProjectFolder, project.ScriptIntermediateFolder)}</BaseIntermediateOutputPath>
         <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)</IntermediateOutputPath>
     </PropertyGroup>
 </Project>";
@@ -171,6 +197,49 @@ namespace UniGameEditor.Build
                 // Write to file
                 File.WriteAllText(dirPropFile, xml);
             }
+        }
+
+        private static void AddDefaultProjectReferences(Project project, ScriptProject scriptProject)
+        {
+            // Add UniGame
+            AddPathProjectReference(project, scriptProject, typeof(UniGame).Assembly.Location, false);
+        }
+
+        public static void AddPathProjectReference(Project project, ScriptProject scriptProject, string referencePath, bool copySource)
+        {
+            // Check for project
+            if(project == null)
+                throw new ArgumentNullException(nameof(project));
+
+            // Check for script project
+            if(scriptProject == null)
+                throw new ArgumentNullException(nameof(scriptProject));
+
+            // Check for invalid
+            if (string.IsNullOrEmpty(referencePath) == true)
+                throw new ArgumentException("Reference path cannot be null or empty");
+
+            // Check for file exists
+            if (File.Exists(referencePath) == false)
+                throw new ArgumentException("Could not locate reference path: " + referencePath);
+
+            // Get the output path
+            string targetPath = Path.Combine(project.ScriptBuildFolder, Path.GetFileName(referencePath));
+
+            // Check for copy
+            if (copySource == true)
+            {
+                // Copy if it does not already exist
+                if(File.Exists(targetPath) == false)
+                    File.Copy(referencePath, targetPath);
+            }
+
+            // Get path relative to project
+            string relativeTargetPath = Path.GetRelativePath(scriptProject.CSharpProjectFolder, targetPath);
+
+            // Add the reference
+            scriptProject.AddReferencePath(relativeTargetPath);
+            scriptProject.Save();
         }
 
         private static void RunDotnetCommand(string arguments)

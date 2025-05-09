@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Project>
     <PropertyGroup>
-        <BaseIntermediateOutputPath>..\..\Library\script-obj</BaseIntermediateOutputPath>
+        <BaseIntermediateOutputPath>$(SolutionDir)\Library\script-obj</BaseIntermediateOutputPath>
         <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)</IntermediateOutputPath>
     </PropertyGroup>
 </Project>

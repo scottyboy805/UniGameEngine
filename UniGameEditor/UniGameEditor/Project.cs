@@ -15,8 +15,13 @@ namespace UniGameEditor
 
         [DataMember(Name = "ProjectName")]
         private string projectName;
+        [DataMember(Name = "ProjectVersion")]
+        private Version projectVersion;
         [DataMember(Name = "DeveloperName")]
         private string developerName;
+
+        [DataMember(Name = "EditorVersion")]
+        private Version editorVersion;
 
         // Public
         public const string FileExtension = ".unigame";

@@ -6,5 +6,6 @@
 // Vs
 .vs
 
-// Extensions
+// Extensions for generated files
 *.sln
+*.mgcb
