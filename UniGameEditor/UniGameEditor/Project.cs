@@ -13,21 +13,21 @@ namespace UniGameEditor
         private readonly string libraryFolder;
         private readonly string scriptFolder;
 
-        [DataMember(Name = "ProjectName")]
-        private string projectName;
-        [DataMember(Name = "ProjectVersion")]
-        private Version projectVersion;
+        [DataMember(Name = "Name")]
+        private string name;
+        [DataMember(Name = "Version")]
+        private Version version = new Version(1, 0, 0);
         [DataMember(Name = "DeveloperName")]
-        private string developerName;
+        private string developerName = "";
 
         [DataMember(Name = "EditorVersion")]
-        private Version editorVersion;
+        private Version editorVersion = new Version(1, 0, 0);
 
         // Public
         public const string FileExtension = ".unigame";
 
         // Properties
-        public string ProjectName => projectName;
+        public string Name => name;
         public string ProjectPath => projectPath;
         public string ProjectFolder => projectFolder;
         public string ContentFolder => contentFolder;
@@ -60,7 +60,7 @@ namespace UniGameEditor
             this.libraryFolder = Path.Combine(projectFolder, "Library");
             this.scriptFolder = Path.Combine(projectFolder, "Scripts");
 
-            this.projectName = Path.GetFileNameWithoutExtension(projectPath);
+            this.name = Path.GetFileNameWithoutExtension(projectPath);
 
             
             // Create content on demand
@@ -127,7 +127,7 @@ namespace UniGameEditor
             Project project = new Project(projectPath, false);
 
             // Setup project
-            project.projectName = projectName;
+            project.name = projectName;
 
             // Save the project info
             project.Save();

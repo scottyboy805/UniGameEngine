@@ -1,5 +1,6 @@
 ﻿using ModernWpf;
 using MonoGame.Framework.WpfInterop;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -75,6 +76,12 @@ namespace WindowsEditor
 
             // Initialize editor
             editor.Initialize();            
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {            
+            editor.Shutdown();
+            editor = null;
         }
 
         private void OnGameLoaded()

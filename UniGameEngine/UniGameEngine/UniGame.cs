@@ -2,9 +2,11 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Framework.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using UniGameEngine.Content.Serializers;
 using UniGameEngine.Graphics;
@@ -17,11 +19,20 @@ using UniGameEngine.Scene;
 
 namespace UniGameEngine
 {
+    public enum Platform
+    {
+        Windows,
+        OSX,
+        Linux,
+        IOS,
+        Android,
+    }
+
     public abstract class UniGame : Game
     {
         // Protected
         protected static UniGame current = null;
-
+        
         // Private
         private static readonly GameUpdateComparer updateComparer = new GameUpdateComparer();
         private static readonly GameDrawComparer drawComparer = new GameDrawComparer();
@@ -44,7 +55,7 @@ namespace UniGameEngine
         internal Queue<GameElement> scheduleDestroyElements = new Queue<GameElement>();
 
         // Public
-        public static readonly Version EngineVersion = new Version(1, 0, 0);
+        public static readonly Version EngineVersion = typeof(UniGame).Assembly.GetName().Version;
 
         // Properties
         internal static UniGame Current

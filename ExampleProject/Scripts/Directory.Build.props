@@ -4,4 +4,12 @@
         <BaseIntermediateOutputPath>$(SolutionDir)\Library\script-obj</BaseIntermediateOutputPath>
         <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)</IntermediateOutputPath>
     </PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>$(DefineConstants);UNIGAME_EDITOR</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DefineConstants>$(DefineConstants);UNIGAME</DefineConstants>
+  </PropertyGroup>
 </Project>

@@ -3,6 +3,12 @@ using UniGameEngine;
 
 namespace UniGameEditor.Build
 {
+    public enum BuildConfiguration
+    {
+        Debug,
+        Release,
+    }
+
     public static class ScriptPipeline
     {
         // Public
@@ -67,11 +73,7 @@ namespace UniGameEditor.Build
             
             // Set output directory
             scriptProject.OutputPath = relativeOutputPath;
-
-            // Set intermediate directory
-            //scriptProject.IntermediatePath = relativeIntermediatePath;
             scriptProject.Save();
-
 
 
             // Refresh the solution
@@ -84,14 +86,43 @@ namespace UniGameEditor.Build
             return scriptProject;
         }
 
-        public static void RefreshCSharpSolution(Project project)
+        public static void BuildCSharpSolution(Project project, BuildConfiguration configuration = BuildConfiguration.Release, bool rebuild = false)
+        {
+            // Check for null
+            if(project == null)
+                throw new ArgumentNullException(nameof(project));
+
+            // Get solution path by refreshing before build
+            string solutionPath = RefreshCSharpSolution(project);
+
+            // Check for rebuild
+            if(rebuild == true)
+            {
+                // Create clean command
+                string cleanCommand = $"clean {solutionPath}";
+
+                // Run clear
+                RunDotnetCommand(cleanCommand);
+            }
+
+            // Select configuration
+            string configSymbol = configuration.ToString();
+
+            // Build command
+            string buildCommand = $@"build {solutionPath} -c {configSymbol} -o {project.ScriptBuildFolder}";
+
+            // Build the solution
+            RunDotnetCommand(buildCommand);
+        }
+
+        public static string RefreshCSharpSolution(Project project)
         {
             // Check for null
             if (project == null)
                 throw new ArgumentNullException(nameof(project));
 
             // Get path
-            string solutionPath = Path.Combine(project.ProjectFolder, project.ProjectName + CSharpSolutionExtension);
+            string solutionPath = Path.Combine(project.ProjectFolder, project.Name + CSharpSolutionExtension);
 
             // Delete existing
             if(File.Exists(solutionPath) == true)
@@ -99,7 +130,7 @@ namespace UniGameEditor.Build
 
 
             // Create the new solution
-            string createCommand = $@"new sln -n {project.ProjectName} -o {project.ProjectFolder}";
+            string createCommand = $@"new sln -n {project.Name} -o {project.ProjectFolder}";
 
             // Run create command
             RunDotnetCommand(createCommand);
@@ -120,6 +151,8 @@ namespace UniGameEditor.Build
 
             // Ensure dependant assemblies are copied to the library
             RestoreReferenceAssemblies(project);
+
+            return solutionPath;
         }
 
         public static void RestoreReferenceAssemblies(Project project)
@@ -263,6 +296,10 @@ namespace UniGameEditor.Build
 
             // Wait for it to finish
             process.WaitForExit();
+
+            // Check for exit code
+            if (process.ExitCode != 0)
+                throw new ApplicationException("Error executing dotnet command");
         }
     }
 }

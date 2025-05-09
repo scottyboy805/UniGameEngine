@@ -12,6 +12,7 @@ using UniGameEngine.Physics;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using UniGameEditor.Build;
+using UniGamePipeline;
 
 namespace UniGameEditor
 {
@@ -39,7 +40,10 @@ namespace UniGameEditor
 
         private Project project = null;
         private ContentDatabase contentDatabase = null;
-        private UniEditorGameInstance gameInstance = null;        
+        private UniEditorGameInstance gameInstance = null;
+
+        // Public
+        public static readonly Version EditorVersion = typeof(UniEditor).Assembly.GetName().Version;
 
         // Internal
         internal EditorMenu menu = null;
@@ -89,6 +93,17 @@ namespace UniGameEditor
             InitializeContentMenu();
             InitializeGameObjectMenu();
             InitializeComponentMenu();            
+        }
+
+        internal void Shutdown()
+        {
+            // Check for project open
+            if(IsProjectOpen == true)
+            {
+                // Save changes to project
+                project.Save();
+                project = null;
+            }
         }
 
         public GameScene NewScene(string sceneName)
@@ -164,8 +179,12 @@ namespace UniGameEditor
             //contentDatabase.ImportContent("WGPU-Logo.png");
 
 
-            var result = ScriptPipeline.CreateNewCSharpProject(project, "TestProject");
-            string outputPath = result.GetOutputAssemblyPath(project);
+            //var result = ScriptPipeline.CreateNewCSharpProject(project, "TestProject");
+            //string outputPath = result.GetOutputAssemblyPath(project);
+
+
+            // Build the solution
+            ScriptPipeline.BuildCSharpSolution(project);
 
             GameScene scene = NewScene("My Scene");
 
